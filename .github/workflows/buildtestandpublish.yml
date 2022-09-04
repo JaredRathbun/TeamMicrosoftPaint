@@ -77,6 +77,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JaredRathbun_TeamMicrosoftPaint
+  license-headers:
+    name: Add License Headers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install licenseheaders
+      - run: python -m licenseheaders -t header.tmpl -x *.xml -v -d src
   publish-javadoc:
     runs-on: ubuntu-latest
     steps:
