@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/johann-petrak/licenseheaders.git
+    rev: 'master'
+    hooks:
+        - id: licenseheaders
+          args: ["-t", ".copyright.tmpl", "-cy", "-f", "src"]
