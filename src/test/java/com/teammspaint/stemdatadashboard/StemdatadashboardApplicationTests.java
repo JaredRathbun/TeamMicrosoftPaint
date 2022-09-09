@@ -26,6 +26,7 @@ class StemdatadashboardApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// Auto generated.
 	}
 
 }
