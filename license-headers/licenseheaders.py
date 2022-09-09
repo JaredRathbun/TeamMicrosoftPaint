@@ -11,23 +11,26 @@ LANGUAGE_REGEXS = {
 }
 
 if __name__ == '__main__':
-    directory = sys.argv[1]
-    for root, sub_folder, files in os.walk(directory):
+    for root, sub_folder, files in os.walk('../src/'):
         for file in files:
             with open(os.path.realpath(os.path.join(root, file)), 'r+') as f:
                 contents = f.read()
                 file_type = file.split('.')[1]
-                regex = LANGUAGE_REGEXS[file_type]
-                res = re.search(regex, contents)
-                
-                if res is None:
-                    with open(f'templates/header.{file_type}') as temp:
-                        template = temp.read()
-
-                    new_contents = template + '\n' + contents
+                if file_type in ['css', 'java', 'py', 'js', 'html']:
+                    regex = LANGUAGE_REGEXS[file_type]
+                    res = re.search(regex, contents)
                     
-                    f.seek(0)
-                    f.write(new_contents)
+                    if file == 'SQLDialect.java':
+                        print(res)
+
+                    if res is None:
+                        with open(f'templates/header.{file_type}') as temp:
+                            template = temp.read()
+                    
+                        new_contents = template + '\n' + contents
+                        
+                        f.seek(0)
+                        f.write(new_contents)
                     f.truncate()
                     
                     
