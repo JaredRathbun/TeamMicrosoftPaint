@@ -5,5 +5,5 @@
 Our Capstone Project repository.
 
 ## Important Links
-- ADD REQUIREMENTS DOCUMENT AND ALL OTHER DOCUMENTS HERE
+- [Requirements Document](https://docs.google.com/document/d/157iyS07rQm8yJFJeVWR_ZD2b1uBtJpyaRzKcNHmdzCQ/edit)
 - [Deepsource Static Code Analysis](https://deepsource.io/gh/JaredRathbun/TeamMicrosoftPaint)
