@@ -6,4 +6,5 @@ Our Capstone Project repository.
 
 ## Important Links
 - [Requirements Document](https://docs.google.com/document/d/157iyS07rQm8yJFJeVWR_ZD2b1uBtJpyaRzKcNHmdzCQ/edit)
+- [Functional Specification](https://docs.google.com/document/d/1Ypb2SLG7-zbuIucbpgP6dW7aTDYOCHmwdaHG1EaElTI/edit)
 - [Deepsource Static Code Analysis](https://deepsource.io/gh/JaredRathbun/TeamMicrosoftPaint)
