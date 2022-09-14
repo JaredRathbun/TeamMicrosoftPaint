@@ -16,11 +16,14 @@ spring:
         initialization-mode: always
 
     jpa:
+        show-sql: false
+        properties:
+            hibernate:
+                format_sql: true
         hibernate: 
             ddl-auto: none
         database-platform: com.teammspaint.stemdatadashboard.SQLDialect
         open-in-view: false
-
 
     security:
         oauth2:
