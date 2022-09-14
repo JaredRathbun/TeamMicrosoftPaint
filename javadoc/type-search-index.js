@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.teammspaint.stemdatadashboard","l":"Application"},{"p":"com.teammspaint.stemdatadashboard","l":"SQLDialect"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.teammspaint.stemdatadashboard","l":"Application"},{"p":"com.teammspaint.stemdatadashboard.controller","l":"Endpoints"},{"p":"com.teammspaint.stemdatadashboard","l":"SQLDialect"}];updateSearchResults();
