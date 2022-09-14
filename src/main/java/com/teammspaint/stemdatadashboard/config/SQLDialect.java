@@ -1,4 +1,4 @@
-package com.teammspaint.stemdatadashboard;
+package com.teammspaint.stemdatadashboard.config;
 
 /**
 * Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
