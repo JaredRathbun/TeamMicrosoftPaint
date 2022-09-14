@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.teammspaint.stemdatadashboard"},{"l":"com.teammspaint.stemdatadashboard.controller"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.teammspaint.stemdatadashboard"},{"l":"com.teammspaint.stemdatadashboard.config"},{"l":"com.teammspaint.stemdatadashboard.controller"}];updateSearchResults();
