@@ -30,10 +30,18 @@ public enum Provider {
     /**
      * A user registered locally.
      */
-    LOCAL,
+    LOCAL {
+        public String toString() {
+            return "LOCAL";
+        }
+    },
 
     /**
      * A user registered with Google.
      */
-    GOOGLE
+    GOOGLE {
+        public String toString() {
+            return "GOOGLE";
+        }
+    }
 }
