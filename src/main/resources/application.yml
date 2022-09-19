@@ -1,0 +1,37 @@
+application:
+    title: STEM Data Dashboard
+    version: V1.0.0
+
+spring:
+    banner:
+        location: classpath:banner.txt
+
+    sql:
+        init:
+            mode: always
+
+    datasource:
+        url: jdbc:sqlite:src/main/resources/database.db
+        driver-class-name: org.sqlite.JDBC
+        initialization-mode: always
+
+    jpa:
+        show-sql: false
+        properties:
+            hibernate:
+                format_sql: true
+        hibernate: 
+            ddl-auto: none
+        database-platform: com.teammspaint.stemdatadashboard.SQLDialect
+        open-in-view: false
+
+    security:
+        oauth2:
+            client:
+                registration:
+                    google:
+                        clientId: 343581734108-c8occ931j4qhsccjutu31sq2vgimqlqq.apps.googleusercontent.com
+                        clientSecret: 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
+                        scope:
+                        - email
+                        - profile
