@@ -1,0 +1,15 @@
+* {
+    --blue-color: rgb(0, 55, 104);
+}
+
+body {
+    font-family: 'Gotham' !important;
+}
+
+.blue-bg {
+    background-color: var(--blue-color) !important;
+}
+
+table td {
+    vertical-align: middle !important;
+}
