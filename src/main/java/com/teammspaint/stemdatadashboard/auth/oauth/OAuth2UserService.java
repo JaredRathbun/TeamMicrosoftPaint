@@ -1,4 +1,4 @@
-package com.teammspaint.stemdatadashboard.oauth;
+package com.teammspaint.stemdatadashboard.auth.oauth;
 
 /**
 * Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 

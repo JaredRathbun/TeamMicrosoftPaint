@@ -1,4 +1,4 @@
-package com.teammspaint.stemdatadashboard.oauth;
+package com.teammspaint.stemdatadashboard.auth.oauth;
 
 import java.io.IOException;
 

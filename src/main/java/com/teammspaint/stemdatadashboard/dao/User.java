@@ -30,7 +30,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.teammspaint.stemdatadashboard.oauth.Provider;
+import com.teammspaint.stemdatadashboard.auth.oauth.Provider;
 
 @Entity
 @Table(name = "USERS")
