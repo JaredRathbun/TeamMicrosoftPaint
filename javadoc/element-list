@@ -1,3 +1,7 @@
 com.teammspaint.stemdatadashboard
+com.teammspaint.stemdatadashboard.auth
+com.teammspaint.stemdatadashboard.auth.oauth
 com.teammspaint.stemdatadashboard.config
-com.teammspaint.stemdatadashboard.controller
+com.teammspaint.stemdatadashboard.dao
+com.teammspaint.stemdatadashboard.repository
+com.teammspaint.stemdatadashboard.service
