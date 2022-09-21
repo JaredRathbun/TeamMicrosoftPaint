@@ -71,16 +71,11 @@
                                             class="d-none d-lg-inline me-2 text-gray-600 small">User Name</span><img
                                             class="border rounded-circle img-profile"
                                             src="../static/img/avatars/avatar1.jpeg"></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity
-                                            log</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i
-                                                class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                            &nbsp;Logout
+                                        </a>
                                     </div>
                                 </div>
                             </li>
@@ -169,16 +164,15 @@
                         <div class="col-lg-7 col-xl-8">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h6 class="text-primary fw-bold m-0">Some Data Graph/Chart</h6>
+                                    <h6 class="text-primary fw-bold m-0">Student GPA vs. School Semesters</h6>
                                     <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle"
                                             aria-expanded="false" data-bs-toggle="dropdown" type="button"><i
                                                 class="fas fa-ellipsis-v text-gray-400"></i></button>
                                         <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
-                                            <p class="text-center dropdown-header">dropdown header:</p><a
-                                                class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item"
-                                                href="#">&nbsp;Another action</a>
-                                            <div class="dropdown-divider"></div><a class="dropdown-item"
-                                                href="#">&nbsp;Something else here</a>
+                                            <a class="dropdown-item" href="#">&nbsp;Download as Excel Sheet</a>
+                                            <a class="dropdown-item" href="#">&nbsp;Download as CSV File</a>
+                                            <a class="dropdown-item" href="#">&nbsp;Download as PNG</a>
+                                            <a class="dropdown-item" href="#">&nbsp;Download as PDF</a>
                                         </div>
                                     </div>
                                 </div>
@@ -256,42 +250,49 @@
                         </div>
                         <div class="col">
                             <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0">Some Data Graph/Chart</h6>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="small fw-bold">Server migration<span class="float-end">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 20%;"><span
-                                                class="visually-hidden">20%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Sales tracking<span class="float-end">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 40%;"><span
-                                                class="visually-hidden">40%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Customer Database<span class="float-end">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 60%;"><span
-                                                class="visually-hidden">60%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Payout Details<span class="float-end">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" aria-valuenow="80" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 80%;"><span
-                                                class="visually-hidden">80%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Account setup<span class="float-end">Complete!</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-success" aria-valuenow="100" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 100%;"><span
-                                                class="visually-hidden">100%</span></div>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">DWF Rate Calculations</h6>
+                                    <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle"
+                                        aria-expanded="false" data-bs-toggle="dropdown" type="button"><i
+                                            class="fas fa-ellipsis-v text-gray-400"></i></button>
+                                        <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                                            <a class="dropdown-item" href="#">&nbsp;Download as Excel Sheet</a>
+                                            <a class="dropdown-item" href="#">&nbsp;Download as CSV File</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="card-body" style="overflow: auto;">
+                                    <table class="table table-responsive table-striped table-hover my-0">
+                                        <thead>
+                                            <tr class="d-flex">
+                                                <th class="col-3">Class Code</th>
+                                                <th class="col-3">Class Name</th>
+                                                <th class="col-3">Semester</th>
+                                                <th class="col-3">DWF Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="d-flex">
+                                                <td class="col-3">CSC1610</td>
+                                                <td class="col-3">Problem Solving with Java</td>
+                                                <td class="col-3">FA 2022</td>
+                                                <td class="col-3">.25</td>
+                                            </tr>
+                                            <tr class="d-flex">
+                                                <td class="col-3">CSC2710</td>
+                                                <td class="col-3">Analysis of Algorithms</td>
+                                                <td class="col-3">FA 2020</td>
+                                                <td class="col-3">.2</td>
+                                            </tr>
+                                            <tr class="d-flex">
+                                                <td class="col-3">CSC3555</td>
+                                                <td class="col-3">Database Principles</td>
+                                                <td class="col-3">SP 2022</td>
+                                                <td class="col-3">.45</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                         </div>
                     </div>
                 </div>

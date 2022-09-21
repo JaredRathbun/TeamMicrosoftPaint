@@ -22,7 +22,7 @@ spring:
                 format_sql: true
         hibernate: 
             ddl-auto: none
-        database-platform: com.teammspaint.stemdatadashboard.SQLDialect
+        database-platform: com.teammspaint.stemdatadashboard.config.SQLDialect
         open-in-view: false
 
     security:

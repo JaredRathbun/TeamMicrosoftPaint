@@ -12,6 +12,7 @@
 </head>
 
 <body id="page-top">
+    <script src="https://kit.fontawesome.com/177241023b.js" crossorigin="anonymous"></script>
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion blue-bg p-0">
             <div class="container-fluid d-flex flex-column p-0"><a
@@ -72,16 +73,11 @@
                                             class="d-none d-lg-inline me-2 text-gray-600 small">User Name</span><img
                                             class="border rounded-circle img-profile"
                                             src="../static/img/avatars/avatar1.jpeg"></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a
-                                            class="dropdown-item" href="#"><i
-                                                class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity
-                                            log</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i
-                                                class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                            &nbsp;Logout
+                                        </a>
                                     </div>
                                 </div>
                             </li>
@@ -90,9 +86,7 @@
                 </nav>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Dashboard</h3><a
-                            class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i
-                                class="fas fa-download fa-sm text-white-50"></i>&nbsp;Download All Data</a>
+                        <h3 class="text-dark mb-0">Visualizations</h3>
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-xl-3 mb-4">
@@ -167,131 +161,236 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-7 col-xl-8">
+                        <div class="col-12">
                             <div class="card shadow mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h6 class="text-primary fw-bold m-0">Some Data Graph/Chart</h6>
-                                    <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle"
-                                            aria-expanded="false" data-bs-toggle="dropdown" type="button"><i
-                                                class="fas fa-ellipsis-v text-gray-400"></i></button>
-                                        <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
-                                            <p class="text-center dropdown-header">dropdown header:</p><a
-                                                class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item"
-                                                href="#">&nbsp;Another action</a>
-                                            <div class="dropdown-divider"></div><a class="dropdown-item"
-                                                href="#">&nbsp;Something else here</a>
-                                        </div>
-                                    </div>
+                                <div class="card-header d-flex justify-content-between align-items-center align-middle">
+                                    <h6 class="text-primary fw-bold m-0">Chart/Graph Generation</h6>
+                                    <p class="text-primary m-0">To generate a graph/chart, select the columns and type of the graph from the dropdowns below.</p>
                                 </div>
-                                <div class="card-body">
-                                    <div class="chart-area"><canvas
-                                            data-bss-chart="{&quot;type&quot;:&quot;line&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Earnings&quot;,&quot;fill&quot;:true,&quot;data&quot;:[&quot;0&quot;,&quot;10000&quot;,&quot;5000&quot;,&quot;15000&quot;,&quot;10000&quot;,&quot;20000&quot;,&quot;15000&quot;,&quot;25000&quot;],&quot;backgroundColor&quot;:&quot;rgba(78, 115, 223, 0.05)&quot;,&quot;borderColor&quot;:&quot;rgba(78, 115, 223, 1)&quot;}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;],&quot;drawOnChartArea&quot;:false},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;fontStyle&quot;:&quot;normal&quot;,&quot;padding&quot;:20}}],&quot;yAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;]},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;fontStyle&quot;:&quot;normal&quot;,&quot;padding&quot;:20}}]}}}"></canvas>
-                                    </div>
+                                <div class="card-body align-items-center align-middle">
+                                    <table class="table table-responsive my-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-3">X-Axis</th>
+                                                <th class="col-3">Y-Axis</th>
+                                                <th class="col-3">Graph/Chart Type</th>
+                                                <th class="col-2"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-3">
+                                                    <select class="form-select">
+                                                        <option selected disabled>Choose a column...</option>
+                                                        <option value="1">Student ID #</option>
+                                                        <option value="2">Student First Name</option>
+                                                        <option value="3">Student Last Name</option>
+                                                        <option value="4">Program Code</option>
+                                                        <option value="5">Major</option>
+                                                    </select>
+                                                </td>
+                                                <td class="col-3">
+                                                    <select class="form-select">
+                                                        <option selected disabled>Choose a column...</option>
+                                                        <option value="1">Student ID #</option>
+                                                        <option value="2">Student First Name</option>
+                                                        <option value="3">Student Last Name</option>
+                                                        <option value="4">Program Code</option>
+                                                        <option value="5">Major</option>
+                                                    </select>
+                                                </td>
+                                                <td class="col-3">
+                                                    <select class="form-select">
+                                                        <option selected disabled>Choose a chart/graph type...</option>
+                                                        <option value="1">Bar Chart</option>
+                                                        <option value="2">Scatterplot</option>
+                                                        <option value="3">Standard Deviation</option>
+                                                        <option value="4">Pie Chart</option>
+                                                        <option value="5">Line Graph</option>
+                                                    </select>
+                                                </td>
+                                                <td class="col-2">
+                                                    <button class="btn btn-primary">Generate Visual</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-5 col-xl-4">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
                             <div class="card shadow mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h6 class="text-primary fw-bold m-0">Some Data Graph/Chart</h6>
-                                    <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle"
-                                            aria-expanded="false" data-bs-toggle="dropdown" type="button"><i
-                                                class="fas fa-ellipsis-v text-gray-400"></i></button>
-                                        <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
-                                            <p class="text-center dropdown-header">dropdown header:</p><a
-                                                class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item"
-                                                href="#">&nbsp;Another action</a>
-                                            <div class="dropdown-divider"></div><a class="dropdown-item"
-                                                href="#">&nbsp;Something else here</a>
-                                        </div>
+                                <div class="card-header d-flex justify-content-between align-items-center align-middle">
+                                    <div class="d-block my-auto">
+                                        <h6 class="text-primary fw-bold m-0">Data Correlations</h6>
+                                        <!-- <p>Correlate a given time period, class, and type of data.</p> -->
                                     </div>
+                                    
+                                    <p class="text-primary m-0">Please select a start and end date, the class you are searching for, and the data you would like.</p>
                                 </div>
-                                <div class="card-body" style="height: 352px;">
-                                    <div class="chart-area"><canvas
-                                            data-bss-chart="{&quot;type&quot;:&quot;doughnut&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Direct&quot;,&quot;Social&quot;,&quot;Referral&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;&quot;,&quot;backgroundColor&quot;:[&quot;#4e73df&quot;,&quot;#1cc88a&quot;,&quot;#36b9cc&quot;],&quot;borderColor&quot;:[&quot;#ffffff&quot;,&quot;#ffffff&quot;,&quot;#ffffff&quot;],&quot;data&quot;:[&quot;50&quot;,&quot;30&quot;,&quot;15&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}}"></canvas>
+                                <div class="card-body d-flex flex-wrap">
+                                    <div class="col-10 align-items-center text-center">
+                                        <table class="table table-responsive">
+                                            <thead>
+                                                <tr class="d-flex">
+                                                    <th class="col-2">Start Date</th>
+                                                    <th class="col-2">End Date</th>
+                                                    <th class="col-2">Class</th>
+                                                    <th class="col-2">Data Selection</th>
+                                                    <th class="col-2" />
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="d-flex">
+                                                    <td class="col-2">
+                                                        <select class="form-select">
+                                                            <option selected disabled>Choose semester...</option>
+                                                            <option value="1">SP 16</option>
+                                                            <option value="2">FA 16</option>
+                                                            <option value="3">SP 17</option>
+                                                            <option value="4">FA 17</option>
+                                                            <option value="5">SP 18</option>
+                                                            <option value="6">FA 18</option>
+                                                            <option value="7">SP 19</option>
+                                                            <option value="8">FA 19</option>
+                                                            <option value="9">SP 20</option>
+                                                            <option value="10">FA 20</option>
+                                                            <option value="11">SP 21</option>
+                                                            <option value="12">FA 21</option>
+                                                            <option value="13">SP 22</option>
+                                                            <option value="14">FA 22</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-2">
+                                                        <select class="form-select">
+                                                            <option selected disabled>Choose semester...</option>
+                                                            <option value="1">SP 16</option>
+                                                            <option value="2">FA 16</option>
+                                                            <option value="3">SP 17</option>
+                                                            <option value="4">FA 17</option>
+                                                            <option value="5">SP 18</option>
+                                                            <option value="6">FA 18</option>
+                                                            <option value="7">SP 19</option>
+                                                            <option value="8">FA 19</option>
+                                                            <option value="9">SP 20</option>
+                                                            <option value="10">FA 20</option>
+                                                            <option value="11">SP 21</option>
+                                                            <option value="12">FA 21</option>
+                                                            <option value="13">SP 22</option>
+                                                            <option value="14">FA 22</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-2">
+                                                        <select class="form-select">
+                                                            <option selected disabled>Choose a class...</option>
+                                                            <option value="1">CSC1610 - Problem Solving w/ Java</option>
+                                                            <option value="2">CSC2820 - Data Structures</option>
+                                                            <option value="3">CSC2620 - Object Oriented Design</option>
+                                                            <option value="4">CSC2710 - Analysis of Algorithms</option>
+                                                            <option value="5">CSC3810 - Database Principles</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-2">
+                                                        <select class="form-select">
+                                                            <option selected disabled>Choose an option...</option>
+                                                            <option value="1">Average DWF Rate</option>
+                                                            <option value="2"># of Students w/ A</option>
+                                                            <option value="3"># of Students w/ B</option>
+                                                            <option value="4"># of Students w/ C</option>
+                                                            <option value="5"># of Students w/ D</option>
+                                                            <option value="6"># of Students w/ W</option>
+                                                            <option value="7"># of Students w/ F</option>
+                                                            <option value="8">All Students</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-2">
+                                                        <button class="btn btn-primary">Calculate Value</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="text-center small mt-4"></div>
+                                    <div class="d-block align-items-center text-center">
+                                        <h7 class="text-primary"><u>Calculated Value</u></h7>
+                                        <p class="text-danger mt-1" id="calculation-result">234</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6 mb-4" style="height: 407.2px;">
+                        <div class="col-12">
                             <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0">Some Data Graph/Chart</h6>
+                                <div class="card-header d-flex justify-content-between align-items-center align-middle">
+                                    <div class="d-block my-auto">
+                                        <h6 class="text-primary fw-bold m-0">Class Grades</h6>
+                                    </div>
+                                    
+                                    <p class="text-primary m-0">Please select a class, the appropriate semester, and click download.</p>
                                 </div>
-                                <div class="card-body">
-                                    <h4 class="small fw-bold">Server migration<span class="float-end">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 20%;"><span
-                                                class="visually-hidden">20%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Sales tracking<span class="float-end">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 40%;"><span
-                                                class="visually-hidden">40%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Customer Database<span class="float-end">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 60%;"><span
-                                                class="visually-hidden">60%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Payout Details<span class="float-end">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" aria-valuenow="80" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 80%;"><span
-                                                class="visually-hidden">80%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Account setup<span class="float-end">Complete!</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-success" aria-valuenow="100" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 100%;"><span
-                                                class="visually-hidden">100%</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0">Some Data Graph/Chart</h6>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="small fw-bold">Server migration<span class="float-end">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 20%;"><span
-                                                class="visually-hidden">20%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Sales tracking<span class="float-end">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 40%;"><span
-                                                class="visually-hidden">40%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Customer Database<span class="float-end">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 60%;"><span
-                                                class="visually-hidden">60%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Payout Details<span class="float-end">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" aria-valuenow="80" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 80%;"><span
-                                                class="visually-hidden">80%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Account setup<span class="float-end">Complete!</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-success" aria-valuenow="100" aria-valuemin="0"
-                                            aria-valuemax="100" style="width: 100%;"><span
-                                                class="visually-hidden">100%</span></div>
-                                    </div>
-                                </div>
+                                <div class="card-body d-flex flex-wrap">
+                                    <table class="table table-responsive">
+                                        <thead>
+                                            <tr class="d-flex">
+                                                <th class="col-2">Class</th>
+                                                <th class="col-2">Semester</th>
+                                                <th class="col-2"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="d-flex">
+                                                <td class="col-2">
+                                                    <select class="form-select">
+                                                        <option selected disabled>Choose a class...</option>
+                                                        <option value="1">CSC1610 - Problem Solving w/ Java</option>
+                                                        <option value="2">CSC2820 - Data Structures</option>
+                                                        <option value="3">CSC2620 - Object Oriented Design</option>
+                                                        <option value="4">CSC2710 - Analysis of Algorithms</option>
+                                                        <option value="5">CSC3810 - Database Principles</option>
+                                                    </select>
+                                                </td>
+                                                <td class="col-2">
+                                                    <select class="form-select">
+                                                        <option selected disabled>Choose semester...</option>
+                                                        <option value="1">SP 16</option>
+                                                        <option value="2">FA 16</option>
+                                                        <option value="3">SP 17</option>
+                                                        <option value="4">FA 17</option>
+                                                        <option value="5">SP 18</option>
+                                                        <option value="6">FA 18</option>
+                                                        <option value="7">SP 19</option>
+                                                        <option value="8">FA 19</option>
+                                                        <option value="9">SP 20</option>
+                                                        <option value="10">FA 20</option>
+                                                        <option value="11">SP 21</option>
+                                                        <option value="12">FA 21</option>
+                                                        <option value="13">SP 22</option>
+                                                        <option value="14">FA 22</option>
+                                                    </select>
+                                                </td>
+                                                <td class="col-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="includeStudentInfoCheck" checked>
+                                                        <label class="form-check-label" for="includeStudentInfoCheck">Include student information</label>
+                                                    </div>
+                                                </td>
+                                                <td class="col-2">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Download</button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item">As Excel Sheet</a>
+                                                            <a class="dropdown-item">As CSV File</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div> 
                             </div>
                         </div>
                     </div>

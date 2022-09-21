@@ -43,11 +43,11 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		User newUser = new User("Test", "User", "rathbun.jared@gmail.com");
-		System.out.println(userRepo.saveAndFlush(newUser));
+		// User newUser = new User("Test", "User", "rathbun.jared@gmail.com");
+		// System.out.println(userRepo.saveAndFlush(newUser));
 
-		userRepo.findAll().forEach((user) -> {
-			System.out.println(user);
-		});
+		// userRepo.findAll().forEach((user) -> {
+		// 	System.out.println(user);
+		// });
 	}
 }
