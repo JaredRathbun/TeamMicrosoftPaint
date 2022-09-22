@@ -5,7 +5,9 @@ from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
-app = Flask('STEM Data Dashboard')
+from stemdatadashboard.blueprints import auth
+
+app = Flask('STEM Data Dashboard', template_folder='templates')
 db = SQLAlchemy()
 jwt_manager = JWTManager()
 session = Session()
@@ -32,6 +34,9 @@ def init_app() -> Flask:
     jwt_manager.init_app(app)
     session.init_app(app)
     login_manager.init_app(app)
+
+    from stemdatadashboard.blueprints.auth.routes import auth_bp
+    app.register_blueprint(auth_bp)
 
     return app
     
