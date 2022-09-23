@@ -1,10 +1,12 @@
 from os import path, environ
-import os
+import os.path
 from dotenv import load_dotenv
+import logging
 
 ## Init the logging object.
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
+import os
 import sys
 
 # Courtesy of: https://stackoverflow.com/questions/13733552/logger-configuration-to-log-to-file-and-print-to-stdout
@@ -159,8 +161,6 @@ class Config():
     STATIC_FOLDER = 'static'
     TEMPLATES_FOLDER = 'templates'
     SESSION_TYPE = 'filesystem'
-    PERMANENT_SESSION_LIFETIME = timedelta(hours=5)
-    SESSION_FILE_DIR= '../cookies'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class ProdConfig(Config):
@@ -170,7 +170,7 @@ class ProdConfig(Config):
     ENV = 'production'
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + environ.get('PROD_DATABASE_PATH')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.abspath(environ.get('PROD_DATABASE_PATH'))
 
 class DevConfig(Config):
     '''
@@ -179,4 +179,5 @@ class DevConfig(Config):
     ENV = 'development'
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + environ.get('DEV_DATABASE_PATH')
+    
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.abspath(environ.get('DEV_DATABASE_PATH'))

@@ -1,2 +1,2 @@
-$env:ENV = 'dev'
+$env:ENV='dev'
 python ../run.py

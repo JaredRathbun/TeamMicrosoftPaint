@@ -1,4 +1,4 @@
-from stemdatadashboard import init_app
+from app import init_app
 
 if __name__ == '__main__':
     # Starts the main app.
