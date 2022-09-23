@@ -5,10 +5,10 @@ from os import environ as environ
 
 @pytest.fixture(scope='module')
 def test_client():
-    app = init_app()
+    app = init_app('test.cfg')
     app.testing = True
     app.config['Testing'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] =  abspath(environ('TEST_DATABASE_PATH'))
+    app.config['SQLALCHEMY_DATABASE_URI'] =  abspath('test/test.db')
     app.config['SECRET_KEY'] = 'dev'
     app.config['EMAIL_PASS_PATH'] = 'Capstone1@'
 
