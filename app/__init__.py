@@ -1,3 +1,21 @@
+# Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
+#
+# This file is part of STEM Data Dashboard.
+# 
+# STEM Data Dashboard is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free 
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# STEM Data Dashboard is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+# details.
+#
+# You should have received a copy of the GNU General Public License along with 
+# STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
+
+
 from flask import Flask
 from os import environ
 from flask_session import Session
@@ -12,7 +30,7 @@ app = Flask('STEM Data Dashboard', instance_relative_config=True,
     static_folder=path.abspath('./app/static')
 )
 
-db = SQLAlchemy()
+db = SQLAlchemy(app)
 jwt_manager = JWTManager()
 session = Session()
 login_manager = LoginManager(app)
@@ -26,10 +44,11 @@ def init_app(config_fname: str = None) -> Flask:
         app.register_blueprint(auth_bp)
         
         # Init the DB, create all tables.
-        db.init_app(app)
-        from app.models import User
         with app.app_context():
+            db.init_app(app)
+            from app.models import User, Student, MCASScore, ClassData
             db.create_all()
+
 
         jwt_manager.init_app(app)
         session.init_app(app)

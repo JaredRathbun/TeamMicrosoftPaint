@@ -1,7 +1,26 @@
+# Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
+#
+# This file is part of STEM Data Dashboard.
+# 
+# STEM Data Dashboard is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free 
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# STEM Data Dashboard is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+# details.
+#
+# You should have received a copy of the GNU General Public License along with 
+# STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
+
+
 from flask import render_template, request, make_response, redirect
-from . import auth_bp
+from . import auth_bp, oauth_client
 from app.models import InvalidProviderException, User
 import base64
+from flask_login import current_user
 
 
 @auth_bp.route('/login', methods = ['GET', 'POST'])
@@ -21,7 +40,10 @@ def login():
         }
     '''
     if request.method == 'GET':
-        return render_template('auth/login.html')
+        if current_user.is_authenticated:
+            redirect('/dashboard')
+        else:
+            return render_template('auth/login.html')
     else:
         body = request.get_json()
 
@@ -51,6 +73,7 @@ def login():
         
         return {'message': 'Failed Login'}, 401
 
+@auth_bp.route('oauth/login', methods = [])
 
 @auth_bp.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -79,3 +102,16 @@ def register():
                 else:
                     return {'message': 'Failed to enroll user.'}, 500
                 
+                
+@auth_bp.route('/reset', methods = ['GET', 'POST'])
+def reset():
+    if request.method == 'GET':
+        return render_template('auth/reset.html')
+    else:
+        body = request.get_json()
+
+        if 'email' not in body:
+            return {'message': 'Email not provided'}, 400
+        else:
+            # Need to email a reset link to the user here.
+            pass

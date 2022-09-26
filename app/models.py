@@ -1,10 +1,31 @@
+# Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
+#
+# This file is part of STEM Data Dashboard.
+# 
+# STEM Data Dashboard is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free 
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# STEM Data Dashboard is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+# details.
+#
+# You should have received a copy of the GNU General Public License along with 
+# STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
+
+
 import logging as logger
 from flask_login import UserMixin
 import enum
-from app import db
+from app import db, app
 import pyotp
-import sqlalchemy
 from werkzeug.security import check_password_hash, generate_password_hash
+import sqlalchemy
+from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint, 
+    Enum, DateTime, ForeignKey)
+import secrets
 
 class ProviderEnum(enum.Enum):
     LOCAL = 1
@@ -14,14 +35,14 @@ class InvalidProviderException(Exception):
     pass
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'USERS'
-    email = db.Column(db.String(255), primary_key=True)
-    last_name = db.Column(db.String(100), nullable=False)
-    first_name = db.Column(db.String(100), nullable=False)
-    hash = db.Column(db.String(60))
-    totp_key = db.Column(db.String(255))
-    is_admin = db.Column(db.Boolean(), nullable=False, default=False)
-    provider = db.Column(db.Enum(ProviderEnum))
+    __tablename__ = 'users'
+    email = Column(Text(), primary_key=True)
+    last_name = Column(Text(), nullable=False)
+    first_name = Column(Text(), nullable=False)
+    hash = Column(Text())
+    totp_key = Column(Text())
+    is_admin = Column(Boolean(), nullable=False, default=False)
+    provider = Column(Enum(ProviderEnum))
 
     def __init__(self, email, first_name, last_name, password=None):
         self.email = email
@@ -71,6 +92,82 @@ class User(UserMixin, db.Model):
             db.session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as e:
-            logger.error('IntegrityError while adding new user.', e)
+            logger.error('Unable to insert new user.', e)
             db.session.rollback()
             return False
+
+
+class Student(db.Model):
+    __tablename__ = 'students'
+    id = Column(Integer(), primary_key=True)
+    last_name = Column(Text(), nullable=False)
+    first_name = Column(Text(), nullable=False)
+    major_1 = Column(Text(), nullable=False)
+    major_2 = Column(Text())
+    major_3 = Column(Text())
+    concentration_1 = Column(Text())
+    concentration_2 = Column(Text())
+    concentration_3 = Column(Text())
+    minor_1 = Column(Text())
+    minor_2 = Column(Text())
+    minor_3 = Column(Text())
+    math_placement_score = Column(Integer())
+    high_school_gpa = Column(Float(), 
+        CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
+    college_gpa = Column(Float(), 
+        CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
+    sat_score = Column(Integer(), 
+        CheckConstraint(f'sat_score >= {app.config["SAT_SCORE_MIN"]} AND sat_score <= {app.config["SAT_SCORE_MAX"]}'))
+    act_score = Column(Integer(), 
+        CheckConstraint(f'act_score >= {app.config["ACT_SCORE_MIN"]} AND act_score <= {app.config["ACT_SCORE_MAX"]}'))
+    state_code = Column(Text(), nullable=False)
+    country_code = Column(Text(), nullable=False)
+    leave_date = Column(DateTime())
+    first_gen_student = Column(Boolean())
+
+
+    @staticmethod
+    def gen_random_id():
+        # Get all the ids in the table, sorted.
+        all_ids = list(map(lambda s: s.id, Student.query.all()))
+        
+        # Generate a random id.
+        gen_id = secrets.randbelow(1999999) + 1000000
+
+        # Keep generating until a unique id is found.
+        while gen_id in all_ids:
+            gen_id = secrets.randbelow(1999999) + 1000000
+
+        return gen_id
+
+
+class ClassData(db.Model):
+    __tablename__ = 'class_data'
+    dummy_pk = Column(Integer(), primary_key=True)
+    student_id = Column(Integer(), nullable=False)
+    program_code = Column(Text(), CheckConstraint('program_code IN ("UNDG", "GRAD")'), 
+        nullable=False)
+    subprogram_desc = Column(Text(), nullable=False)
+    course_title = Column(Text(), nullable=False)
+    course_num = Column(Text(), 
+        CheckConstraint('length(course_num) >= 7 AND length(course_num) <= 8'), 
+        nullable=False)
+    final_grade = Column(Text(), nullable=False)
+    course_semester = Column(Text(), nullable=False)
+    course_year = Column(Integer(), CheckConstraint('course_year <= date()'),
+         nullable=False)
+
+
+class MCASScore(db.Model):
+    __tablename__ = 'mcas_scores'
+    student_id = Column(Integer(), ForeignKey('students.id'), primary_key=True, 
+        nullable=False)
+    english_raw = Column(Integer(), CheckConstraint(f'english_raw >= {app.config["MCAS_RAW_MIN"]} AND english_raw <= {app.config["MCAS_RAW_MAX"]}'))
+    english_scaled = Column(Integer(), CheckConstraint(f'english_scaled >= {app.config["MCAS_SCALED_MIN"]} AND english_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
+    english_achievement_level = Column(Text(), CheckConstraint('english_achievement_level IN ("F", "NI", "P", "A")'))
+    math_raw = Column(Integer(), CheckConstraint(f'math_raw >= {app.config["MCAS_RAW_MIN"]} AND math_raw <= {app.config["MCAS_RAW_MAX"]}'))
+    math_scaled = Column(Integer(), CheckConstraint(f'math_scaled >= {app.config["MCAS_SCALED_MIN"]} AND math_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
+    math_achievement_level = Column(Text(), CheckConstraint('math_achievement_level IN ("F", "NI", "P", "A")'))
+    stem_raw = Column(Integer(), CheckConstraint(f'stem_raw >= {app.config["MCAS_RAW_MIN"]} AND stem_raw <= {app.config["MCAS_RAW_MAX"]}'))
+    stem_scaled = Column(Integer(), CheckConstraint(f'stem_scaled >= {app.config["MCAS_SCALED_MIN"]} AND stem_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
+    stem_achievement_level = Column(Text(), CheckConstraint('stem_achievement_level IN ("F", "NI", "P", "A")'))
