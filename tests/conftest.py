@@ -21,7 +21,7 @@ from app import init_app
 from os.path import abspath as abspath
 from os import environ as environ
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def test_client():
     app = init_app('test.cfg')
     app.testing = True
