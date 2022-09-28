@@ -38,6 +38,7 @@ jobs:
 
     - name: Build coverage file
       run: |
+        python3 --version
         python -m pytest > pytest-coverage.txt
 
     - name: Pytest coverage comment
