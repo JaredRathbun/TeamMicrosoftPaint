@@ -160,6 +160,12 @@ class User(UserMixin, db.Model):
         else:
             return None
 
+    def set_admin(self):
+        '''
+        Sets the user to an admin.
+        '''
+        self.is_admin = True
+        
 
 class Student(db.Model):
     __tablename__ = 'students'
