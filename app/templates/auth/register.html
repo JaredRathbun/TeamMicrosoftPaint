@@ -1,16 +1,16 @@
 <!-- 
 Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
-This file is part of Foobar.
+This file is part of STEM Data Dashboard.
  
-Foobar is free software: you can redistribute it and/or modify it under the 
+STEM Data Dashboard is free software: you can redistribute it and/or modify it under the 
 terms of the GNU General Public License as published by the Free Software 
 Foundation, either version 3 of the License, or (at your option) any later 
 version.
-Foobar is distributed in the hope that it will be useful, but WITHOUT ANY 
+STEM Data Dashboard is distributed in the hope that it will be useful, but WITHOUT ANY 
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with 
-Foobar. If not, see <https://www.gnu.org/licenses/>.
+STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 Template built using: https://bootstrapstudio.io/
 -->
@@ -23,8 +23,7 @@ Template built using: https://bootstrapstudio.io/
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Register Account - STEM Data Dashboard</title>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
-    <link href="http://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
-    <link rel="stylesheet" href="../static/fonts/fontawesome-all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/login.css">
 </head>
 
@@ -34,8 +33,8 @@ Template built using: https://bootstrapstudio.io/
             <div class="card-body p-0">
                 <div class="row">
                     <div class="col-lg-5 d-none d-lg-flex">
-                        <div class="flex-grow-1 bg-register-image"
-                            style="background-image: url('../static/img/mack.gif');"></div>
+                        <div class="flex-grow-1 bg-register-image" style="background-image: url('../static/img/warrior-vial-small.png');">
+                        </div>
                     </div>
                     <div class="col-lg-7">
                         <div class="p-5">
@@ -44,39 +43,46 @@ Template built using: https://bootstrapstudio.io/
                             </div>
                             <form class="user">
                                 <div class="row mb-3">
-                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
-                                            type="text" id="exampleFirstName" placeholder="First Name"
-                                            name="first_name"></div>
-                                    <div class="col-sm-6"><input class="form-control form-control-user" type="text"
-                                            id="exampleFirstName" placeholder="Last Name" name="last_name"></div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input class="form-control form-control-user"
+                                            type="text" id="firstNameField" placeholder="First Name"
+                                            name="first_name" oninput="checkFields()">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input class="form-control form-control-user" type="text"
+                                            id="lastNameField" placeholder="Last Name" name="last_name" oninput="checkFields()">
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <input class="form-control form-control-user" type="email"
-                                        id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Email Address"
-                                        name="email">
+                                        id="emailField" aria-describedby="emailHelp" placeholder="Email Address"
+                                        name="email" oninput="checkFields()">
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input class="form-control form-control-user"
-                                            type="password" id="examplePasswordInput" placeholder="Password"
-                                            name="password">
+                                            type="password" id="passwordField1" placeholder="Password"
+                                            name="password" oninput="checkFields()">
                                     </div>
                                     <div class="col-sm-6">
                                         <input class="form-control form-control-user" type="password"
-                                            id="exampleRepeatPasswordInput" placeholder="Repeat Password"
-                                            name="password_repeat">
+                                            id="passwordField2" placeholder="Repeat Password"
+                                            name="password_repeat" oninput="checkFields()">
                                     </div>
                                 </div>
-                                    <button class="btn btn-primary d-block btn-user w-100" type="submit">Register Account</button>
+                                <div class="row mb-2">
+                                    <p class="text-danger text-center" style='visibility: hidden' id="statusP">An account already exists with that email address.</p>
+                                </div>
+                                <button class="btn btn-primary d-block btn-user w-100" type="submit" disabled id='registerButton' onclick="sendRegister(event)">Register Account</button>
                                 <hr>
-                                <a class="btn btn-primary d-block btn-google btn-user w-100 mb-2" role="button">
+                                <a class="btn btn-primary d-block btn-google btn-user w-100 mb-2" role="button" href="/oauth/register">
                                     <i class="fab fa-google"></i>
                                     &nbsp; Register with Google
                                 </a>
                                 <hr>
                             </form>
-                            <div class="text-center"><a class="small" href="reset.html">Forgot Password?</a></div>
-                            <div class="text-center"><a class="small" href="login.html">Already have an account? Login!</a>
+                            <div class="text-center"><a class="small" href="/sendreset">Forgot Password?</a></div>
+                            <div class="text-center"><a class="small" href="/login">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>
@@ -87,6 +93,7 @@ Template built using: https://bootstrapstudio.io/
     <script src="../static/bootstrap/js/bootstrap.min.js"></script>
     <script src="../static/js/bs-init.js"></script>
     <script src="../static/js/theme.js"></script>
+    <script src="../static/js/register.js"></script>
 </body>
 
 </html>

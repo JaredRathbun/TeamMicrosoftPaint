@@ -33,4 +33,4 @@ def load_user(email: str):
 # Register the blueprint.
 auth_bp = Blueprint('auth', __name__)
 
-oauth_client = WebApplicationClient()
+oauth_client = WebApplicationClient(app.config['GOOGLE_CLIENT_ID'])

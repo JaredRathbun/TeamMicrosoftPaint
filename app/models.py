@@ -1,21 +1,23 @@
-# Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
+# Copyright (c) 2022 Jared Rathbun and Katie O'Neil.
 #
 # This file is part of STEM Data Dashboard.
-# 
+#
 # STEM Data Dashboard is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free 
+# under the terms of the GNU General Public License as published by the Free
 # Software Foundation, either version 3 of the License, or (at your option) any
 # later version.
 #
-# STEM Data Dashboard is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+# STEM Data Dashboard is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the GNU General Public License along with 
+# You should have received a copy of the GNU General Public License along with
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app, jsonify
 import logging as logger
 from flask_login import UserMixin
 import enum
@@ -23,16 +25,23 @@ from app import db, app
 import pyotp
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlalchemy
-from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint, 
+from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
     Enum, DateTime, ForeignKey)
 import secrets
 
+
 class ProviderEnum(enum.Enum):
     LOCAL = 1
-    PROVIDER = 2
+    GOOGLE = 2
+
 
 class InvalidProviderException(Exception):
     pass
+
+
+class ExistingPasswordException(Exception):
+    pass
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -55,12 +64,20 @@ class User(UserMixin, db.Model):
         else:
             self.provider = ProviderEnum.GOOGLE
 
+    def get_id(self):
+        return self.email
+
+    def is_active():
+        return True
+
+    def is_authenticated():
+        return True
 
     def check_password(self, password: str):
         '''
         Verifies the provided password against the hashed password.
 
-        param: 
+        param:
             password: The password the user entered.
         return:
             A `bool` representing whether or not the password was correct.
@@ -69,7 +86,6 @@ class User(UserMixin, db.Model):
             return check_password_hash(self.hash, password)
         else:
             raise InvalidProviderException
-            
 
     def gen_totp_key(self):
         '''
@@ -82,7 +98,7 @@ class User(UserMixin, db.Model):
         '''
         Attempts to enroll a new `User` into the database.
 
-        param: 
+        param:
             usr: The new `User` object to add to the database.
         return:
             A `bool` representing if the insertion was sucessful or not.
@@ -95,6 +111,54 @@ class User(UserMixin, db.Model):
             logger.error('Unable to insert new user.', e)
             db.session.rollback()
             return False
+
+    def set_password(self, new_password: str):
+        '''
+        Changes the user's password, provided it is not the same as the current
+        password.
+
+        param:
+            new_password: The user's new password.
+        return: A `bool` representing whether or not the operation was successful.
+        raises:
+            `TypeError` if the new password is an empty `str`.
+            `ExistingPasswordException` if the new password is the same as the
+            current password.
+        '''
+        if new_password is None or new_password.strip() == '':
+            raise TypeError('New password was empty.')
+        else:
+            if self.check_password(new_password):
+                raise ExistingPasswordException()
+            else:
+                # Generate the new hash and commit it to the database.
+                self.hash = generate_password_hash(new_password)
+                db.session.commit()
+        return True
+
+
+    def get_reset_token(self, duration=1800) -> str:
+        '''
+        Gets a reset token for the given user.
+        
+        param: duration=1800 The amount of time the token is valid for.
+        return: The token represented as a string.
+        '''
+        return Serializer(current_app.config['SECRET_KEY'], duration).dumps(
+            {'email': self.email}).decode('utf-8')
+
+    
+    @staticmethod
+    def verify_reset_token(token: str):
+        if token:
+            try:
+                email = Serializer(current_app.config['SECRET_KEY']).loads(
+                    token)['email']
+                return User.query.get(email)
+            except Exception as e:
+                return None
+        else:
+            return None
 
 
 class Student(db.Model):

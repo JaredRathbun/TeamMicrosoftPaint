@@ -1,16 +1,16 @@
 <!-- 
 Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
-This file is part of Foobar.
+This file is part of STEM Data Dashboard.
  
-Foobar is free software: you can redistribute it and/or modify it under the 
+STEM Data Dashboard is free software: you can redistribute it and/or modify it under the 
 terms of the GNU General Public License as published by the Free Software 
 Foundation, either version 3 of the License, or (at your option) any later 
 version.
-Foobar is distributed in the hope that it will be useful, but WITHOUT ANY 
+STEM Data Dashboard is distributed in the hope that it will be useful, but WITHOUT ANY 
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with 
-Foobar. If not, see <https://www.gnu.org/licenses/>.
+STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 Template built using: https://bootstrapstudio.io/
 -->
@@ -23,7 +23,7 @@ Template built using: https://bootstrapstudio.io/
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard - STEM Data Dashboard</title>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
-    <link href="http://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/dashboard.css">
 </head>
 
@@ -85,14 +85,14 @@ Template built using: https://bootstrapstudio.io/
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
                                         aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
-                                            class="d-none d-lg-inline me-2 text-gray-600 small">User Name</span><img
+                                            class="d-none d-lg-inline me-2 text-gray-600 small">{{ user_name }}</span><img
                                             class="border rounded-circle img-profile"
                                             src="../static/img/avatars/avatar1.jpeg"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
-                                        <a class="dropdown-item" href="#">
+                                        <button class="dropdown-item" onclick="logout(event)">
                                             <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
                                             &nbsp;Logout
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </li>
@@ -325,6 +325,7 @@ Template built using: https://bootstrapstudio.io/
     <script src="../static/js/bs-init.js"></script>
     <script src="../static/js/theme.js"></script>
     <script src="https://kit.fontawesome.com/177241023b.js" crossorigin="anonymous"></script>
+    <script src="../static/js/dashboard.js"></script>
 </body>
 
 </html>

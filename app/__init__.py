@@ -24,6 +24,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from os import path
 import logging as logger
+from flask_mail import Mail
 
 app = Flask('STEM Data Dashboard', instance_relative_config=True,
     template_folder=path.abspath('./app/templates'),
@@ -32,7 +33,7 @@ app = Flask('STEM Data Dashboard', instance_relative_config=True,
 
 db = SQLAlchemy(app)
 jwt_manager = JWTManager()
-session = Session()
+mail = Mail()
 login_manager = LoginManager(app)
 login_manager.login_view = 'routes.login'
 
@@ -41,7 +42,9 @@ def init_app(config_fname: str = None) -> Flask:
     if config_loaded:
         # Blueprints need to be registered here.
         from app.blueprints.auth.routes import auth_bp
+        from app.blueprints.dashboard.routes import dash_bp
         app.register_blueprint(auth_bp)
+        app.register_blueprint(dash_bp)
         
         # Init the DB, create all tables.
         with app.app_context():
@@ -49,10 +52,13 @@ def init_app(config_fname: str = None) -> Flask:
             from app.models import User, Student, MCASScore, ClassData
             db.create_all()
 
-
         jwt_manager.init_app(app)
-        session.init_app(app)
+
+        login_manager.login_view = "auth.login"
         login_manager.init_app(app)
+
+        # Set up the SMTP connection for Gmail.
+        mail.init_app(app)
 
         return app
     else:
