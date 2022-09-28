@@ -38,7 +38,7 @@ jobs:
 
     - name: Build coverage file
       run: |
-        python3 -m pytest > pytest-coverage.txt
+        python -m pytest > pytest-coverage.txt
 
     - name: Pytest coverage comment
       uses: MishaKav/pytest-coverage-comment@main
