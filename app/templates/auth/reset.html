@@ -1,3 +1,20 @@
+<!-- 
+Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
+This file is part of STEM Data Dashboard.
+ 
+STEM Data Dashboard is free software: you can redistribute it and/or modify it under the 
+terms of the GNU General Public License as published by the Free Software 
+Foundation, either version 3 of the License, or (at your option) any later 
+version.
+STEM Data Dashboard is distributed in the hope that it will be useful, but WITHOUT ANY 
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with 
+STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
+
+Template built using: https://bootstrapstudio.io/
+-->
+
 <!DOCTYPE html>
 <html>
 
@@ -6,8 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Reset Password - STEM Data Dashboard</title>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
-    <link href="http://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
-    <link rel="stylesheet" href="../static/fonts/fontawesome-all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/login.css">
 </head>
 
@@ -17,10 +33,10 @@
             <div class="col-md-9 col-lg-12 col-xl-10">
                 <div class="card shadow-lg o-hidden border-0 my-5">
                     <div class="card-body p-0">
-                        <div class="row">
+                        <div class="row" style="height: 500px;">
                             <div class="col-lg-6 d-none d-lg-flex">
-                                <img class="flex-grow-1 bg-login-image"
-                                    style="background-image: url('../static/img/mack.gif');">
+                                <div class="flex-grow-1 bg-register-image" style="background-image: url('../static/img/warrior-vial-small.png');">
+                                </div>
                             </div>
                             <div class="col-lg-6 ">
                                 <div class="p-5">
@@ -28,18 +44,23 @@
                                         <h4 class="text-dark mb-4">Reset Password</h4>
                                     </div>
                                     <form class="user">
-                                        <p>Please enter the Email Address linked to your account.</p>
+                                        <p class="text-center">Please enter a new password</p>
                                         <div class="mb-3">
-                                            <input class="form-control form-control-user" type="email"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Email Address" name="email">
+                                            <input class="form-control form-control-user" type="password"
+                                                id="newPassword1" aria-describedby="emailHelp"
+                                                placeholder="New Password" name="email1" oninput="checkPasswordFields()">
+                                            <br>
+                                            <input class="form-control form-control-user" type="password"
+                                                id="newPassword2" aria-describedby="emailHelp"
+                                                placeholder="Reenter New Password" name="email2" oninput="checkPasswordFields()">
                                         </div>
+                                        <p class="text-danger text-center mb-3" style='visibility: hidden' id="passwordStatusP">Your passwords do not match.</p>
                                         <button class="btn btn-primary d-block btn-user w-100"
-                                            type="submit">Send Reset Email</button>
+                                            type="submit" onclick="sendReset(event)" disabled id="resetButton">Reset Password</button>
                                         <hr>
                                     </form>
                                     <div class="text-center">
-                                        <a class="small" href="reset.html">Remember your password? Login here.</a>
+                                        <a class="small" href="/login">Remember your password? Login here.</a>
                                     </div>
                                 </div>
                             </div>
@@ -52,6 +73,7 @@
     <script src="../static/bootstrap/js/bootstrap.min.js"></script>
     <script src="../static/js/bs-init.js"></script>
     <script src="../static/js/theme.js"></script>
+    <script src="../static/js/reset.js"></script>
 </body>
 
 </html>

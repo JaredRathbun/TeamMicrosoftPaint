@@ -16,21 +16,23 @@
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 
-from app import login_manager
-from flask import Blueprint
-from app.models import User
-from app import app
-from oauthlib.oauth2 import WebApplicationClient
+import pytest
+from app import init_app
+from os.path import abspath as abspath
+from os import environ as environ
 
-# Register the login manager.
-@login_manager.user_loader
-def load_user(email: str):
-    '''
-    Loads the user from the database based on their email address.
-    '''
-    return User.query.get(email)
+@pytest.fixture(scope='module')
+def test_client():
+    app = init_app('test.cfg')
+    app.testing = True
+    app.config['Testing'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] =  abspath('test/test.db')
+    app.config['SECRET_KEY'] = 'dev'
+    app.config['EMAIL_PASS_PATH'] = 'Capstone1@'
 
-# Register the blueprint.
-auth_bp = Blueprint('auth', __name__)
+    with app.test_client() as testing_client:
+        with app.app_context():
+            yield testing_client
 
-oauth_client = WebApplicationClient(app.config['GOOGLE_CLIENT_ID'])
+# https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
+# https://testdriven.io/blog/flask-pytest/ 

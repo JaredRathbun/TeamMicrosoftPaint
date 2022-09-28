@@ -16,21 +16,9 @@
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 
-from app import login_manager
-from flask import Blueprint
-from app.models import User
-from app import app
-from oauthlib.oauth2 import WebApplicationClient
+from app import init_app
 
-# Register the login manager.
-@login_manager.user_loader
-def load_user(email: str):
-    '''
-    Loads the user from the database based on their email address.
-    '''
-    return User.query.get(email)
-
-# Register the blueprint.
-auth_bp = Blueprint('auth', __name__)
-
-oauth_client = WebApplicationClient(app.config['GOOGLE_CLIENT_ID'])
+if __name__ == '__main__':
+    app = init_app('dev.cfg')
+    app.app_context().push()
+    app.run('0.0.0.0', debug=app.config['DEBUG'], ssl_context=('instance/cert.pem', 'instance/key.pem'))
