@@ -18,7 +18,8 @@
 
 from flask import render_template, request, redirect, url_for
 from . import auth_bp, oauth_client
-from app.models import ExistingPasswordException, InvalidProviderException, ProviderEnum, User
+from app.models import (ExistingPasswordException, InvalidProviderException, 
+    ProviderEnum, User, InvalidPrivilegeException)
 import base64
 from flask_login import current_user, login_user, logout_user, login_required
 from . import app
@@ -26,6 +27,10 @@ import requests
 import json
 from flask_mail import Message
 from app import mail
+import re
+
+
+MERRIMACK_EMAIL_REGEX = r'x*@merrimack.edu'
 
 def send_reset_email(email: str) -> bool:
     usr = User.query.get(email)
@@ -42,6 +47,19 @@ def send_reset_email(email: str) -> bool:
             {url_for('auth.reset', token=token, _external=True)}
             If you did not make this request please reset your password immediately.
             '''
+        mail.send(msg)
+        return True
+
+def send_otp_email(usr: User) -> bool:
+    if usr is None:
+        return False
+    else:
+        otp = usr.get_otp().now()
+        msg = Message('STEM Data Dashboard | 2-Factor Authentication',
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[usr.email])
+        msg.body = f'''Your OTP (One Time Passcode) is {otp}. If you did not submit a request for this code, please consider changing your password.
+                '''
         mail.send(msg)
         return True
 
@@ -81,6 +99,9 @@ def login():
         if 'email' not in body or 'password' not in body:
             return {'Bad Request'}, 400
 
+        if re.search(MERRIMACK_EMAIL_REGEX, body['email']):
+            return {'message': 'Cannot login with merrimack.edu email.'}, 406        
+
         usr = User.query.get(body['email'])
 
         if usr:
@@ -94,11 +115,11 @@ def login():
 
             if login_success:
                 is_admin = usr.is_admin
+                login_user(usr)
 
                 if is_admin:
-                    return {'message': 'Successful Admin Login'}, 202 
+                    return redirect(f'/otp/{usr.email}')
                 else: 
-                    login_user(usr)
                     return redirect('/dashboard')
             else:
                 return {'message': 'Failed Login'}, 401
@@ -107,7 +128,6 @@ def login():
 
 
 @auth_bp.route('/oauth/login', methods = ['GET'])
-@auth_bp.route('/oauth/register', methods = ['GET'])
 def oauth_login():
     google_provider = requests.get(app.config['GOOGLE_DISCOVERY_URL']).json()
     auth_endpoint = google_provider['authorization_endpoint']
@@ -119,7 +139,6 @@ def oauth_login():
 
 
 @auth_bp.route('/oauth/login/callback', methods = ['GET'])
-@auth_bp.route('/oauth/register/callback', methods = ['GET'])
 def oauth_login_callback():
     code = request.args.get('code')
     google_provider = requests.get(app.config['GOOGLE_DISCOVERY_URL']).json()
@@ -146,11 +165,10 @@ def oauth_login_callback():
     usr = User.query.get(res['email'])
 
     if usr:
+        login_user(usr)
         if usr.is_admin:
-            # May want to change to redirect the user to an OTP page.
-            return {'message': 'Successful Admin Login'}, 202 
-        else: 
-            login_user(usr)
+            return redirect(f'/otp/{usr.email}')
+        else:
             return redirect('/dashboard')
     else:
         # If the user doesn't exist, register them.
@@ -167,12 +185,31 @@ def oauth_login_callback():
         
 
 @login_required
-@auth_bp.route('/otp/<user>', methods = ['POST'])
-def otp(user):
-    usr = User.query.get(user)
-    # Change to check OTP and login if success.
-    login_user(usr)
-    return {'message': 'success'}, 200
+@auth_bp.route('/otp/<email>', methods = ['GET', 'POST'])
+def otp(email):
+    usr = User.query.get(email)
+    if not usr:
+        return {'message': 'User not found'}, 400
+
+    if request.method == 'GET':
+        try:
+            send_otp_email(usr)
+        except InvalidPrivilegeException:
+            return {'message': 'User is not an admin.'}, 403
+
+
+        return render_template('auth/otp.html', 
+            name=usr.first_name + ' ' + usr.last_name)
+    else:
+        # Change to check OTP and login if success.
+        body = request.get_json()
+        if 'otp' in body:
+            if usr.verify_otp(body['otp']): 
+                return redirect('/dashboard') 
+            else:
+                return {'message': 'Invalid OTP Code'}, 401
+        else:
+            return {'message': 'Invalid request.'}, 400
 
 
 @auth_bp.route('/register', methods = ['GET', 'POST'])
@@ -196,11 +233,14 @@ def register():
             if User.query.get(email):
                 return {'message': 'User exists'}, 409
             else:
-                new_user = User(email, first_name, last_name, password)
-                if User.insert_user(new_user):
-                    return redirect('/login')
+                if re.search(MERRIMACK_EMAIL_REGEX, email):
+                    return {'message': 'User has merrimack.edu email.'}, 406
                 else:
-                    return {'message': 'Failed to enroll user.'}, 500
+                    new_user = User(email, first_name, last_name, password)
+                    if User.insert_user(new_user):
+                        return redirect('/login')
+                    else:
+                        return {'message': 'Failed to enroll user.'}, 500
                 
                 
 @auth_bp.route('/sendreset', methods = ['GET', 'POST'])
@@ -248,7 +288,7 @@ def reset():
                 return {'message': 'User not found.'}, 400
 
 
-@auth_bp.route('/logout', methods = ['GET', 'POST'])
+@auth_bp.route('/logout', methods = ['POST'])
 def logout():
     logout_user()
     return redirect('/login')

@@ -14,7 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License along with 
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
-
+#
+# Code referenced from: 
+# https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
+# https://testdriven.io/blog/flask-pytest/
 
 from cgi import test
 import pytest
@@ -39,13 +42,12 @@ def init_db(test_client):
     base = declarative_base()
 
     from app.models import User
-
     
     base.metadata.drop_all(db.engine)
     base.metadata.create_all(db.engine)
     local_usr = User('dummy@dummy.com', 'dummy', 'user', 'test123')
     google_usr = User('dummy@gmail.com', 'dummy', 'googleuser')
-    admin_usr = User('admin@teammspaint@gmail.com', 'dummy', 'admin', 'test123')
+    admin_usr = User('admin.teammspaint@gmail.com', 'dummy', 'admin', 'test123')
     admin_usr.set_admin()
 
     User.insert_user(local_usr)
@@ -59,5 +61,4 @@ def init_db(test_client):
     db.session.close()
     base.metadata.drop_all(bind=db.engine)
     db.drop_all()
-# https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
-# https://testdriven.io/blog/flask-pytest/ 
+ 

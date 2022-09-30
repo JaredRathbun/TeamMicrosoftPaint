@@ -31,7 +31,7 @@ Template built using: https://bootstrapstudio.io/
     <div class="container">
         <div class="card shadow-lg o-hidden border-0 my-5">
             <div class="card-body p-0">
-                <div class="row">
+                <div class="row" style="height: 555px">
                     <div class="col-lg-5 d-none d-lg-flex">
                         <div class="flex-grow-1 bg-register-image" style="background-image: url('../static/img/warrior-vial-small.png');">
                         </div>
@@ -71,14 +71,9 @@ Template built using: https://bootstrapstudio.io/
                                     </div>
                                 </div>
                                 <div class="row mb-2">
-                                    <p class="text-danger text-center" style='visibility: hidden' id="statusP">An account already exists with that email address.</p>
+                                    <p class="text-danger text-center" style='visibility: hidden' id="statusP"></p>
                                 </div>
                                 <button class="btn btn-primary d-block btn-user w-100" type="submit" disabled id='registerButton' onclick="sendRegister(event)">Register Account</button>
-                                <hr>
-                                <a class="btn btn-primary d-block btn-google btn-user w-100 mb-2" role="button" href="/oauth/register">
-                                    <i class="fab fa-google"></i>
-                                    &nbsp; Register with Google
-                                </a>
                                 <hr>
                             </form>
                             <div class="text-center"><a class="small" href="/sendreset">Forgot Password?</a></div>

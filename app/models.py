@@ -43,6 +43,10 @@ class ExistingPasswordException(Exception):
     pass
 
 
+class InvalidPrivilegeException(Exception):
+    pass
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     email = Column(Text(), primary_key=True)
@@ -91,7 +95,8 @@ class User(UserMixin, db.Model):
         '''
         Generates the TOTP Key for this user and saves it.
         '''
-        return pyotp.random_base32()
+        self.totp_key = pyotp.random_base32()
+
 
     @staticmethod
     def insert_user(usr):
@@ -160,12 +165,42 @@ class User(UserMixin, db.Model):
         else:
             return None
 
+
     def set_admin(self):
         '''
         Sets the user to an admin.
         '''
         self.is_admin = True
-        
+        self.gen_totp_key()
+        db.session.commit()
+
+
+    def get_otp(self):
+        '''
+        Returns the TOTP OTP code for the user.
+
+        return: An `TOTP` object.
+        '''
+        if self.totp_key is None:
+            raise InvalidPrivilegeException('User is not an admin!')
+        return pyotp.TOTP(self.totp_key, interval=120)
+
+    
+    def verify_otp(self, otp: str) -> bool:
+        '''
+        Verifies the user's OTP code.
+
+        param:
+            otp: The user's OTP code.
+        return:
+            A `bool` representing the result of the the comparison.
+        '''
+        if otp: 
+            correct_otp = self.get_otp().now()
+            return correct_otp == otp
+        else:
+            return False
+
 
 class Student(db.Model):
     __tablename__ = 'students'
