@@ -14,25 +14,51 @@
 #
 # You should have received a copy of the GNU General Public License along with 
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
+#
+# Code referenced from: 
+# https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
+# https://testdriven.io/blog/flask-pytest/
 
-
+from cgi import test
 import pytest
-from app import init_app
+from app import init_app, db, app
 from os.path import abspath as abspath
 from os import environ as environ
+from sqlalchemy.orm import declarative_base
 
 @pytest.fixture(scope='module')
 def test_client():
     app = init_app('test.cfg')
     app.testing = True
-    app.config['Testing'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] =  abspath('test/test.db')
     app.config['SECRET_KEY'] = 'dev'
-    app.config['EMAIL_PASS_PATH'] = 'Capstone1@'
 
     with app.test_client() as testing_client:
         with app.app_context():
             yield testing_client
 
-# https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
-# https://testdriven.io/blog/flask-pytest/ 
+
+@pytest.fixture(scope='module')
+def init_db(test_client):
+    base = declarative_base()
+
+    from app.models import User
+    
+    base.metadata.drop_all(db.engine)
+    base.metadata.create_all(db.engine)
+    local_usr = User('dummy@dummy.com', 'dummy', 'user', 'test123')
+    google_usr = User('dummy@gmail.com', 'dummy', 'googleuser')
+    admin_usr = User('admin.teammspaint@gmail.com', 'dummy', 'admin', 'test123')
+    admin_usr.set_admin()
+
+    User.insert_user(local_usr)
+    User.insert_user(google_usr)
+    User.insert_user(admin_usr)
+
+    db.session.commit()
+
+    yield
+
+    db.session.close()
+    base.metadata.drop_all(bind=db.engine)
+    db.drop_all()
+ 

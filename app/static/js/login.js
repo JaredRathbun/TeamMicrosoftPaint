@@ -43,9 +43,12 @@ function sendLogin(e) {
             window.location.href = res.url;
         }
 
-        if (res.status == 202) {
-            // Handle admin OTP code.
+        if (res.status == 406) {
+            statusP.innerText = 'You cannot login with a merrimack.edu email.' + 
+                ' Please use the Login with Google button!';
+            statusP.style.visibility = 'visible';
         } else if (res.status == 401) {
+            statusP.innerText = 'Invalid Email/Password';
             statusP.style.visibility = 'visible';
         }
     });
