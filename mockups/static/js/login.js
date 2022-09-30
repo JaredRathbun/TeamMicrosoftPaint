@@ -2,7 +2,7 @@ function sendLogin() {
     const email = document.getElementById("emailField").value;
     const password = document.getElementById('passwordField').value;
 
-    console.log(email, password);
+    
     // Send the login request here.
 
     // If successful, clear the login fields and prompt for an OTP.
