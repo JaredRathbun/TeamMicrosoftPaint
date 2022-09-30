@@ -17,7 +17,7 @@
 
 
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, jsonify
+from flask import current_app
 import logging as logger
 from flask_login import UserMixin
 import enum

@@ -19,11 +19,8 @@
 # https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
 # https://testdriven.io/blog/flask-pytest/
 
-from cgi import test
 import pytest
 from app import init_app, db, app
-from os.path import abspath as abspath
-from os import environ as environ
 from sqlalchemy.orm import declarative_base
 
 @pytest.fixture(scope='module')
@@ -61,4 +58,3 @@ def init_db(test_client):
     db.session.close()
     base.metadata.drop_all(bind=db.engine)
     db.drop_all()
- 

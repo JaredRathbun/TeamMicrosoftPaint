@@ -17,8 +17,6 @@
 
 
 from flask import Flask
-from os import environ
-from flask_session import Session
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
