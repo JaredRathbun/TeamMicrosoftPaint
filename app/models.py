@@ -71,11 +71,14 @@ class User(UserMixin, db.Model):
     def get_id(self):
         return self.email
 
-    def is_active():
+
+    def is_active(self):
         return True
 
-    def is_authenticated():
+
+    def is_authenticated(self):
         return True
+
 
     def check_password(self, password: str):
         '''
@@ -88,8 +91,8 @@ class User(UserMixin, db.Model):
         '''
         if self.provider is ProviderEnum.LOCAL:
             return check_password_hash(self.hash, password)
-        else:
-            raise InvalidProviderException
+        raise InvalidProviderException
+
 
     def gen_totp_key(self):
         '''
@@ -132,13 +135,13 @@ class User(UserMixin, db.Model):
         '''
         if new_password is None or new_password.strip() == '':
             raise TypeError('New password was empty.')
-        else:
-            if self.check_password(new_password):
-                raise ExistingPasswordException()
-            else:
-                # Generate the new hash and commit it to the database.
-                self.hash = generate_password_hash(new_password)
-                db.session.commit()
+            
+        if self.check_password(new_password):
+            raise ExistingPasswordException()
+            
+        # Generate the new hash and commit it to the database.
+        self.hash = generate_password_hash(new_password)
+        db.session.commit()
         return True
 
 
@@ -162,8 +165,7 @@ class User(UserMixin, db.Model):
                 return User.query.get(email)
             except Exception as e:
                 return None
-        else:
-            return None
+        return None
 
 
     def set_admin(self):
@@ -198,8 +200,7 @@ class User(UserMixin, db.Model):
         if otp: 
             correct_otp = self.get_otp().now()
             return correct_otp == otp
-        else:
-            return False
+        return False
 
 
 class Student(db.Model):

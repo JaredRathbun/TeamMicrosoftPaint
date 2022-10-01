@@ -263,9 +263,7 @@ def test_reset_password_good(test_client, init_db):
 
 def test_reset_with_old_password(test_client, init_db):
     from app.models import User
-
-    from app.models import User
-
+    
     usr = User.query.get('admin.teammspaint@gmail.com')
     reset_token = usr.get_reset_token()
 

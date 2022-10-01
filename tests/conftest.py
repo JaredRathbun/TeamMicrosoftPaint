@@ -19,10 +19,8 @@
 # https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
 # https://testdriven.io/blog/flask-pytest/
 
-from cgi import test
 import pytest
-from app import init_app, db, app
-from os.path import abspath as abspath
+from app import init_app, db
 from os import environ as environ
 from sqlalchemy.orm import declarative_base
 
