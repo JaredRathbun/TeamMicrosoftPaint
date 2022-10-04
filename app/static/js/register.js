@@ -86,7 +86,7 @@ function sendRegister(evt) {
                 statusP.innerText = 'An account already exists with that email.';
                 statusP.style.visibility = 'visible';
             } else if (res.status == 406) { 
-                statusP.innerText = 'You cannot register with a merrimack.edu email address. \nPlease log in with Google instead!';
+                statusP.innerHTML = 'You cannot register with a merrimack.edu email address. \nPlease <a href="/oauth/login">log in</a> with Google instead!';
                 statusP.style.visibility = 'visible';  
             } else if (res.status == 500) {
                 statusP.innerText = 'It looks like we couldn\'t process that request.\nPlease try again!';
