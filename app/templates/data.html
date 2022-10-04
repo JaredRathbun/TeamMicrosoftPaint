@@ -133,7 +133,7 @@ Template built using: https://bootstrapstudio.io/
                                                 aria-controls="dataTable" placeholder="Search"></label></div>
                                 </div>
                             </div>
-                            <div class="table-responsive mt-2" id="dataTable" role="grid"
+                            <!-- <div class="table-responsive mt-2" id="dataTable" role="grid"
                                 aria-describedby="dataTable_info" style="height: 55vh; overflow: auto;">
                                 <table class="table table-responsive table-striped table-hover my-0" id="dataTable" >
                                     <thead>
@@ -1040,6 +1040,760 @@ Template built using: https://bootstrapstudio.io/
                                             <td class="col-1">P</td>
                                         </tr>
                                 </table>
+                            </div> -->
+                            <div class="table-responsive mt-2" id="dataTable" role="grid" style="height: 55vh; overflow: auto;">
+                                <table class="table table-responsive table-striped my-0">
+                                    <thead>
+                                        <tr class="d-flex">
+                                            <th class="col-1"></th>
+                                            <th class="col-2">Student ID #</th>
+                                            <th class="col-2">Course Code</th>
+                                            <th class="col-2">Course Title</th>
+                                            <th class="col-2">Semester</th>
+                                            <th class="col-2">Year</th>
+                                            <th class="col-1">Final Grade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="d-flex">
+                                            <td class="col-1">
+                                                <i class="fa-solid fa-eye-slash rowToggle" data-collapse-target="test-row"></i>
+                                            </td>
+                                            <td class="col-2">12346544</td>
+                                            <td class="col-2">CSC1610</td>
+                                            <td class="col-2">Intro to Programming w/ Java</td>
+                                            <td class="col-2">FA</td>
+                                            <td class="col-2">2019</td>
+                                            <td class="col-1">A-</td>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <td hidden id="test-row">
+                                                <div class="container mx-2 mt-1">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Demographics</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>First Name</th>
+                                                                    <td>John</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Last Name</th>
+                                                                    <td>Doe</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major 1</th>
+                                                                    <td>Computer Science</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Minor 1</th>
+                                                                    <td>Cyber Security</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Ethnicity</th>
+                                                                    <td>White</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Home Location</th>
+                                                                    <td>NJ, USA</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>First Generation Student</th>
+                                                                    <td>Y</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Academic Information</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>Overall College GPA</th>
+                                                                    <td>3.89</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major College GPA</th>
+                                                                    <td>3.25</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>High School GPA</th>
+                                                                    <td>3.02</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Math Placement Score</th>
+                                                                    <td>123</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>SAT Score</th>
+                                                                    <td>1500</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>ACT Score</th>
+                                                                    <td>31</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Date</th>
+                                                                    <td>5/22/2016</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Reason</th>
+                                                                    <td>Graduated</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student MCAS Scores</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>MCAS Subject</th>
+                                                                        <th>RAW Score</th>
+                                                                        <th>Scaled Score</th>
+                                                                        <th>Achievement Level</th>
+                                                                    </tr>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>English</td>
+                                                                            <td>32</td>
+                                                                            <td>242</td>
+                                                                            <td>P</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Math</td>
+                                                                            <td>52</td>
+                                                                            <td>266</td>
+                                                                            <td>A</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>STEM</td>
+                                                                            <td>25</td>
+                                                                            <td>232</td>
+                                                                            <td>NI</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="d-flex">
+                                            <td class="col-1">
+                                                <i class="fa-solid fa-eye-slash rowToggle" data-collapse-target="test-row-1"></i>
+                                            </td>
+                                            <td class="col-2">12346544</td>
+                                            <td class="col-2">CSC1610</td>
+                                            <td class="col-2">Intro to Programming w/ Java</td>
+                                            <td class="col-2">FA</td>
+                                            <td class="col-2">2019</td>
+                                            <td class="col-1">A-</td>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <td hidden id="test-row-1">
+                                                <div class="container mx-2 mt-1">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Demographics</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>First Name</th>
+                                                                    <td>John</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Last Name</th>
+                                                                    <td>Doe</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major 1</th>
+                                                                    <td>Computer Science</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Minor 1</th>
+                                                                    <td>Cyber Security</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Ethnicity</th>
+                                                                    <td>White</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Home Location</th>
+                                                                    <td>NJ, USA</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>First Generation Student</th>
+                                                                    <td>Y</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Academic Information</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>Overall College GPA</th>
+                                                                    <td>3.89</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major College GPA</th>
+                                                                    <td>3.25</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>High School GPA</th>
+                                                                    <td>3.02</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Math Placement Score</th>
+                                                                    <td>123</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>SAT Score</th>
+                                                                    <td>1500</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>ACT Score</th>
+                                                                    <td>31</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Date</th>
+                                                                    <td>5/22/2016</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Reason</th>
+                                                                    <td>Graduated</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student MCAS Scores</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>MCAS Subject</th>
+                                                                        <th>RAW Score</th>
+                                                                        <th>Scaled Score</th>
+                                                                        <th>Achievement Level</th>
+                                                                    </tr>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>English</td>
+                                                                            <td>32</td>
+                                                                            <td>242</td>
+                                                                            <td>P</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Math</td>
+                                                                            <td>52</td>
+                                                                            <td>266</td>
+                                                                            <td>A</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>STEM</td>
+                                                                            <td>25</td>
+                                                                            <td>232</td>
+                                                                            <td>NI</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="d-flex">
+                                            <td class="col-1">
+                                                <i class="fa-solid fa-eye-slash rowToggle" data-collapse-target="test-row-2"></i>
+                                            </td>
+                                            <td class="col-2">12346544</td>
+                                            <td class="col-2">CSC1610</td>
+                                            <td class="col-2">Intro to Programming w/ Java</td>
+                                            <td class="col-2">FA</td>
+                                            <td class="col-2">2019</td>
+                                            <td class="col-1">A-</td>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <td hidden id="test-row-2">
+                                                <div class="container mx-2 mt-1">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Demographics</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>First Name</th>
+                                                                    <td>John</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Last Name</th>
+                                                                    <td>Doe</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major 1</th>
+                                                                    <td>Computer Science</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Minor 1</th>
+                                                                    <td>Cyber Security</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Ethnicity</th>
+                                                                    <td>White</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Home Location</th>
+                                                                    <td>NJ, USA</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>First Generation Student</th>
+                                                                    <td>Y</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Academic Information</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>Overall College GPA</th>
+                                                                    <td>3.89</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major College GPA</th>
+                                                                    <td>3.25</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>High School GPA</th>
+                                                                    <td>3.02</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Math Placement Score</th>
+                                                                    <td>123</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>SAT Score</th>
+                                                                    <td>1500</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>ACT Score</th>
+                                                                    <td>31</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Date</th>
+                                                                    <td>5/22/2016</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Reason</th>
+                                                                    <td>Graduated</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student MCAS Scores</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>MCAS Subject</th>
+                                                                        <th>RAW Score</th>
+                                                                        <th>Scaled Score</th>
+                                                                        <th>Achievement Level</th>
+                                                                    </tr>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>English</td>
+                                                                            <td>32</td>
+                                                                            <td>242</td>
+                                                                            <td>P</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Math</td>
+                                                                            <td>52</td>
+                                                                            <td>266</td>
+                                                                            <td>A</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>STEM</td>
+                                                                            <td>25</td>
+                                                                            <td>232</td>
+                                                                            <td>NI</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="d-flex">
+                                            <td class="col-1">
+                                                <i class="fa-solid fa-eye-slash rowToggle" data-collapse-target="test-row-3"></i>
+                                            </td>
+                                            <td class="col-2">12346544</td>
+                                            <td class="col-2">CSC1610</td>
+                                            <td class="col-2">Intro to Programming w/ Java</td>
+                                            <td class="col-2">FA</td>
+                                            <td class="col-2">2019</td>
+                                            <td class="col-1">A-</td>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <td hidden id="test-row-3">
+                                                <div class="container mx-2 mt-1">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Demographics</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>First Name</th>
+                                                                    <td>John</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Last Name</th>
+                                                                    <td>Doe</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major 1</th>
+                                                                    <td>Computer Science</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Minor 1</th>
+                                                                    <td>Cyber Security</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Ethnicity</th>
+                                                                    <td>White</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Home Location</th>
+                                                                    <td>NJ, USA</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>First Generation Student</th>
+                                                                    <td>Y</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Academic Information</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>Overall College GPA</th>
+                                                                    <td>3.89</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major College GPA</th>
+                                                                    <td>3.25</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>High School GPA</th>
+                                                                    <td>3.02</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Math Placement Score</th>
+                                                                    <td>123</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>SAT Score</th>
+                                                                    <td>1500</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>ACT Score</th>
+                                                                    <td>31</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Date</th>
+                                                                    <td>5/22/2016</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Reason</th>
+                                                                    <td>Graduated</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student MCAS Scores</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>MCAS Subject</th>
+                                                                        <th>RAW Score</th>
+                                                                        <th>Scaled Score</th>
+                                                                        <th>Achievement Level</th>
+                                                                    </tr>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>English</td>
+                                                                            <td>32</td>
+                                                                            <td>242</td>
+                                                                            <td>P</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Math</td>
+                                                                            <td>52</td>
+                                                                            <td>266</td>
+                                                                            <td>A</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>STEM</td>
+                                                                            <td>25</td>
+                                                                            <td>232</td>
+                                                                            <td>NI</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="d-flex">
+                                            <td class="col-1">
+                                                <i class="fa-solid fa-eye-slash rowToggle" data-collapse-target="test-row-4"></i>
+                                            </td>
+                                            <td class="col-2">12346544</td>
+                                            <td class="col-2">CSC1610</td>
+                                            <td class="col-2">Intro to Programming w/ Java</td>
+                                            <td class="col-2">FA</td>
+                                            <td class="col-2">2019</td>
+                                            <td class="col-1">A-</td>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <td hidden id="test-row-4">
+                                                <div class="container mx-2 mt-1">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Demographics</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>First Name</th>
+                                                                    <td>John</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Last Name</th>
+                                                                    <td>Doe</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major 1</th>
+                                                                    <td>Computer Science</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Minor 1</th>
+                                                                    <td>Cyber Security</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Ethnicity</th>
+                                                                    <td>White</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Home Location</th>
+                                                                    <td>NJ, USA</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>First Generation Student</th>
+                                                                    <td>Y</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Academic Information</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>Overall College GPA</th>
+                                                                    <td>3.89</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major College GPA</th>
+                                                                    <td>3.25</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>High School GPA</th>
+                                                                    <td>3.02</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Math Placement Score</th>
+                                                                    <td>123</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>SAT Score</th>
+                                                                    <td>1500</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>ACT Score</th>
+                                                                    <td>31</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Date</th>
+                                                                    <td>5/22/2016</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Reason</th>
+                                                                    <td>Graduated</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student MCAS Scores</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>MCAS Subject</th>
+                                                                        <th>RAW Score</th>
+                                                                        <th>Scaled Score</th>
+                                                                        <th>Achievement Level</th>
+                                                                    </tr>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>English</td>
+                                                                            <td>32</td>
+                                                                            <td>242</td>
+                                                                            <td>P</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Math</td>
+                                                                            <td>52</td>
+                                                                            <td>266</td>
+                                                                            <td>A</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>STEM</td>
+                                                                            <td>25</td>
+                                                                            <td>232</td>
+                                                                            <td>NI</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="d-flex">
+                                            <td class="col-1">
+                                                <i class="fa-solid fa-eye-slash rowToggle" data-collapse-target="test-row-5"></i>
+                                            </td>
+                                            <td class="col-2">12346544</td>
+                                            <td class="col-2">CSC1610</td>
+                                            <td class="col-2">Intro to Programming w/ Java</td>
+                                            <td class="col-2">FA</td>
+                                            <td class="col-2">2019</td>
+                                            <td class="col-1">A-</td>
+                                        </tr>
+                                        <tr class="d-flex">
+                                            <td hidden id="test-row-5">
+                                                <div class="container mx-2 mt-1">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Demographics</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>First Name</th>
+                                                                    <td>John</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Last Name</th>
+                                                                    <td>Doe</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major 1</th>
+                                                                    <td>Computer Science</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Minor 1</th>
+                                                                    <td>Cyber Security</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Ethnicity</th>
+                                                                    <td>White</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Home Location</th>
+                                                                    <td>NJ, USA</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>First Generation Student</th>
+                                                                    <td>Y</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student Academic Information</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <tr>
+                                                                    <th>Overall College GPA</th>
+                                                                    <td>3.89</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Major College GPA</th>
+                                                                    <td>3.25</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>High School GPA</th>
+                                                                    <td>3.02</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Math Placement Score</th>
+                                                                    <td>123</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>SAT Score</th>
+                                                                    <td>1500</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>ACT Score</th>
+                                                                    <td>31</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Date</th>
+                                                                    <td>5/22/2016</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Leave Reason</th>
+                                                                    <td>Graduated</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <h5 class="mx-2">Student MCAS Scores</h5>
+                                                            <table class="table my-0 col-4">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>MCAS Subject</th>
+                                                                        <th>RAW Score</th>
+                                                                        <th>Scaled Score</th>
+                                                                        <th>Achievement Level</th>
+                                                                    </tr>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>English</td>
+                                                                            <td>32</td>
+                                                                            <td>242</td>
+                                                                            <td>P</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Math</td>
+                                                                            <td>52</td>
+                                                                            <td>266</td>
+                                                                            <td>A</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>STEM</td>
+                                                                            <td>25</td>
+                                                                            <td>232</td>
+                                                                            <td>NI</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 align-self-center">
@@ -1073,9 +1827,11 @@ Template built using: https://bootstrapstudio.io/
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../static/js/bs-init.js"></script>
     <script src="../static/js/theme.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/js/data.js"></script>
 </body>
 
 </html>
