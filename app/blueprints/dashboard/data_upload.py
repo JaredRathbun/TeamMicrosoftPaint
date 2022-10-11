@@ -198,13 +198,14 @@ def __insert_class_data(class_data: DataFrame, id_mapping: dict[int]):
                     db.session.add(course)
                     db.session.flush()
 
-                    # Add the new ClassData entry.
-                    new_class_data = ClassData(student_id=random_id,
-                        program_code=program_code,
-                        subprogram_desc=subprogram_desc,
-                        final_grade=grade,
-                        course=course.id)
-                    db.session.add(new_class_data)
+                # Add the new ClassData entry.
+                new_class_data = ClassData(student_id=random_id,
+                    program_code=program_code,
+                    subprogram_desc=subprogram_desc,
+                    final_grade=grade,
+                    course=course.id)
+                db.session.add(new_class_data)
+                db.session.flush()
                     
 
 def __insert_students(students: DataFrame):
