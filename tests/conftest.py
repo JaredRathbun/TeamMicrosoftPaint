@@ -21,7 +21,7 @@
 
 from cgi import test
 import pytest
-from app import init_app, db, app
+from app import init_app, db
 from os.path import abspath as abspath
 from os import environ as environ
 from sqlalchemy.orm import declarative_base
@@ -30,11 +30,13 @@ from sqlalchemy.orm import declarative_base
 def test_client():
     app = init_app('test.cfg')
     app.testing = True
+    app.config['DEBUG'] = False
     app.config['SECRET_KEY'] = 'dev'
 
     with app.test_client() as testing_client:
         with app.app_context():
             yield testing_client
+        db.drop_all()
 
 
 @pytest.fixture(scope='module')

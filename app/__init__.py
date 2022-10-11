@@ -16,6 +16,7 @@
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 
+from functools import wraps
 from flask import Flask
 from os import environ
 from flask_session import Session
@@ -25,6 +26,7 @@ from flask_login import LoginManager
 from os import path
 import logging as logger
 from flask_mail import Mail
+from flask_login import current_user
 
 app = Flask('STEM Data Dashboard', instance_relative_config=True,
     template_folder=path.abspath('./app/templates'),
@@ -65,3 +67,12 @@ def init_app(config_fname: str = None) -> Flask:
         logger.critical('Failed to load config file. Please make sure it exists in the /config directory.')
         raise SystemExit()
     
+
+def admin_required(f):
+    @wraps(f)
+    def dec_func(*args, **kwargs):
+        if current_user.is_admin:
+            return f(*args, **kwargs)
+        else:
+            return {'message': 'User does not have privledges to perform this action.'}, 401
+    return dec_func

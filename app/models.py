@@ -219,8 +219,10 @@ class Student(db.Model):
     math_placement_score = Column(Integer())
     high_school_gpa = Column(Float(), 
         CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
-    college_gpa = Column(Float(), 
-        CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
+    overall_college_gpa = Column(Float(), 
+        CheckConstraint('overall_college_gpa >= 0.0 AND overall_college_gpa <= 4.0'))
+    major_college_gpa = Column(Float(), 
+        CheckConstraint('major_college_gpa >= 0.0 AND major_college_gpa <= 4.0'))
     sat_score = Column(Integer(), 
         CheckConstraint(f'sat_score >= {app.config["SAT_SCORE_MIN"]} AND sat_score <= {app.config["SAT_SCORE_MAX"]}'))
     act_score = Column(Integer(), 
@@ -253,20 +255,13 @@ class ClassData(db.Model):
     program_code = Column(Text(), CheckConstraint('program_code IN ("UNDG", "GRAD")'), 
         nullable=False)
     subprogram_desc = Column(Text(), nullable=False)
-    course_title = Column(Text(), nullable=False)
-    course_num = Column(Text(), 
-        CheckConstraint('length(course_num) >= 7 AND length(course_num) <= 8'), 
-        nullable=False)
     final_grade = Column(Text(), nullable=False)
-    course_semester = Column(Text(), nullable=False)
-    course_year = Column(Integer(), CheckConstraint('course_year <= date()'),
-         nullable=False)
+    course = Column(Integer(), nullable=False)
 
 
 class MCASScore(db.Model):
     __tablename__ = 'mcas_scores'
-    student_id = Column(Integer(), ForeignKey('students.id'), primary_key=True, 
-        nullable=False)
+    student_id = Column(Integer(), primary_key=True, nullable=False)
     english_raw = Column(Integer(), CheckConstraint(f'english_raw >= {app.config["MCAS_RAW_MIN"]} AND english_raw <= {app.config["MCAS_RAW_MAX"]}'))
     english_scaled = Column(Integer(), CheckConstraint(f'english_scaled >= {app.config["MCAS_SCALED_MIN"]} AND english_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
     english_achievement_level = Column(Text(), CheckConstraint('english_achievement_level IN ("F", "NI", "P", "A")'))
@@ -276,3 +271,18 @@ class MCASScore(db.Model):
     stem_raw = Column(Integer(), CheckConstraint(f'stem_raw >= {app.config["MCAS_RAW_MIN"]} AND stem_raw <= {app.config["MCAS_RAW_MAX"]}'))
     stem_scaled = Column(Integer(), CheckConstraint(f'stem_scaled >= {app.config["MCAS_SCALED_MIN"]} AND stem_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
     stem_achievement_level = Column(Text(), CheckConstraint('stem_achievement_level IN ("F", "NI", "P", "A")'))
+
+
+class Course(db.Model):
+    __tablename__ = 'courses'
+    id = Column(Integer(), primary_key=True)
+    course_num = Column(Text(), CheckConstraint('length(course_num) >= 7 AND length(course_num) <= 9'), 
+        nullable=False)
+    title = Column(Text(), nullable=False)
+    semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI")'), 
+        nullable=False)
+    year = Column(Integer(), nullable=False)
+
+    
+    def __repr__(self):
+        return f'{self.id} - {self.course_num} - {self.title} '

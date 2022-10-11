@@ -17,6 +17,11 @@
 
 
 from base64 import b64encode 
+import pandas as pd
+from io import BytesIO
+from os import path
+import json
+
 
 def __str_to_b64(str_to_convert: str):
     return b64encode(str_to_convert.encode('ascii')).decode('ascii')
@@ -72,7 +77,7 @@ def test_merrimack_email_login(test_client, init_db):
     assert (res.status_code == 406)
     assert ('Content-Type' in res.headers)
     assert ('application/json' == res.headers['Content-Type'])
-    assert (b'{\n  "message": "Cannot login with merrimack.edu email."\n}\n' 
+    assert (b'{"message":"Cannot login with merrimack.edu email."}\n' 
         in res.data)
 
     
@@ -115,7 +120,7 @@ def test_merrimack_email_register(test_client, init_db):
     assert (res.status_code == 406)
     assert ('Content-Type' in res.headers)
     assert ('application/json' == res.headers['Content-Type'])
-    assert (b'{\n  "message": "User has merrimack.edu email."\n}\n' in res.data)
+    assert (b'{"message":"User has merrimack.edu email."}\n' in res.data)
 
 
 def test_existing_register(test_client, init_db):
@@ -133,7 +138,7 @@ def test_existing_register(test_client, init_db):
     res = test_client.post('/register', json=user_info)
 
     assert (res.status_code == 409)
-    assert (b'{\n  "message": "User exists"\n}\n' in res.data)
+    assert (b'{"message":"User exists"}\n' in res.data)
 
 
 def test_bad_register_missing_first_name(test_client, init_db):
@@ -146,7 +151,7 @@ def test_bad_register_missing_first_name(test_client, init_db):
     res = test_client.post('/register', json=user_info)
 
     assert (res.status_code == 400)
-    assert (b'{\n  "message": "Invalid Request"\n}\n' in res.data)
+    assert (b'{"message":"Invalid Request"}\n' in res.data)
 
 
 def test_get_otp(test_client, init_db):
@@ -163,7 +168,7 @@ def test_get_otp_not_admin(test_client, init_db):
     assert (res.status_code == 403)
     assert ('Content-Type' in res.headers)
     assert ('application/json' == res.headers['Content-Type'])
-    assert (b'{\n  "message": "User is not an admin."\n}\n' in res.data)
+    assert (b'{"message":"User is not an admin."}\n' in res.data)
 
 
 def test_good_otp_auth(test_client, init_db):
@@ -191,7 +196,7 @@ def test_bad_otp_auth(test_client):
     assert (res.status_code == 401)
     assert ('Content-Type' in res.headers)
     assert ('application/json' == res.headers['Content-Type'])
-    assert (b'{\n  "message": "Invalid OTP Code"\n}\n' == res.data)
+    assert (b'{"message":"Invalid OTP Code"}\n' == res.data)
 
 
 def test_otp_auth_bad_body(test_client):
@@ -202,7 +207,7 @@ def test_otp_auth_bad_body(test_client):
     assert (res.status_code == 400)
     assert ('Content-Type' in res.headers)
     assert ('application/json' == res.headers['Content-Type'])
-    assert (b'{\n  "message": "Invalid request."\n}\n' == res.data)
+    assert (b'{"message":"Invalid request."}\n' == res.data)
 
 
 def test_get_reset(test_client):
@@ -231,7 +236,7 @@ def test_post_good_sendreset(test_client, init_db):
     assert (res.status_code == 200)
     assert ('Content-Type' in res.headers)
     assert ('application/json' == res.headers['Content-Type'])
-    assert (b'{\n  "message": "Success"\n}\n' == res.data)
+    assert (b'{"message":"Success"}\n' == res.data)
     
 
 
@@ -289,3 +294,94 @@ def test_logout(test_client):
     assert (res.status_code == 302)
     assert ('Content-Type' in res.headers)
     assert ('text/html; charset=utf-8' == res.headers['Content-Type'])
+
+
+def __read_file(file_name: str) -> tuple[BytesIO, str]:
+    '''
+    Reads the file at the specified file, and returns a tuple containing the 
+    bytes of the object wrapped in a BytesIO object, and the file path.
+
+    param:
+        file_name: The name of the file.
+    return:
+        A tuple containing (BytesIO, file path)
+    '''
+    file_path = path.normpath(path.dirname(__file__) + f'/test_data/{file_name}')
+    
+    with open(file_path, 'rb') as file:
+        return (BytesIO(file.read()), file_path)
+
+
+def test_good_data_upload(test_client):
+    from app.models import Student
+    
+    file = {
+        'file': __read_file('test_data_sheet.xlsx')
+    }
+    res = test_client.post('/upload', data=file)
+
+    assert (res.status_code == 200)
+    
+    # There should be one student in the database.
+    assert (len(Student.query.all()) == 1)
+    
+
+
+def test_bad_student_upload(test_client):
+    from app.models import Student
+
+    file = {
+        'file': __read_file('test_data_bad_student.xlsx')
+    }
+
+    res = test_client.post('/upload', data=file)
+
+    '''
+    The test file for this test has a bad leave date, first gen student, and 
+    SAT score. 
+    '''
+    
+    dict_res = json.loads(res.data.decode('utf-8'))
+    assert (res.status_code == 400)
+    # Bad leave date, first gen students, sat, and 2 errors caused by this one.
+    assert (len(dict_res['errors']) == 5)
+    assert (dict_res['message'] == 'Errors while parsing data.')
+    assert (Student.query.filter_by(first_name='Jennifer', last_name='Lopez'))
+
+
+def test_bad_class_data_upload(test_client):
+    from app.models import ClassData, Course
+
+    file = {
+        'file': __read_file('test_data_bad_class_data.xlsx')
+    }
+
+    res = test_client.post('/upload', data=file)
+
+    dict_res = json.loads(res.data.decode('utf-8'))
+
+    assert (res.status_code == 400)
+
+    # Invalid prog code, subprog. desc., grade, semester, and course year.
+    assert (len(dict_res['errors']) == 5)
+    assert (dict_res['message'] == 'Errors while parsing data.')
+    assert (len(ClassData.query.all()) == 1)
+    assert (len(Course.query.all()) == 1)
+
+
+def test_bad_mcas_score(test_client):
+    from app.models import MCASScore
+
+    file = {
+        'file': __read_file('test_data_bad_mcas_score.xlsx')
+    }
+
+    res = test_client.post('/upload', data=file)
+
+    dict_res = json.loads(res.data.decode('utf-8'))
+
+    assert (res.status_code == 400)
+    # There is just a possibility of the student ID missing as all other vals are nullable.
+    assert (len(dict_res['errors']) == 1)
+    assert (dict_res['message'] == 'Errors while parsing data.')
+    assert (len(MCASScore.query.all()) == 2)
