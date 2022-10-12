@@ -76,3 +76,9 @@ def admin_required(f):
         else:
             return {'message': 'User does not have privledges to perform this action.'}, 401
     return dec_func
+
+
+def change_user_permissions(u: dict):
+    print(u['email'])
+
+app.jinja_env.globals.update(change_user_permissions=change_user_permissions)

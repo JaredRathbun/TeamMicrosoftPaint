@@ -262,15 +262,15 @@ class ClassData(db.Model):
 class MCASScore(db.Model):
     __tablename__ = 'mcas_scores'
     student_id = Column(Integer(), primary_key=True, nullable=False)
-    english_raw = Column(Integer(), CheckConstraint(f'english_raw >= {app.config["MCAS_RAW_MIN"]} AND english_raw <= {app.config["MCAS_RAW_MAX"]}'))
-    english_scaled = Column(Integer(), CheckConstraint(f'english_scaled >= {app.config["MCAS_SCALED_MIN"]} AND english_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
-    english_achievement_level = Column(Text(), CheckConstraint('english_achievement_level IN ("F", "NI", "P", "A")'))
-    math_raw = Column(Integer(), CheckConstraint(f'math_raw >= {app.config["MCAS_RAW_MIN"]} AND math_raw <= {app.config["MCAS_RAW_MAX"]}'))
-    math_scaled = Column(Integer(), CheckConstraint(f'math_scaled >= {app.config["MCAS_SCALED_MIN"]} AND math_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
-    math_achievement_level = Column(Text(), CheckConstraint('math_achievement_level IN ("F", "NI", "P", "A")'))
-    stem_raw = Column(Integer(), CheckConstraint(f'stem_raw >= {app.config["MCAS_RAW_MIN"]} AND stem_raw <= {app.config["MCAS_RAW_MAX"]}'))
-    stem_scaled = Column(Integer(), CheckConstraint(f'stem_scaled >= {app.config["MCAS_SCALED_MIN"]} AND stem_scaled <= {app.config["MCAS_SCALED_MAX"]}'))
-    stem_achievement_level = Column(Text(), CheckConstraint('stem_achievement_level IN ("F", "NI", "P", "A")'))
+    english_raw = Column(Integer())
+    english_scaled = Column(Integer())
+    english_achievement_level = Column(Text())
+    math_raw = Column(Integer())
+    math_scaled = Column(Integer())
+    math_achievement_level = Column(Text())
+    stem_raw = Column(Integer())
+    stem_scaled = Column(Integer())
+    stem_achievement_level = Column(Text())
 
 
 class Course(db.Model):
