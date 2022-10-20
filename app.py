@@ -21,5 +21,4 @@ from app import init_app
 if __name__ == '__main__':
     app = init_app('dev.cfg')
     app.app_context().push()
-    print(app.config['PORT'])
     app.run('0.0.0.0',port=app.config['PORT'], debug=app.config['DEBUG'], ssl_context=('instance/cert.pem', 'instance/key.pem'))
