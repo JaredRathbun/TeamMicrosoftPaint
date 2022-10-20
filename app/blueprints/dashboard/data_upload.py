@@ -267,6 +267,11 @@ def __insert_students(students: DataFrame):
                 current_row))
             found_error = True
 
+        if (students['Ethnicity'][idx] is None):
+            error_list.append(InvalidDataException('Ethnicity missing', 
+                current_row))
+            found_error = True
+
         high_school_gpa = students['High School GPA'][idx]
         overall_college_gpa = students['Overall College GPA'][idx]
         major_college_gpa = students['Major College GPA'][idx]
@@ -274,6 +279,8 @@ def __insert_students(students: DataFrame):
         act_score = students['ACT Score'][idx]
         leave_date = students['Leave Date'][idx]
         first_gen_student = students['First Generation Student'][idx]
+        ethnicity = students['Ethnicity'][idx]
+        leave_reason = students['Leave Reason'][idx]
 
         if (high_school_gpa is not None):
             if (high_school_gpa < 0.0 or high_school_gpa > 4.0):
@@ -318,6 +325,14 @@ def __insert_students(students: DataFrame):
                 'must be Y/N or T/F', current_row))
             found_error = True
 
+        if (ethnicity is not None):
+            if (ethnicity not in ('White', 'Asian', 
+                'American Indian or Alaska Native', 'Black or African American',
+                'Hispanic or Latino', 'Native Hawaiian or Other Pacific Islander')):
+                error_list.append(InvalidDataException('Invalid Ethnicity',
+                    current_row))
+                found_error = True 
+
         if (not found_error):
             random_id = Student.gen_random_id()
 
@@ -337,15 +352,17 @@ def __insert_students(students: DataFrame):
                 minor_2=students['Minor 2'][idx],
                 minor_3=students['Minor 3'][idx],
                 math_placement_score=students['Math Placement Score'][idx],
-                high_school_gpa=students['High School GPA'][idx],
-                overall_college_gpa=students['Overall College GPA'][idx],
-                major_college_gpa=students['Major College GPA'][idx],
-                sat_score=students['SAT Score'][idx],
-                act_score=students['ACT Score'][idx],
+                high_school_gpa=high_school_gpa,
+                overall_college_gpa=overall_college_gpa,
+                major_college_gpa=major_college_gpa,
+                sat_score=sat_score,
+                act_score=act_score,
                 state_code=students['State Code'][idx],
                 country_code=students['Country Code'][idx],
-                leave_date=students['Leave Date'][idx],
-                first_gen_student=students['First Generation Student'][idx])
+                leave_date=leave_date,
+                first_gen_student=first_gen_student,
+                ethnicity=ethnicity,
+                leave_reason=leave_reason)
 
             db.session.add(new_student)
         else:

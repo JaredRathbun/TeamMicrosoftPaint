@@ -89,7 +89,7 @@ class User(UserMixin, db.Model):
         if self.provider is ProviderEnum.LOCAL:
             return check_password_hash(self.hash, password)
         else:
-            raise InvalidProviderException
+            raise InvalidProviderException()
 
     def gen_totp_key(self):
         '''
@@ -227,10 +227,13 @@ class Student(db.Model):
         CheckConstraint(f'sat_score >= {app.config["SAT_SCORE_MIN"]} AND sat_score <= {app.config["SAT_SCORE_MAX"]}'))
     act_score = Column(Integer(), 
         CheckConstraint(f'act_score >= {app.config["ACT_SCORE_MIN"]} AND act_score <= {app.config["ACT_SCORE_MAX"]}'))
+    ethnicity = Column(Text(), nullable=False)
     state_code = Column(Text(), nullable=False)
     country_code = Column(Text(), nullable=False)
     leave_date = Column(DateTime())
+    leave_reason = Column(Text())
     first_gen_student = Column(Boolean())
+    mcas_score_obj = db.relationship('MCASScore', uselist=False)
 
 
     @staticmethod
@@ -248,20 +251,184 @@ class Student(db.Model):
         return gen_id
 
 
+    @staticmethod
+    def get_avg_overall_gpa() -> str:
+        '''
+        Calculates the average overall GPA for all students in the database.
+
+        return: The average overall GPA of all students in the database 
+                represented by a str.
+        '''
+        def __sum_gpa():
+            '''
+            Calculates the sum of all overall college GPAs in the database.
+            '''
+            sum = 0
+            for student in Student.query.all():
+                sum += student.overall_college_gpa
+            return sum
+
+        total_students = len(Student.query.all())
+        gpa_sum = __sum_gpa()
+
+        return '%.2f' % (gpa_sum / total_students) if total_students > 0 else 0.0
+
+
+    @staticmethod
+    def get_avg_major_gpa() -> str:
+        '''
+        Calculates the average major GPA for all students in the database.
+
+        return: The average major GPA of all students in the database 
+                represented by a str.
+        '''
+        def __sum_gpa():
+            '''
+            Calculates the sum of all major college GPAs in the database.
+            '''
+            sum = 0
+            for student in Student.query.all():
+                sum += student.major_college_gpa
+            return sum
+
+        total_students = len(Student.query.all())
+        gpa_sum = __sum_gpa()
+
+        return '%.2f' % (gpa_sum / total_students) if total_students > 0 else 0.0 
+
+
 class ClassData(db.Model):
     __tablename__ = 'class_data'
     dummy_pk = Column(Integer(), primary_key=True)
-    student_id = Column(Integer(), nullable=False)
+    student_id = Column(Integer(), ForeignKey('students.id'), nullable=False)
     program_code = Column(Text(), CheckConstraint('program_code IN ("UNDG", "GRAD")'), 
         nullable=False)
     subprogram_desc = Column(Text(), nullable=False)
     final_grade = Column(Text(), nullable=False)
-    course = Column(Integer(), nullable=False)
+    course = Column(Integer(), ForeignKey('courses.id'), nullable=False)
+    course_obj = db.relationship('Course', uselist=False)
+    student_obj = db.relationship('Student', uselist=False)
+
+
+    @staticmethod
+    def get_avg_dwf() -> float:
+        '''
+        Calculates the average DWF rate of all the data in the database.
+        '''
+        class_data = ClassData.query
+        num_grades = len(class_data.all())
+        num_with_dwf = len(class_data.filter(ClassData.final_grade=='F' or 
+            ClassData.final_grade=='W' or ClassData.final_grade=='D' or 
+            ClassData.final_grade=='D-' or ClassData.final_grade=='D+').all())
+        
+        return (num_with_dwf / num_grades) * 100 if num_grades > 0 else 0.0 
+
+
+    @staticmethod
+    def get_data(limit: int=None) -> list[dict] :
+        '''
+        Returns a list of dictionaries, which contain the information for each
+        `ClassData` entry, along with the student, MCAS score, and class related
+        to the entry.
+
+        param: 
+            limit: The max number of entries to generate. If the limit is not 
+            supplied, then all entries are returned.
+
+        return:
+            A `list` of `dict` objects that contain the information about each
+            class entry and the data related to it.
+        '''
+        class_data = ClassData.query.all()
+        return_list = []
+
+        # If the limit is not specified, set it to the max amount.
+        if (limit is None):
+            limit = len(class_data)
+        
+        for i in range(limit):
+            
+            current_class = class_data[i]
+            current_student = current_class.student_obj
+            current_mcas_scores = current_student.mcas_score_obj
+            current_course = current_class.course_obj
+
+            def format_leave_date(date):
+                if (date is not None):
+                    return date.strftime('%m-%d-%Y')
+                else:
+                    return None
+
+            def get_mcas_score_dict(score_obj):
+                if (score_obj is not None):
+                    return {
+                        'english_raw': score_obj.english_raw,
+                        'english_scaled': score_obj.english_scaled,
+                        'english_achievement_level': score_obj.english_achievement_level,
+                        'math_raw': score_obj.math_raw,
+                        'math_scaled': score_obj.math_scaled,
+                        'math_achievement_level': score_obj.math_achievement_level,
+                        'stem_raw': score_obj.stem_raw,
+                        'stem_scaled': score_obj.stem_scaled,
+                        'stem_achievement_level': score_obj.stem_achievement_level
+                    }
+                else:
+                    return {
+                        'english_raw': None,
+                        'english_scaled': None,
+                        'english_achievement_level': None,
+                        'math_raw': None,
+                        'math_scaled': None,
+                        'math_achievement_level': None,
+                        'stem_raw': None,
+                        'stem_scaled': None,
+                        'stem_achievement_level': None
+                    }
+
+            current_dict = {
+                'student_id': current_class.student_id,
+                'course_code': current_course.course_num,
+                'course_title': current_course.title,
+                'semester': current_course.semester,
+                'year': current_course.year,
+                'final_grade': current_class.final_grade,
+                'subprogram_desc': current_class.subprogram_desc,
+                'demographics': {
+                    'first_name': current_student.first_name,
+                    'last_name': current_student.last_name,
+                    'major_1': current_student.major_1,
+                    'major_2': current_student.major_2,
+                    'major_3': current_student.major_3,
+                    'concentration_1': current_student.concentration_1,
+                    'concentration_2': current_student.concentration_2,
+                    'concentration_3': current_student.concentration_3,
+                    'minor_1': current_student.minor_1,
+                    'minor_2': current_student.minor_2,
+                    'minor_3': current_student.minor_3,
+                    'ethnicity': current_student.ethnicity,
+                    'home_location': f'{current_student.state_code}, {current_student.country_code}',
+                    'first_gen_student': current_student.first_gen_student
+                },
+                'academic_info': {
+                    'overall_college_gpa': current_student.overall_college_gpa,
+                    'major_college_gpa': current_student.major_college_gpa,
+                    'high_school_gpa': current_student.high_school_gpa,
+                    'math_placement_score': current_student.math_placement_score,
+                    'sat_score': current_student.sat_score,
+                    'act_score': current_student.act_score,
+                    'leave_date': format_leave_date(current_student.leave_date),
+                    'leave_reason': current_student.leave_reason 
+                },
+                'mcas_info': get_mcas_score_dict(current_mcas_scores)
+            }
+            return_list.append(current_dict)
+        return return_list
 
 
 class MCASScore(db.Model):
     __tablename__ = 'mcas_scores'
-    student_id = Column(Integer(), primary_key=True, nullable=False)
+    student_id = Column(Integer(), ForeignKey('students.id'), primary_key=True, 
+        nullable=False)
     english_raw = Column(Integer())
     english_scaled = Column(Integer())
     english_achievement_level = Column(Text())

@@ -20,7 +20,7 @@
 
 function logout(evt) {
     evt.preventDefault();
-    fetch('/logout').then((res) => {
+    fetch('/logout', {method: 'POST'}).then((res) => {
         if (res.redirected) {
             window.location.href = res.url;
         }

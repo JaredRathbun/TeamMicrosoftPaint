@@ -58,12 +58,12 @@ Template built using: https://bootstrapstudio.io/
                         </a>
                     </li>
                     {% if current_user.is_admin %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin">
-                                <i class="fas fa-user"></i>
-                                    <span>Administration</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">
+                            <i class="fas fa-user"></i>
+                            <span>Administration</span>
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
                 <div class="text-center d-none d-md-inline"></div>
@@ -92,11 +92,13 @@ Template built using: https://bootstrapstudio.io/
                             </li>
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
-                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
+                                        href="#">
                                         <span class="d-none d-lg-inline me-2 text-gray-600 small">
                                             {{ user_name }}
                                         </span>
-                                        <img class="border rounded-circle img-profile" src="../static/img/avatars/avatar1.jpeg">
+                                        <img class="border rounded-circle img-profile"
+                                            src="../static/img/avatars/avatar1.jpeg">
                                     </a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                         <button class="dropdown-item" onclick="logout(event)">
@@ -121,7 +123,7 @@ Template built using: https://bootstrapstudio.io/
                                         <div class="col me-2">
                                             <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>AVG
                                                     DWF&nbsp;</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>6%</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ dwf_avg }}</span></div>
                                         </div>
                                         <div class="col-auto"><i class="fas fa-percent fa-2x text-gray-300"></i></div>
                                     </div>
@@ -135,7 +137,7 @@ Template built using: https://bootstrapstudio.io/
                                         <div class="col me-2">
                                             <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>AVG
                                                     GPA</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>3.52</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ overall_avg_gpa }}</span></div>
                                         </div>
                                         <div class="col-auto"><i class="fas fa-user-graduate fa-2x text-gray-300"></i>
                                         </div>
@@ -148,23 +150,10 @@ Template built using: https://bootstrapstudio.io/
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
-                                            <div class="text-uppercase text-info fw-bold text-xs mb-1"><span>SOME
-                                                    IMPORTANT VALUE</span></div>
-                                            <div class="row g-0 align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="text-dark fw-bold h5 mb-0 me-3"><span>50%</span></div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm">
-                                                        <div class="progress-bar bg-info" aria-valuenow="50"
-                                                            aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                                                            <span class="visually-hidden">50%</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>AVG MAJOR GPA</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ major_avg_gpa }}</span></div>
                                         </div>
-                                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        <div class="col-auto"><i class="fas fa-user-graduate fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -175,11 +164,10 @@ Template built using: https://bootstrapstudio.io/
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
-                                            <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span>SOME
-                                                    IMPORTANT VALUE</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>18</span></div>
+                                            <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span>Total Students</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ total_students }}</span></div>
                                         </div>
-                                        <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300"></i></div>
+                                        <div class="col-auto"><i class="fa fa-school fa-2x text-gray-300"></i></div>
                                     </div>
                                 </div>
                             </div>
@@ -190,7 +178,8 @@ Template built using: https://bootstrapstudio.io/
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center align-middle">
                                     <h6 class="text-primary fw-bold m-0">Chart/Graph Generation</h6>
-                                    <p class="text-primary m-0">To generate a graph/chart, select the columns and type of the graph from the dropdowns below.</p>
+                                    <p class="text-primary m-0">To generate a graph/chart, select the columns and type
+                                        of the graph from the dropdowns below.</p>
                                 </div>
                                 <div class="card-body align-items-center align-middle">
                                     <table class="table table-responsive my-0">
@@ -240,7 +229,7 @@ Template built using: https://bootstrapstudio.io/
                                             </tr>
                                         </tbody>
                                     </table>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -254,8 +243,9 @@ Template built using: https://bootstrapstudio.io/
                                         <h6 class="text-primary fw-bold m-0">Data Correlations</h6>
                                         <!-- <p>Correlate a given time period, class, and type of data.</p> -->
                                     </div>
-                                    
-                                    <p class="text-primary m-0">Please select a start and end date, the class you are searching for, and the data you would like.</p>
+
+                                    <p class="text-primary m-0">Please select a start and end date, the class you are
+                                        searching for, and the data you would like.</p>
                                 </div>
                                 <div class="card-body d-flex flex-wrap">
                                     <div class="col-10 align-items-center text-center">
@@ -355,8 +345,9 @@ Template built using: https://bootstrapstudio.io/
                                     <div class="d-block my-auto">
                                         <h6 class="text-primary fw-bold m-0">Class Grades</h6>
                                     </div>
-                                    
-                                    <p class="text-primary m-0">Please select a class, the appropriate semester, and click download.</p>
+
+                                    <p class="text-primary m-0">Please select a class, the appropriate semester, and
+                                        click download.</p>
                                 </div>
                                 <div class="card-body d-flex flex-wrap">
                                     <table class="table table-responsive">
@@ -400,13 +391,17 @@ Template built using: https://bootstrapstudio.io/
                                                 </td>
                                                 <td class="col-2">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" id="includeStudentInfoCheck" checked>
-                                                        <label class="form-check-label" for="includeStudentInfoCheck">Include student information</label>
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                            id="includeStudentInfoCheck" checked>
+                                                        <label class="form-check-label"
+                                                            for="includeStudentInfoCheck">Include student
+                                                            information</label>
                                                     </div>
                                                 </td>
                                                 <td class="col-2">
                                                     <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Download</button>
+                                                        <button class="btn btn-primary dropdown-toggle"
+                                                            data-bs-toggle="dropdown">Download</button>
                                                         <div class="dropdown-menu">
                                                             <a class="dropdown-item">As Excel Sheet</a>
                                                             <a class="dropdown-item">As CSV File</a>
@@ -416,7 +411,7 @@ Template built using: https://bootstrapstudio.io/
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -434,6 +429,7 @@ Template built using: https://bootstrapstudio.io/
     <script src="../static/js/chart.min.js"></script>
     <script src="../static/js/bs-init.js"></script>
     <script src="../static/js/theme.js"></script>
+    <script src="../static/js/dashboard/visualizations.js"></script>
 </body>
 
 </html>

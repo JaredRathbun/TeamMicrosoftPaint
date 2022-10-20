@@ -27,14 +27,21 @@ from app.models import User, ClassData, MCASScore, Course, Student
 @login_required
 def get_dash():
     name = current_user.first_name + ' ' + current_user.last_name
-    return render_template('dashboard.html', user_name=name)
+    dwf_avg = ClassData.get_avg_dwf()
+    overall_avg_gpa = Student.get_avg_overall_gpa()
+    major_avg_gpa = Student.get_avg_major_gpa()
+    total_students = len(Student.query.all())
+
+    return render_template('dashboard/dashboard.html', current_user=current_user,
+        user_name=name, dwf_avg=dwf_avg, overall_avg_gpa=overall_avg_gpa, 
+        major_avg_gpa=major_avg_gpa, total_students=total_students)
 
 
 @dash_bp.route('/data', methods = ['GET'])
 @login_required
 def get_data():
     name = current_user.first_name + ' ' + current_user.last_name
-    return render_template('data.html', current_user=current_user,
+    return render_template('dashboard/data.html', current_user=current_user,
         user_name=name)
 
 
@@ -42,8 +49,14 @@ def get_data():
 @login_required
 def get_visualizations():
     name = current_user.first_name + ' ' + current_user.last_name
-    return render_template('visualizations.html', current_user=current_user, 
-        user_name=name)
+    dwf_avg = ClassData.get_avg_dwf()
+    overall_avg_gpa = Student.get_avg_overall_gpa()
+    major_avg_gpa = Student.get_avg_major_gpa()
+    total_students = len(Student.query.all())
+    return render_template('dashboard/visualizations.html', 
+        current_user=current_user, user_name=name, dwf_avg=dwf_avg, 
+        overall_avg_gpa=overall_avg_gpa, major_avg_gpa=major_avg_gpa, 
+        total_students=total_students)
 
 
 @dash_bp.route('/admin', methods = ['GET'])
@@ -71,7 +84,7 @@ def get_admin():
         user_admin_list = [get_user_dict(u) for u in User.query.all()]
         name = current_user.first_name + ' ' + current_user.last_name
 
-        return render_template('admin.html', current_user=current_user, 
+        return render_template('dashboard/admin.html', current_user=current_user, 
             user_name=name, total_admins=total_admins, total_users=total_users,
             total_students=total_students, rows_in_dataset=rows_in_dataset,
             user_admin_list=user_admin_list)
@@ -80,11 +93,29 @@ def get_admin():
 
 
 @dash_bp.route('/upload', methods = ['POST'])
-@admin_required
-@login_required
+# @admin_required
+# @login_required
 def upload_data():
     if 'file' in request.files.keys():
         uploaded_file = request.files['file']
         return upload_excel_file(uploaded_file)
     else:
         return {'message': 'Missing file.'}, 400
+
+
+@dash_bp.route('/all-data', methods = ['GET'])
+def all_data():
+    if (len(request.data) != 0):
+        body = request.get_json()
+        limit = body['limit']
+    else:
+        limit = None
+
+    data = ClassData.get_data()
+    
+    if (limit is not None and limit > len(data)):
+        return {'message': 'Limit out of bounds.'}, 400
+    else:
+        data = ClassData.get_data(limit)
+        return data, 200
+        

@@ -64,3 +64,12 @@ function changeUserPermissions(element, emailAddress) {
     console.log(element);
     console.log(emailAddress);
 }
+
+function logout(evt) {
+    evt.preventDefault();
+    fetch('/logout', {method: 'POST'}).then((res) => {
+        if (res.redirected) {
+            window.location.href = res.url;
+        }
+    });
+}
