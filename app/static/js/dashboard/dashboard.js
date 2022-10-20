@@ -18,27 +18,11 @@
 *
 */
 
-$(() => {
-    // Hide all tables that are sub tables.
-
-    $('.rowToggle').click((evt) => {
-        evt.stopPropagation();
-        let tgt = $(evt.target).data('collapse-target');
-        let icon = $(evt.target);
-
-        // Flip the eye icon.
-        if (icon.hasClass('fa-eye-slash')) {
-            icon.removeClass('fa-eye-slash').addClass('fa-eye');
-        } else {
-            icon.removeClass('fa-eye').addClass('fa-eye-slash');
-        }
-
-        var id = '#' + tgt;
-        if (!$(id).is(':visible')) {
-            $(id).removeAttr('hidden');
-            $(id).slideDown(400);
-        } else {
-            $(id).slideToggle('slow', () => {});
+function logout(evt) {
+    evt.preventDefault();
+    fetch('/logout', {method: 'POST'}).then((res) => {
+        if (res.redirected) {
+            window.location.href = res.url;
         }
     });
-});
+}
