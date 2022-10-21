@@ -73,62 +73,34 @@ function createTable(data) {
                 </td>
                 <td class="col-2">${val.student_id}</td>
                 <td class="col-2">${val.course_code}</td>
-                <td class="col-2">${val.subprogram_desc}</td>
-                <td class="col-2">${val.course_title}</td>
+                <td class="col-2">${val.program_level}</td>
+                <td class="col-2">${val.subprogram_code}</td>
                 <td class="col-1">${val.semester}</td>
                 <td class="col-1">${val.year}</td>
-                <td class="col-1">${val.final_grade}</td>
+                <td class="col-1">${val.grade}</td>
             </tr>
             <tr class="d-flex">
-                <td hidden id="row-${rowID}">
+                <td hidden id="test-row">
                     <div class="container mx-2 mt-1">
                         <div class="row">
                             <div class="col-4">
                                 <h5 class="mx-2">Student Demographics</h5>
                                 <table class="table my-0 col-4">
                                     <tr>
-                                        <th>First Name</th>
-                                        <td>${val.demographics.first_name}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Last Name</th>
-                                        <td>${val.demographics.last_name}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Major 1</th>
-                                        <td>${val.demographics.major_1}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Major 2</th>
-                                        <td>${convertToNA(val.demographics.major_2)}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Major 3</th>
-                                        <td>${convertToNA(val.demographics.major_3)}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Minor 1</th>
-                                        <td>${convertToNA(val.demographics.minor_1)}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Minor 2</th>
-                                        <td>${convertToNA(val.demographics.minor_2)}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Minor 3</th>
-                                        <td>${convertToNA(val.demographics.minor_3)}</td>
-                                    </tr>
-                                    <tr>
                                         <th>Ethnicity</th>
-                                        <td>${val.demographics.ethnicity}</td>
+                                        <td>${val.demographics.race_ethnicity}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Gender</th>
+                                        <td>${val.demographics.gender}</td>
                                     </tr>
                                     <tr>
                                         <th>Home Location</th>
                                         <td>${val.demographics.home_location}</td>
                                     </tr>
                                     <tr>
-                                        <th>First Generation Student</th>
-                                        <td>${convertBooleanToString(val.demographics.first_gen_student)}</td>
+                                        <th>Home Zip Code</th>
+                                        <td>${val.demographics.home_zip_code}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -136,70 +108,62 @@ function createTable(data) {
                                 <h5 class="mx-2">Student Academic Information</h5>
                                 <table class="table my-0 col-4">
                                     <tr>
-                                        <th>Overall College GPA</th>
-                                        <td>${val.academic_info.overall_college_gpa}</td>
+                                        <th>Major</th>
+                                        <td>${val.academic_info.major}</td>
                                     </tr>
                                     <tr>
-                                        <th>Major College GPA</th>
-                                        <td>${val.academic_info.major_college_gpa}</td>
+                                        <th>Concentration</th>
+                                        <td>${val.academic_info.concentration}</td>
                                     </tr>
                                     <tr>
-                                        <th>High School GPA</th>
-                                        <td>${val.academic_info.high_school_gpa}</td>
+                                        <th>Class</th>
+                                        <td>${val.academic_info.class_year}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Cumulative College GPA</th>
+                                        <td>${val.academic_info.college_gpa}</td>
                                     </tr>
                                     <tr>
                                         <th>Math Placement Score</th>
                                         <td>${val.academic_info.math_placement_score}</td>
                                     </tr>
                                     <tr>
-                                        <th>SAT Score</th>
-                                        <td>${convertToNA(val.academic_info.sat_score)}</td>
+                                        <th>SAT Total Score</th>
+                                        <td>${val.academic_info.sat_total}</td>
                                     </tr>
                                     <tr>
-                                        <th>ACT Score</th>
-                                        <td>${convertToNA(val.academic_info.act_score)}</td>
+                                        <th>SAT Math Score</th>
+                                        <td>${val.academic_info.sat_math}</td>
                                     </tr>
                                     <tr>
-                                        <th>Leave Date</th>
-                                        <td>${convertToNA(val.academic_info.leave_date)}</td>
+                                        <th>Admit Term + Year</th>
+                                        <td>${val.academic_info.admit_term_year}</td>
                                     </tr>
                                     <tr>
-                                        <th>Leave Reason</th>
-                                        <td>${convertToNA(val.academic_info.leave_reason)}</td>
+                                        <th>Admit Type</th>
+                                        <td>${val.academic_info.admit_type}</td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="col-4">
-                                <h5 class="mx-2">Student MCAS Scores</h5>
+                                <h5 class="mx-2">Student High School Information</h5>
                                 <table class="table my-0 col-4">
-                                    <thead>
-                                        <tr>
-                                            <th>MCAS Subject</th>
-                                            <th>RAW Score</th>
-                                            <th>Scaled Score</th>
-                                            <th>Achievement Level</th>
-                                        </tr>
-                                        <tbody>
-                                            <tr>
-                                                <td>English</td>
-                                                <td>${convertToNA(val.mcas_info.english_raw)}</td>
-                                                <td>${convertToNA(val.mcas_info.english_scaled)}</td>
-                                                <td>${convertToNA(val.mcas_info.english_achievement_level)}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Math</td>
-                                                <td>${convertToNA(val.mcas_info.math_raw)}</td>
-                                                <td>${convertToNA(val.mcas_info.math_scaled)}</td>
-                                                <td>${convertToNA(val.mcas_info.math_achievement_level)}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>STEM</td>
-                                                <td>${convertToNA(val.mcas_info.stem_raw)}</td>
-                                                <td>${convertToNA(val.mcas_info.stem_scaled)}</td>
-                                                <td>${convertToNA(val.mcas_info.stem_achievement_level)}</td>
-                                            </tr>
-                                        </tbody>
-                                    </thead>
+                                    <tr>
+                                        <th>High School GPA</th>
+                                        <td>${val.high_school_info.gpa}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>High School Name</th>
+                                        <td>${val.high_school_info.name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>High School Location</th>
+                                        <td>${val.high_school_info.location}</td> 
+                                    </tr>
+                                    <tr>
+                                        <th>High School CEEB</th>
+                                        <td>${val.high_school_info.ceeb}</td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

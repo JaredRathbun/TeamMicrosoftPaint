@@ -20,7 +20,7 @@ from datetime import datetime
 from werkzeug.datastructures import FileStorage
 import pandas as pd
 from pandas import DataFrame
-from app.models import Student, ClassData, MCASScore, Course
+from app.models import Student, ClassData, Course
 from app import db, app
 import re
 
@@ -65,7 +65,6 @@ def upload_excel_file(data: FileStorage):
 
         id_mapping = __insert_students(students)
         __insert_class_data(class_data, id_mapping)
-        __insert_mcas_scores(mcas_scores, id_mapping)
         
 
         # If there were no errors, commit the database and return the success msg.
@@ -370,43 +369,6 @@ def __insert_students(students: DataFrame):
             failed_students.append(students['ID'][idx])
     
     return id_maps
-
-
-def __insert_mcas_scores(mcas_scores: DataFrame, id_mapping: dict[int]) -> None:
-    '''
-    Inserts all MCAS Scores into the database, reporting any errors if found.
-
-    param:
-        mcas_scores: A `DataFrame` containing the mcas_scores sheet.
-        id_mapping: A `dict` representing the student's IDs mapped to a random ID.
-
-    '''
-    # Replace all nans with None.
-    mcas_scores = mcas_scores.astype(object).where(mcas_scores.notna(), None)
-
-    for idx in mcas_scores.index:
-        current_row = idx + 2
-        random_id = None
-
-        try:
-            random_id = id_mapping[mcas_scores['Student ID'][idx]]
-        except KeyError:
-            error_list.append(InvalidDataException('Matching student not found for Student MCAS Score', current_row))
-            found_error = True
-            continue
-
-        if (random_id is not None):
-            new_mcas_score = MCASScore(student_id=random_id,
-                english_raw=mcas_scores['English RAW Score'][idx],
-                english_scaled=mcas_scores['English Scaled Score'][idx],
-                english_achievement_level=mcas_scores['English Achievement Level'][idx],
-                math_raw=mcas_scores['Math RAW Score'][idx],
-                math_scaled=mcas_scores['Math Scaled Score'][idx],
-                math_achievement_level=mcas_scores['Math Achievement Level'][idx],
-                stem_raw=mcas_scores['STEM RAW Score'][idx],
-                stem_scaled=mcas_scores['STEM Scaled Score'][idx],
-                stem_achievement_level=mcas_scores['STEM Achievement Level'][idx])
-            db.session.add(new_mcas_score)
 
 
 def __process_errors(errors: list[InvalidDataException]) -> list[dict]:

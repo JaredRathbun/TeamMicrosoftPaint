@@ -17,7 +17,7 @@
 
 
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, jsonify
+from flask import current_app
 import logging as logger
 from flask_login import UserMixin
 import enum
@@ -26,13 +26,52 @@ import pyotp
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlalchemy
 from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
-    Enum, DateTime, ForeignKey)
-import secrets
+    Enum, ForeignKey)
 
 
 class ProviderEnum(enum.Enum):
-    LOCAL = 1
-    GOOGLE = 2
+    LOCAL, GOOGLE = range(2)
+
+
+class RoleEnum(enum.Enum):
+    VIEWER, DATA_ADMIN, ADMIN = range(3)
+
+
+class ClassEnum(enum.Enum):
+    FRESHMAN, SOPHOMORE, JUNIOR, SENIOR = range(4)
+
+    @staticmethod
+    def parse_class(class_str: str):
+        match class_str:
+            case 'FR':
+                return ClassEnum.FRESHMAN
+            case 'SO':
+                return ClassEnum.SOPHOMORE
+            case 'JR':
+                return ClassEnum.JUNIOR
+            case 'SR':
+                return ClassEnum.SENIOR
+            case _:
+                return InvalidClassException('Class not recognized.')
+
+    
+    @staticmethod 
+    def class_to_str(class_year) -> str:
+        match class_year:
+            case ClassEnum.FRESHMAN:
+                return 'Freshman'
+            case ClassEnum.SOPHOMORE:
+                return 'Sophomore'
+            case ClassEnum.JUNIOR:
+                return 'Junior'
+            case ClassEnum.SENIOR:
+                return 'Senior'
+            case _:
+                return ''
+
+
+class InvalidClassException(Exception):
+    pass
 
 
 class InvalidProviderException(Exception):
@@ -204,68 +243,54 @@ class User(UserMixin, db.Model):
 
 class Student(db.Model):
     __tablename__ = 'students'
-    id = Column(Integer(), primary_key=True)
-    last_name = Column(Text(), nullable=False)
-    first_name = Column(Text(), nullable=False)
-    major_1 = Column(Text(), nullable=False)
-    major_2 = Column(Text())
-    major_3 = Column(Text())
-    concentration_1 = Column(Text())
-    concentration_2 = Column(Text())
-    concentration_3 = Column(Text())
-    minor_1 = Column(Text())
-    minor_2 = Column(Text())
-    minor_3 = Column(Text())
+    id = Column(Text(), primary_key=True)
+    admit_year = Column(Integer(), nullable=False)
+    admit_term = Column(Text(), nullable=False)
+    admit_type = Column(Text(), nullable=False)
+    major = Column(Text(), nullable=False)
+    major_desc = Column(Text(), nullable=False)
+    concentration_code = Column(Text())
+    concentration_desc = Column(Text())
+    class_year = Column(Enum(ClassEnum), nullable = False)
+    city = Column(Text())
+    state = Column(Text())
+    country = Column(Text())
+    postal_code = Column(Text(), nullable=False)
+    math_placement_score = Column(Integer())
+    race_ethnicity = Column(Text(), nullable=False)
+    gender = Column(Text(), nullable=False)
+    gpa_cumulative = Column(Float(), 
+        CheckConstraint('gpa_cumulative >= 0.0 AND gpa_cumulative <= 4.0'))
     math_placement_score = Column(Integer())
     high_school_gpa = Column(Float(), 
         CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
-    overall_college_gpa = Column(Float(), 
-        CheckConstraint('overall_college_gpa >= 0.0 AND overall_college_gpa <= 4.0'))
-    major_college_gpa = Column(Float(), 
-        CheckConstraint('major_college_gpa >= 0.0 AND major_college_gpa <= 4.0'))
-    sat_score = Column(Integer(), 
-        CheckConstraint(f'sat_score >= {app.config["SAT_SCORE_MIN"]} AND sat_score <= {app.config["SAT_SCORE_MAX"]}'))
-    act_score = Column(Integer(), 
-        CheckConstraint(f'act_score >= {app.config["ACT_SCORE_MIN"]} AND act_score <= {app.config["ACT_SCORE_MAX"]}'))
-    ethnicity = Column(Text(), nullable=False)
-    state_code = Column(Text(), nullable=False)
-    country_code = Column(Text(), nullable=False)
-    leave_date = Column(DateTime())
-    leave_reason = Column(Text())
-    first_gen_student = Column(Boolean())
-    mcas_score_obj = db.relationship('MCASScore', uselist=False)
+    sat_math = Column(Integer(), 
+        CheckConstraint(f'sat_math >= {app.config["SAT_SCORE_MIN"]} AND sat_math <= {app.config["SAT_SCORE_MAX"]}'))
+    sat_total = Column(Integer(), 
+        CheckConstraint(f'sat_total >= {app.config["SAT_SCORE_MIN"]} AND sat_total <= {app.config["SAT_SCORE_MAX"]}'))
+    high_school_name = Column(Text())
+    high_school_city = Column(Text())
+    high_school_state = Column(Text())
+    high_school_ceeb = Column(Integer())
 
 
     @staticmethod
-    def gen_random_id():
-        # Get all the ids in the table, sorted.
-        all_ids = list(map(lambda s: s.id, Student.query.all()))
-        
-        # Generate a random id.
-        gen_id = secrets.randbelow(1999999) + 1000000
-
-        # Keep generating until a unique id is found.
-        while gen_id in all_ids:
-            gen_id = secrets.randbelow(1999999) + 1000000
-
-        return gen_id
-
-
-    @staticmethod
-    def get_avg_overall_gpa() -> str:
+    def get_avg_gpa() -> str:
         '''
-        Calculates the average overall GPA for all students in the database.
+        Calculates the average college GPA for all students in the database.
 
-        return: The average overall GPA of all students in the database 
-                represented by a str.
+        return: The average GPA of all students in the database represented by 
+            a str.
         '''
         def __sum_gpa():
             '''
-            Calculates the sum of all overall college GPAs in the database.
+            Calculates the sum of all college GPAs in the database.
             '''
             sum = 0
             for student in Student.query.all():
-                sum += student.overall_college_gpa
+                student_gpa = student.gpa_cumulative
+                if (student_gpa is not None):
+                    sum += student.gpa_cumulative
             return sum
 
         total_students = len(Student.query.all())
@@ -275,20 +300,22 @@ class Student(db.Model):
 
 
     @staticmethod
-    def get_avg_major_gpa() -> str:
+    def get_avg_high_school_gpa() -> str:
         '''
-        Calculates the average major GPA for all students in the database.
+        Calculates the average high school GPA for all students in the database.
 
-        return: The average major GPA of all students in the database 
+        return: The average high school GPA of all students in the database 
                 represented by a str.
         '''
         def __sum_gpa():
             '''
-            Calculates the sum of all major college GPAs in the database.
+            Calculates the sum of all high school GPAs in the database.
             '''
             sum = 0
             for student in Student.query.all():
-                sum += student.major_college_gpa
+                student_hs_gpa = student.high_school_gpa
+                if (student_hs_gpa is not None):
+                    sum += student.high_school_gpa
             return sum
 
         total_students = len(Student.query.all())
@@ -301,10 +328,10 @@ class ClassData(db.Model):
     __tablename__ = 'class_data'
     dummy_pk = Column(Integer(), primary_key=True)
     student_id = Column(Integer(), ForeignKey('students.id'), nullable=False)
-    program_code = Column(Text(), CheckConstraint('program_code IN ("UNDG", "GRAD")'), 
+    program_level = Column(Text(), nullable=False)
+    subprogram_code = Column(Integer(), nullable=False)
+    grade = Column(Text(), CheckConstraint("grade in ('A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'W', 'IP', 'P')"), 
         nullable=False)
-    subprogram_desc = Column(Text(), nullable=False)
-    final_grade = Column(Text(), nullable=False)
     course = Column(Integer(), ForeignKey('courses.id'), nullable=False)
     course_obj = db.relationship('Course', uselist=False)
     student_obj = db.relationship('Student', uselist=False)
@@ -317,9 +344,9 @@ class ClassData(db.Model):
         '''
         class_data = ClassData.query
         num_grades = len(class_data.all())
-        num_with_dwf = len(class_data.filter(ClassData.final_grade=='F' or 
-            ClassData.final_grade=='W' or ClassData.final_grade=='D' or 
-            ClassData.final_grade=='D-' or ClassData.final_grade=='D+').all())
+        num_with_dwf = len(class_data.filter(ClassData.grade=='F' or 
+            ClassData.grade=='W' or ClassData.grade=='D' or 
+            ClassData.grade=='D-' or ClassData.grade=='D+').all())
         
         return (num_with_dwf / num_grades) * 100 if num_grades > 0 else 0.0 
 
@@ -346,11 +373,9 @@ class ClassData(db.Model):
         if (limit is None):
             limit = len(class_data)
         
-        for i in range(limit):
-            
+        for i in range(limit):   
             current_class = class_data[i]
             current_student = current_class.student_obj
-            current_mcas_scores = current_student.mcas_score_obj
             current_course = current_class.course_obj
 
             def format_leave_date(date):
@@ -359,97 +384,84 @@ class ClassData(db.Model):
                 else:
                     return None
 
-            def get_mcas_score_dict(score_obj):
-                if (score_obj is not None):
-                    return {
-                        'english_raw': score_obj.english_raw,
-                        'english_scaled': score_obj.english_scaled,
-                        'english_achievement_level': score_obj.english_achievement_level,
-                        'math_raw': score_obj.math_raw,
-                        'math_scaled': score_obj.math_scaled,
-                        'math_achievement_level': score_obj.math_achievement_level,
-                        'stem_raw': score_obj.stem_raw,
-                        'stem_scaled': score_obj.stem_scaled,
-                        'stem_achievement_level': score_obj.stem_achievement_level
-                    }
+            def format_home_location(city: str, state: str, country: str) -> str:
+                if (city is not None and state is not None and country is not None):
+                    return f'{city}, {state}, {country}'
+                elif (city is not None and state is not None):
+                    return f'{city}, {state}'
+                elif (city is not None and country is not None):
+                    return f'{city}, {country}'
+                elif (state is not None and country is not None):
+                    return f'{state}, {country}'
                 else:
-                    return {
-                        'english_raw': None,
-                        'english_scaled': None,
-                        'english_achievement_level': None,
-                        'math_raw': None,
-                        'math_scaled': None,
-                        'math_achievement_level': None,
-                        'stem_raw': None,
-                        'stem_scaled': None,
-                        'stem_achievement_level': None
-                    }
+                    return ''
+
+            def format_high_school_info(student):
+                gpa = student.high_school_gpa
+                name = student.high_school_name
+                city = student.high_school_city
+                state = student.high_school_state
+                ceeb = student.high_school_ceeb
+
+                if (city is not None and state is not None):
+                    location = f'{"" if (city is None) else city}, {"" if (state is None) else state}'
+                elif (city is None and state is not None):
+                    location = state
+                elif (city is not None and state is None):
+                    location = city
+                else:
+                    location = 'N/A'
+                    
+                return {
+                    'gpa': '' if (gpa is None) else gpa,
+                    'name': '' if (name is None) else name,
+                    'location': location,
+                    'ceeb': '' if (ceeb is None) else ceeb
+                }
 
             current_dict = {
                 'student_id': current_class.student_id,
                 'course_code': current_course.course_num,
-                'course_title': current_course.title,
+                'program_level': current_class.program_level,
+                'subprogram_code': current_class.subprogram_code,
                 'semester': current_course.semester,
                 'year': current_course.year,
-                'final_grade': current_class.final_grade,
-                'subprogram_desc': current_class.subprogram_desc,
+                'grade': current_class.grade,
                 'demographics': {
-                    'first_name': current_student.first_name,
-                    'last_name': current_student.last_name,
-                    'major_1': current_student.major_1,
-                    'major_2': current_student.major_2,
-                    'major_3': current_student.major_3,
-                    'concentration_1': current_student.concentration_1,
-                    'concentration_2': current_student.concentration_2,
-                    'concentration_3': current_student.concentration_3,
-                    'minor_1': current_student.minor_1,
-                    'minor_2': current_student.minor_2,
-                    'minor_3': current_student.minor_3,
-                    'ethnicity': current_student.ethnicity,
-                    'home_location': f'{current_student.state_code}, {current_student.country_code}',
-                    'first_gen_student': current_student.first_gen_student
+                    'race_ethnicity': current_student.race_ethnicity,
+                    'gender': current_student.gender,
+                    'home_location': format_home_location(current_student.city,
+                        current_student.state, current_student.country),
+                    'home_zip_code': '' if (current_student.postal_code is None) 
+                        else current_student.postal_code 
                 },
                 'academic_info': {
-                    'overall_college_gpa': current_student.overall_college_gpa,
-                    'major_college_gpa': current_student.major_college_gpa,
-                    'high_school_gpa': current_student.high_school_gpa,
+                    'major': current_student.major_desc,
+                    'concentration': current_student.concentration_desc,
+                    'class_year': ClassEnum.class_to_str(current_student.class_year),
+                    'college_gpa': current_student.gpa_cumulative,
                     'math_placement_score': current_student.math_placement_score,
-                    'sat_score': current_student.sat_score,
-                    'act_score': current_student.act_score,
-                    'leave_date': format_leave_date(current_student.leave_date),
-                    'leave_reason': current_student.leave_reason 
+                    'sat_math': current_student.sat_math,
+                    'sat_total': current_student.sat_total,
+                    'admit_term_year': f'{current_student.admit_term} {current_student.admit_year}', 
+                    'admit_type': current_student.admit_type
                 },
-                'mcas_info': get_mcas_score_dict(current_mcas_scores)
+                'high_school_info': format_high_school_info(current_student)
             }
             return_list.append(current_dict)
         return return_list
 
 
-class MCASScore(db.Model):
-    __tablename__ = 'mcas_scores'
-    student_id = Column(Integer(), ForeignKey('students.id'), primary_key=True, 
-        nullable=False)
-    english_raw = Column(Integer())
-    english_scaled = Column(Integer())
-    english_achievement_level = Column(Text())
-    math_raw = Column(Integer())
-    math_scaled = Column(Integer())
-    math_achievement_level = Column(Text())
-    stem_raw = Column(Integer())
-    stem_scaled = Column(Integer())
-    stem_achievement_level = Column(Text())
-
-
 class Course(db.Model):
     __tablename__ = 'courses'
     id = Column(Integer(), primary_key=True)
+    term_code = Column(Text(), nullable=False)
     course_num = Column(Text(), CheckConstraint('length(course_num) >= 7 AND length(course_num) <= 9'), 
         nullable=False)
-    title = Column(Text(), nullable=False)
-    semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI")'), 
+    semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI", "SU")'), 
         nullable=False)
     year = Column(Integer(), nullable=False)
 
     
     def __repr__(self):
-        return f'{self.id} - {self.course_num} - {self.title} '
+        return f'{self.id} - {self.course_num} - {self.title}'

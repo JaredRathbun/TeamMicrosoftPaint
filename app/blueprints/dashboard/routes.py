@@ -16,25 +16,27 @@
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 
+
+
 from . import dash_bp
 from flask import render_template, request
 from flask_login import login_required, current_user
 from app import admin_required
 from app.blueprints.dashboard.data_upload import upload_excel_file
-from app.models import User, ClassData, MCASScore, Course, Student
+from app.models import User, ClassData, Course, Student
 
 @dash_bp.route('/dashboard', methods = ['GET'])
 @login_required
 def get_dash():
     name = current_user.first_name + ' ' + current_user.last_name
     dwf_avg = ClassData.get_avg_dwf()
-    overall_avg_gpa = Student.get_avg_overall_gpa()
-    major_avg_gpa = Student.get_avg_major_gpa()
+    avg_gpa = Student.get_avg_gpa()
+    high_school_avg_gpa = Student.get_avg_high_school_gpa()
     total_students = len(Student.query.all())
 
     return render_template('dashboard/dashboard.html', current_user=current_user,
-        user_name=name, dwf_avg=dwf_avg, overall_avg_gpa=overall_avg_gpa, 
-        major_avg_gpa=major_avg_gpa, total_students=total_students)
+        user_name=name, dwf_avg=dwf_avg, avg_gpa=avg_gpa, 
+        high_school_avg_gpa=high_school_avg_gpa, total_students=total_students)
 
 
 @dash_bp.route('/data', methods = ['GET'])
@@ -50,12 +52,12 @@ def get_data():
 def get_visualizations():
     name = current_user.first_name + ' ' + current_user.last_name
     dwf_avg = ClassData.get_avg_dwf()
-    overall_avg_gpa = Student.get_avg_overall_gpa()
-    major_avg_gpa = Student.get_avg_major_gpa()
+    avg_gpa = Student.get_avg_gpa()
+    high_school_avg_gpa = Student.get_avg_high_school_gpa()
     total_students = len(Student.query.all())
     return render_template('dashboard/visualizations.html', 
         current_user=current_user, user_name=name, dwf_avg=dwf_avg, 
-        overall_avg_gpa=overall_avg_gpa, major_avg_gpa=major_avg_gpa, 
+        avg_gpa=avg_gpa, high_school_avg_gpa=high_school_avg_gpa, 
         total_students=total_students)
 
 
@@ -93,8 +95,8 @@ def get_admin():
 
 
 @dash_bp.route('/upload', methods = ['POST'])
-# @admin_required
-# @login_required
+@admin_required
+@login_required
 def upload_data():
     if 'file' in request.files.keys():
         uploaded_file = request.files['file']
@@ -112,7 +114,7 @@ def all_data():
         limit = None
 
     data = ClassData.get_data()
-    
+
     if (limit is not None and limit > len(data)):
         return {'message': 'Limit out of bounds.'}, 400
     else:

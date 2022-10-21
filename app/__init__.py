@@ -51,7 +51,7 @@ def init_app(config_fname: str = None) -> Flask:
         # Init the DB, create all tables.
         with app.app_context():
             db.init_app(app)
-            from app.models import User, Student, MCASScore, ClassData
+            from app.models import User, Student, ClassData
             db.create_all()
 
         jwt_manager.init_app(app)
@@ -64,7 +64,7 @@ def init_app(config_fname: str = None) -> Flask:
 
         return app
     else:
-        logger.critical('Failed to load config file. Please make sure it exists in the /config directory.')
+        logger.critical('Failed to load config file. Please make sure it exists in the /instance directory.')
         raise SystemExit()
     
 
