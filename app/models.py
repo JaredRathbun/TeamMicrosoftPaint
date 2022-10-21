@@ -34,18 +34,37 @@ from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
 
 
 class ProviderEnum(enum.Enum):
+    '''
+    An Enum to represent the method of how a user is authenticating to the system.
+    '''
     LOCAL, GOOGLE = range(2)
 
 
 class RoleEnum(enum.Enum):
+    '''
+    An Enum to hold the valid roles assigned to users.
+    '''
     VIEWER, DATA_ADMIN, ADMIN = range(3)
 
 
 class ClassEnum(enum.Enum):
+    '''
+    An Enum to represent a student's class (year of education).
+    '''
     FRESHMAN, SOPHOMORE, JUNIOR, SENIOR = range(4)
 
     @staticmethod
     def parse_class(class_str: str):
+        '''
+        Parses a `str` object into a `ClassEnum` object. 
+
+        param: 
+            `class_str` The `str` representation of the class.
+        return: 
+            A `ClassEnum` object representing the student's class.
+        raises: 
+            `InvalidClassException` If the class could not be parsed.
+        '''
         match class_str:
             case 'FR':
                 return ClassEnum.FRESHMAN
@@ -56,11 +75,19 @@ class ClassEnum(enum.Enum):
             case 'SR':
                 return ClassEnum.SENIOR
             case _:
-                return InvalidClassException('Class not recognized.')
+                raise InvalidClassException('Class not recognized.')
 
     
     @staticmethod 
     def class_to_str(class_year) -> str:
+        '''
+        Converts a `ClassEnum` object into a `str` format.
+
+        param: 
+            `class_year` The `ClassEnum` object of to parse.
+        return: 
+            A `str` representing the student's class.
+        '''
         match class_year:
             case ClassEnum.FRESHMAN:
                 return 'Freshman'
@@ -75,22 +102,37 @@ class ClassEnum(enum.Enum):
 
 
 class InvalidClassException(Exception):
+    '''
+    An exception to represent an invalid class.
+    '''
     pass
 
 
 class InvalidProviderException(Exception):
+    '''
+    An exception to represent an invalid provider.
+    '''
     pass
 
 
 class ExistingPasswordException(Exception):
+    '''
+    An exception to represent an existing password conflict.
+    '''
     pass
 
 
 class InvalidPrivilegeException(Exception):
+    '''
+    An exception to represent an invalid privilege.
+    '''
     pass
 
 
 class User(UserMixin, db.Model):
+    '''
+    A class to represent a user.
+    '''
     __tablename__ = 'users'
     email = Column(Text(), primary_key=True)
     last_name = Column(Text(), nullable=False)
@@ -101,23 +143,45 @@ class User(UserMixin, db.Model):
     provider = Column(Enum(ProviderEnum))
 
     def __init__(self, email, first_name, last_name, password=None):
+        '''
+        Creates a new `User` object.
+        '''
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
 
+        # If the password exists, a local account is being created. Otherwise,
+        # a Google account is being used to log in.
         if password:
             self.hash = generate_password_hash(password)
             self.provider = ProviderEnum.LOCAL
         else:
             self.provider = ProviderEnum.GOOGLE
 
-    def get_id(self):
+    def get_id(self) -> str:
+        '''
+        Getter for the user's email address.
+
+        return: 
+            A `str` representing the user's email address.
+        '''
         return self.email
 
-    def is_active():
+    def is_active() -> bool:
+        '''
+        Returns if the user is active or not.
+
+        return: 
+            `True`
+        '''
         return True
 
     def is_authenticated():
+        '''
+        Returns whether or not the user is authenticated.
+
+        return: `True`
+        '''
         return True
 
     def check_password(self, password: str):
@@ -128,6 +192,8 @@ class User(UserMixin, db.Model):
             password: The password the user entered.
         return:
             A `bool` representing whether or not the password was correct.
+        raises:
+            An `InvalidProviderException` if the user's provider is not `ProviderEnum.LOCAL`.
         '''
         if self.provider is ProviderEnum.LOCAL:
             return check_password_hash(self.hash, password)
@@ -167,7 +233,8 @@ class User(UserMixin, db.Model):
 
         param:
             new_password: The user's new password.
-        return: A `bool` representing whether or not the operation was successful.
+        return: 
+            A `bool` representing whether or not the operation was successful.
         raises:
             `TypeError` if the new password is an empty `str`.
             `ExistingPasswordException` if the new password is the same as the
@@ -198,6 +265,15 @@ class User(UserMixin, db.Model):
     
     @staticmethod
     def verify_reset_token(token: str):
+        '''
+        Verifies whether or not the user's password reset token is valid.
+        
+        param:
+            `token`: A `str` representing the user's token.
+
+        return: 
+            A `User` corresponding to the user.
+        '''
         if token:
             try:
                 email = Serializer(current_app.config['SECRET_KEY']).loads(
@@ -222,7 +298,8 @@ class User(UserMixin, db.Model):
         '''
         Returns the TOTP OTP code for the user.
 
-        return: An `TOTP` object.
+        return: 
+            A `TOTP` object.
         '''
         if self.totp_key is None:
             raise InvalidPrivilegeException('User is not an admin!')
@@ -246,6 +323,9 @@ class User(UserMixin, db.Model):
 
 
 class Student(db.Model):
+    ''''
+    A class to hold a Student.
+    '''
     __tablename__ = 'students'
     id = Column(Text(), primary_key=True)
     admit_year = Column(Integer(), nullable=False)
@@ -255,7 +335,7 @@ class Student(db.Model):
     major_desc = Column(Text(), nullable=False)
     concentration_code = Column(Text())
     concentration_desc = Column(Text())
-    class_year = Column(Enum(ClassEnum), nullable = False)
+    class_year = Column(Enum(ClassEnum), nullable=False)
     city = Column(Text())
     state = Column(Text())
     country = Column(Text())
@@ -283,12 +363,15 @@ class Student(db.Model):
         '''
         Calculates the average college GPA for all students in the database.
 
-        return: The average GPA of all students in the database represented by 
-            a str.
+        return: 
+            The average GPA of all students in the database represented by a `str`.
         '''
-        def __sum_gpa():
+        def __sum_gpa() -> int:
             '''
             Calculates the sum of all college GPAs in the database.
+
+            return:
+                An `int` holding the sum of all GPAs in the database.
             '''
             sum = 0
             for student in Student.query.all():
@@ -364,7 +447,7 @@ class ClassData(db.Model):
 
         param: 
             limit: The max number of entries to generate. If the limit is not 
-            supplied, then all entries are returned.
+                supplied, then all entries are returned.
 
         return:
             A `list` of `dict` objects that contain the information about each
@@ -377,18 +460,24 @@ class ClassData(db.Model):
         if (limit is None):
             limit = len(class_data)
         
+        # Loop over every ClassData object in the database, within the limit.
         for i in range(limit):   
             current_class = class_data[i]
             current_student = current_class.student_obj
             current_course = current_class.course_obj
 
-            def format_leave_date(date):
-                if (date is not None):
-                    return date.strftime('%m-%d-%Y')
-                else:
-                    return None
-
             def format_home_location(city: str, state: str, country: str) -> str:
+                '''
+                Formats the student's home location.
+
+                param:
+                    `city`: The student's city in a `str`.
+                    `state`: The student's state in a `str`.
+                    `country`: The student's country in a `str`.
+                return:
+                    A formatted `str` representing the student's home location. 
+                    Returns a blank `str` if all 3 parameters were of `NoneType`.
+                '''
                 if (city is not None and state is not None and country is not None):
                     return f'{city}, {state}, {country}'
                 elif (city is not None and state is not None):
@@ -400,7 +489,15 @@ class ClassData(db.Model):
                 else:
                     return ''
 
-            def format_high_school_info(student):
+            def format_high_school_info(student) -> dict:
+                '''
+                Formats the student's high school information.
+
+                param:
+                    `student`: The `Student` object to use for accessing data.
+                return:
+                    A `dict` containing the student's high school information.
+                '''
                 gpa = student.high_school_gpa
                 name = student.high_school_name
                 city = student.high_school_city
@@ -423,6 +520,8 @@ class ClassData(db.Model):
                     'ceeb': '' if (ceeb is None) else ceeb
                 }
 
+            # Create the dict for this ClassData object, and append it to the 
+            # return list.
             current_dict = {
                 'student_id': current_class.student_id,
                 'course_code': current_course.course_num,
@@ -457,6 +556,9 @@ class ClassData(db.Model):
 
 
 class Course(db.Model):
+    '''
+    A class to represent a Course.
+    '''
     __tablename__ = 'courses'
     id = Column(Integer(), primary_key=True)
     term_code = Column(Text(), nullable=False)
@@ -465,7 +567,3 @@ class Course(db.Model):
     semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI", "SU")'), 
         nullable=False)
     year = Column(Integer(), nullable=False)
-
-    
-    def __repr__(self):
-        return f'{self.id} - {self.course_num} - {self.title}'
