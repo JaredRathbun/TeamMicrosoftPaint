@@ -16,8 +16,6 @@
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 
 
-
-
 from . import dash_bp
 from flask import render_template, request
 from flask_login import login_required, current_user
