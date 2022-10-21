@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU General Public License along with 
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 #
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
 # Code referenced from: 
 # https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
 # https://testdriven.io/blog/flask-pytest/
