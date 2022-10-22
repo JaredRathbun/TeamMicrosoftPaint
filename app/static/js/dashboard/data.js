@@ -86,9 +86,9 @@ function createTable(data) {
                 <td hidden id="row-${rowID}">
                     <div class="container mx-2 mt-1">
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col-4">
                                 <h5 class="mx-2">Student Demographics</h5>
-                                <table class="table my-0 col-3">
+                                <table class="table my-0 col-4">
                                     <tr>
                                         <th>Gender</th>
                                         <td>${val.demographics.gender}</td>
@@ -119,9 +119,9 @@ function createTable(data) {
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-3">
+                            <div class="col-4">
                                 <h5 class="mx-3">Student Academic Information</h5>
-                                <table class="table my-0 col-3">
+                                <table class="table my-0 col-4">
                                     <tr>
                                         <th>Major 1</th>
                                         <td>${val.academic_info.major_1}</td>
@@ -156,9 +156,9 @@ function createTable(data) {
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-3">
+                            <div class="col-4">
                                 <h5 class="mx-2">Student Academic Scores</h5>
-                                <table class="table my-0 col-3">
+                                <table class="table my-0 col-4">
                                     <tr>
                                         <th>Cumulative College GPA</th>
                                         <td>${val.academic_scores.college_gpa}</td>
@@ -183,39 +183,6 @@ function createTable(data) {
                                         <th>High School GPA</th>
                                         <td>${val.academic_scores.high_school_gpa}</td>
                                     </tr>
-                                </table>
-                            </div>
-                            <div class="col-2">
-                                <h5 class="mx-2">Student MCAS Scores</h5>
-                                <table class="table my-0 col-2">
-                                    <thead>
-                                        <tr>
-                                            <th>MCAS Subject</th>
-                                            <th>RAW Score</th>
-                                            <th>Scaled Score</th>
-                                            <th>Achievement Level</th>
-                                        </tr>
-                                        <tbody>
-                                            <tr>
-                                                <td>English</td>
-                                                <td>${val.mcas_scores.english_raw}</td>
-                                                <td>${val.mcas_scores.english_scaled}</td>
-                                                <td>${val.mcas_scores.english_achievement_level}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Math</td>
-                                                <td>${val.mcas_scores.math_raw}</td>
-                                                <td>${val.mcas_scores.math_scaled}</td>
-                                                <td>${val.mcas_scores.math_achievement_level}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>STEM</td>
-                                                <td>${val.mcas_scores.stem_raw}</td>
-                                                <td>${val.mcas_scores.stem_scaled}</td>
-                                                <td>${val.mcas_scores.stem_achievement_level}</td>
-                                            </tr>
-                                        </tbody>
-                                    </thead>
                                 </table>
                             </div>
                         </div>

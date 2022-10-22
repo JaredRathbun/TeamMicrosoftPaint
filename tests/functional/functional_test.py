@@ -317,25 +317,37 @@ def __read_file(file_name: str) -> tuple[BytesIO, str]:
 
 
 def test_good_data_upload(test_client):
-    from app.models import Student
+    from app.models import Student, Course, ClassData
     
     file = {
-        'file': __read_file('test_data_sheet.xlsx')
+        'file': __read_file('good_test_data.csv')
     }
     res = test_client.post('/upload', data=file)
 
     assert (res.status_code == 200)
     
-    # There should be one student in the database.
-    assert (len(Student.query.all()) == 1)
+    # There should be 13 students in the database.
+    assert (len(Student.query.all()) == 13)
+
+    # There should be 6 Courses.
+    assert (len(Course.query.all()) == 6)
+
+    # There should be 15 ClassData objects.
+    assert(len(ClassData.query.all()) == 15)
     
 
 
-def test_bad_student_upload(test_client):
-    from app.models import Student
+def test_bad_data_upload(test_client, init_db):
+    from app.models import Student, ClassData, Course
+    from app import db
+
+    # Clear the database.
+    Student.query.delete()
+    ClassData.query.delete()
+    Course.query.delete()
 
     file = {
-        'file': __read_file('test_data_bad_student.xlsx')
+        'file': __read_file('bad_test_data.csv')
     }
 
     res = test_client.post('/upload', data=file)
@@ -347,45 +359,7 @@ def test_bad_student_upload(test_client):
     
     dict_res = json.loads(res.data.decode('utf-8'))
     assert (res.status_code == 400)
-    # Bad leave date, first gen students, sat, and 2 errors caused by this one.
-    assert (len(dict_res['errors']) == 5)
+    # Missing admit type, program_level is incorrect, major1_desc missing, 
+    # course ID missing, term incorrect.
+    assert (len(dict_res['errors']) == 6)
     assert (dict_res['message'] == 'Errors while parsing data.')
-    assert (Student.query.filter_by(first_name='Jennifer', last_name='Lopez'))
-
-
-def test_bad_class_data_upload(test_client):
-    from app.models import ClassData, Course
-
-    file = {
-        'file': __read_file('test_data_bad_class_data.xlsx')
-    }
-
-    res = test_client.post('/upload', data=file)
-
-    dict_res = json.loads(res.data.decode('utf-8'))
-
-    assert (res.status_code == 400)
-
-    # Invalid prog code, subprog. desc., grade, semester, and course year.
-    assert (len(dict_res['errors']) == 5)
-    assert (dict_res['message'] == 'Errors while parsing data.')
-    assert (len(ClassData.query.all()) == 1)
-    assert (len(Course.query.all()) == 1)
-
-
-def test_bad_mcas_score(test_client):
-    from app.models import MCASScore
-
-    file = {
-        'file': __read_file('test_data_bad_mcas_score.xlsx')
-    }
-
-    res = test_client.post('/upload', data=file)
-
-    dict_res = json.loads(res.data.decode('utf-8'))
-
-    assert (res.status_code == 400)
-    # There is just a possibility of the student ID missing as all other vals are nullable.
-    assert (len(dict_res['errors']) == 1)
-    assert (dict_res['message'] == 'Errors while parsing data.')
-    assert (len(MCASScore.query.all()) == 2)

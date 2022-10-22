@@ -24,7 +24,7 @@ from . import dash_bp
 from flask import render_template, request
 from flask_login import login_required, current_user
 from app import admin_required
-from app.blueprints.dashboard.data_upload import upload_excel_file
+from app.blueprints.dashboard.data_upload import upload_csv_file
 from app.models import User, ClassData, Course, Student
 
 @dash_bp.route('/dashboard', methods = ['GET'])
@@ -97,12 +97,12 @@ def get_admin():
 
 
 @dash_bp.route('/upload', methods = ['POST'])
-@admin_required
-@login_required
+# @admin_required
+# @login_required
 def upload_data():
     if 'file' in request.files.keys():
         uploaded_file = request.files['file']
-        return upload_excel_file(uploaded_file)
+        return upload_csv_file(uploaded_file)
     else:
         return {'message': 'Missing file.'}, 400
 

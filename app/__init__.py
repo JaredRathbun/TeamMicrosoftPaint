@@ -75,10 +75,13 @@ def init_app(config_fname: str = None) -> Flask:
 def admin_required(f):
     @wraps(f)
     def dec_func(*args, **kwargs):
-        if current_user.is_admin:
-            return f(*args, **kwargs)
-        else:
-            return {'message': 'User does not have privledges to perform this action.'}, 401
+        try:
+            if current_user.is_admin:
+                return f(*args, **kwargs)
+            else:
+                return {'message': 'User does not have privileges to perform this action.'}, 401
+        except:
+            return {'message': 'User is not an admin.'}, 401
     return dec_func
 
 
