@@ -54,7 +54,7 @@ class ClassEnum(enum.Enum):
     FRESHMAN, SOPHOMORE, JUNIOR, SENIOR = range(4)
 
     @staticmethod
-    def parse_class(class_str: str):
+    def parse_class(class_str: str) -> int:
         '''
         Parses a `str` object into a `ClassEnum` object. 
 
@@ -340,16 +340,15 @@ class Student(db.Model):
     concentration_code = Column(Text())
     concentration_desc = Column(Text())
     class_year = Column(Enum(ClassEnum), nullable=False)
-    city = Column(Text())
+    city = Column(Text(), nullable=False)
     state = Column(Text())
-    country = Column(Text())
+    country = Column(Text(), nullable=False)
     postal_code = Column(Text(), nullable=False)
     math_placement_score = Column(Integer())
     race_ethnicity = Column(Text(), nullable=False)
     gender = Column(Text(), nullable=False)
     gpa_cumulative = Column(Float(), 
         CheckConstraint('gpa_cumulative >= 0.0 AND gpa_cumulative <= 4.0'))
-    math_placement_score = Column(Integer())
     high_school_gpa = Column(Float(), 
         CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
     sat_math = Column(Integer(), 
@@ -619,8 +618,8 @@ class ClassData(db.Model):
                 'grade': current_class.grade,
                 'demographics': format_demographics(),
                 'academic_info': format_academic_info(),
-                'academic_scores': format_academic_scores(),
-                'mcas_scores': format_mcas_scores()
+                'academic_scores': format_academic_scores()
+                # 'mcas_scores': format_mcas_scores()
             }
             return_list.append(current_dict)
         return return_list
