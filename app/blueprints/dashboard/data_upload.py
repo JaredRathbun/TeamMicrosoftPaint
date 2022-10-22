@@ -269,7 +269,7 @@ def __insert_students(csv_file: DataFrame):
             # If the student exists, move to the next row of the data.
             if Student.query.get(unique_id):
                 continue
-
+        
         admit_year = csv_file['Admit_Year'][idx]
         admit_term = csv_file['Admit_Term'][idx]
         admit_type = csv_file['Admit_Type'][idx]
@@ -365,7 +365,6 @@ def __insert_students(csv_file: DataFrame):
 
         if (gpa_cumulative is None):
             gpa_cumulative = 0.00
-        
 
         if (not found_error):
             new_student = Student(id=unique_id,

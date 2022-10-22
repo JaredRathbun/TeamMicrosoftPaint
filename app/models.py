@@ -52,7 +52,7 @@ class ClassEnum(enum.Enum):
     An Enum to represent a student's class (year of education).
     '''
     FRESHMAN, SOPHOMORE, JUNIOR, SENIOR = range(4)
-
+ 
     @staticmethod
     def parse_class(class_str: str) -> int:
         '''
