@@ -448,7 +448,7 @@ class ClassData(db.Model):
             ClassData.grade=='W' or ClassData.grade=='D' or 
             ClassData.grade=='D-' or ClassData.grade=='D+').all())
         
-        return (num_with_dwf / num_grades) * 100 if num_grades > 0 else 0.0 
+        return '%.2f' % ((num_with_dwf / num_grades) * 100) if num_grades > 0 else 0.0 
 
 
     @staticmethod
