@@ -331,8 +331,12 @@ class Student(db.Model):
     admit_year = Column(Integer(), nullable=False)
     admit_term = Column(Text(), nullable=False)
     admit_type = Column(Text(), nullable=False)
-    major = Column(Text(), nullable=False)
-    major_desc = Column(Text(), nullable=False)
+    major_1 = Column(Text(), nullable=False)
+    major_1_desc = Column(Text(), nullable=False)
+    major_2 = Column(Text())
+    major_2_desc = Column(Text())
+    minor_1 = Column(Text())
+    minor_1_desc = Column(Text())
     concentration_code = Column(Text())
     concentration_desc = Column(Text())
     class_year = Column(Enum(ClassEnum), nullable=False)
@@ -352,11 +356,14 @@ class Student(db.Model):
         CheckConstraint(f'sat_math >= {app.config["SAT_SCORE_MIN"]} AND sat_math <= {app.config["SAT_SCORE_MAX"]}'))
     sat_total = Column(Integer(), 
         CheckConstraint(f'sat_total >= {app.config["SAT_SCORE_MIN"]} AND sat_total <= {app.config["SAT_SCORE_MAX"]}'))
+    act_score = Column(Integer(), 
+        CheckConstraint(f'act_score >= {app.config["ACT_SCORE_MIN"]} AND act_score <= {app.config["ACT_SCORE_MAX"]}'))
     high_school_name = Column(Text())
     high_school_city = Column(Text())
     high_school_state = Column(Text())
     high_school_ceeb = Column(Integer())
-
+    cohort = Column(Text())
+    mcas_score_obj = db.relationship('MCASScore', uselist=False)
 
     @staticmethod
     def get_avg_gpa() -> str:
@@ -412,6 +419,9 @@ class Student(db.Model):
 
 
 class ClassData(db.Model):
+    '''
+    A Class to hold Class Data.
+    '''
     __tablename__ = 'class_data'
     dummy_pk = Column(Integer(), primary_key=True)
     student_id = Column(Integer(), ForeignKey('students.id'), nullable=False)
@@ -428,6 +438,10 @@ class ClassData(db.Model):
     def get_avg_dwf() -> float:
         '''
         Calculates the average DWF rate of all the data in the database.
+
+        return: 
+            A `float` reprenting the average DWF rate of all students in the 
+            database.
         '''
         class_data = ClassData.query
         num_grades = len(class_data.all())
@@ -465,6 +479,7 @@ class ClassData(db.Model):
             current_class = class_data[i]
             current_student = current_class.student_obj
             current_course = current_class.course_obj
+            current_mcas_scores = current_student.mcas_score_obj
 
             def format_home_location(city: str, state: str, country: str) -> str:
                 '''
@@ -489,20 +504,52 @@ class ClassData(db.Model):
                 else:
                     return ''
 
-            def format_high_school_info(student) -> dict:
+            def format_info(info: object) -> str:
                 '''
-                Formats the student's high school information.
+                Converts the info `object` into either N/A or the correct 
+                `str` representation of the `object`.
 
                 param:
-                    `student`: The `Student` object to use for accessing data.
+                    info: A `object` representing the info.
                 return:
-                    A `dict` containing the student's high school information.
+                    A `str` holding either the info or 'N/A'.
                 '''
-                gpa = student.high_school_gpa
-                name = student.high_school_name
-                city = student.high_school_city
-                state = student.high_school_state
-                ceeb = student.high_school_ceeb
+                if (info is None):
+                    return 'N/A'
+                else:
+                    return info
+
+            def format_mcas_scores() -> dict:
+                '''
+                Formats the student's MCAS Scores into a `dict` object.
+
+                param: 
+                    `score_obj`: The `MCASScore` object.
+                return:
+                    A `dict` holding the student's MCAS scores.
+                '''
+                if (current_mcas_scores is not None):
+                    return {
+                        'english_raw': format_info(current_mcas_scores.english_raw),
+                        'english_scaled': format_info(current_mcas_scores.english_scaled),
+                        'english_achievement_level': format_info(current_mcas_scores.english_achievement_level),
+                        'math_raw': format_info(current_mcas_scores.math_raw),
+                        'math_scaled': format_info(current_mcas_scores.math_scaled),
+                        'math_achievement_level': format_info(current_mcas_scores.math_achievement_level),
+                        'stem_raw': format_info(current_mcas_scores.stem_raw),
+                        'stem_scaled': format_info(current_mcas_scores.stem_scaled),
+                        'stem_achievement_level': format_info(current_mcas_scores.stem_achievement_level)
+                    }
+
+            def format_demographics() -> dict:
+                '''
+                Creates a `dict` object for the student's demographic information.
+
+                return:
+                    A `dict` object containing the student's demographics.
+                '''
+                city = current_student.high_school_city
+                state = current_student.high_school_state
 
                 if (city is not None and state is not None):
                     location = f'{"" if (city is None) else city}, {"" if (state is None) else state}'
@@ -512,12 +559,52 @@ class ClassData(db.Model):
                     location = city
                 else:
                     location = 'N/A'
-
+                
                 return {
-                    'gpa': '' if (gpa is None) else gpa,
-                    'name': '' if (name is None) else name,
-                    'location': location,
-                    'ceeb': '' if (ceeb is None) else ceeb
+                    'race_ethnicity': current_student.race_ethnicity,
+                    'gender': current_student.gender,
+                    'home_location': format_home_location(current_student.city,
+                        current_student.state, current_student.country),
+                    'home_zip_code': '' if (current_student.postal_code is None) 
+                        else current_student.postal_code,
+                    'high_school_name': format_info(current_student.high_school_name),
+                    'high_school_location': location,
+                    'high_school_ceeb': format_info(current_student.high_school_ceeb)
+                }
+
+            def format_academic_info() -> dict:
+                '''
+                Formats the student's academic info in a `dict` object.
+
+                return:
+                    A `dict` object containing the student's academic info.
+                '''
+                return {
+                    'cohort': format_info(current_student.cohort),
+                    'major_1': current_student.major_1_desc,
+                    'major_2': format_info(current_student.major_2_desc),
+                    'minor_1': format_info(current_student.minor_1_desc),
+                    'concentration': format_info(current_student.concentration_desc),
+                    'class_year': ClassEnum.class_to_str(current_student.class_year),
+                    'admit_term_year': f'{current_student.admit_term} {current_student.admit_year}', 
+                    'admit_type': current_student.admit_type
+                }
+
+            def format_academic_scores() -> dict:
+                '''
+                Formats the student's academic scores and returns them in a 
+                `dict` object.
+
+                return:
+                    A `dict` containing the student's academic scores.
+                '''
+                return {
+                    'college_gpa': format_info(current_student.gpa_cumulative),
+                    'math_placement_score': format_info(current_student.math_placement_score),
+                    'sat_math': format_info(current_student.sat_math),
+                    'sat_total': format_info(current_student.sat_total),
+                    'act_score': format_info(current_student.act_score),
+                    'high_school_gpa': format_info(current_student.high_school_gpa)
                 }
 
             # Create the dict for this ClassData object, and append it to the 
@@ -530,26 +617,10 @@ class ClassData(db.Model):
                 'semester': current_course.semester,
                 'year': current_course.year,
                 'grade': current_class.grade,
-                'demographics': {
-                    'race_ethnicity': current_student.race_ethnicity,
-                    'gender': current_student.gender,
-                    'home_location': format_home_location(current_student.city,
-                        current_student.state, current_student.country),
-                    'home_zip_code': '' if (current_student.postal_code is None) 
-                        else current_student.postal_code 
-                },
-                'academic_info': {
-                    'major': current_student.major_desc,
-                    'concentration': current_student.concentration_desc,
-                    'class_year': ClassEnum.class_to_str(current_student.class_year),
-                    'college_gpa': current_student.gpa_cumulative,
-                    'math_placement_score': current_student.math_placement_score,
-                    'sat_math': current_student.sat_math,
-                    'sat_total': current_student.sat_total,
-                    'admit_term_year': f'{current_student.admit_term} {current_student.admit_year}', 
-                    'admit_type': current_student.admit_type
-                },
-                'high_school_info': format_high_school_info(current_student)
+                'demographics': format_demographics(),
+                'academic_info': format_academic_info(),
+                'academic_scores': format_academic_scores(),
+                'mcas_scores': format_mcas_scores()
             }
             return_list.append(current_dict)
         return return_list
@@ -567,3 +638,21 @@ class Course(db.Model):
     semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI", "SU")'), 
         nullable=False)
     year = Column(Integer(), nullable=False)
+
+
+class MCASScore(db.Model):
+    '''
+    A class to represent MCAS scores.
+    '''
+    __tablename__ = 'mcas_scores'
+    student_id = Column(Text(), ForeignKey('students.id'), primary_key=True, 
+        nullable=False)
+    english_raw = Column(Integer())
+    english_scaled = Column(Integer())
+    english_achievement_level = Column(Text())
+    math_raw = Column(Integer())
+    math_scaled = Column(Integer())
+    math_achievement_level = Column(Text())
+    stem_raw = Column(Integer())
+    stem_scaled = Column(Integer())
+    stem_achievement_level = Column(Text())

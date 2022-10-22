@@ -66,7 +66,7 @@ window.onload = () => {
 function createTable(data) {
     const convertToNA = (val) => (val == null) ? 'N/A' : val;
     const convertBooleanToString = (val) => (val) ? 'Yes' : 'No';
-
+    console.log(data);
     let rowID = 0;
     for (const val of data) {
         const row = `
@@ -83,19 +83,19 @@ function createTable(data) {
                 <td class="col-1">${val.grade}</td>
             </tr>
             <tr class="d-flex">
-                <td hidden id="test-row">
+                <td hidden id="row-${rowID}">
                     <div class="container mx-2 mt-1">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-3">
                                 <h5 class="mx-2">Student Demographics</h5>
-                                <table class="table my-0 col-4">
-                                    <tr>
-                                        <th>Ethnicity</th>
-                                        <td>${val.demographics.race_ethnicity}</td>
-                                    </tr>
+                                <table class="table my-0 col-3">
                                     <tr>
                                         <th>Gender</th>
                                         <td>${val.demographics.gender}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Race/Ethnicity</th>
+                                        <td>${val.demographics.race_ethnicity}</td>
                                     </tr>
                                     <tr>
                                         <th>Home Location</th>
@@ -105,14 +105,34 @@ function createTable(data) {
                                         <th>Home Zip Code</th>
                                         <td>${val.demographics.home_zip_code}</td>
                                     </tr>
+                                    <tr>
+                                        <th>High School Name</th>
+                                        <td>${val.demographics.high_school_name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>High School Location</th>
+                                        <td>${val.demographics.high_school_location}</td> 
+                                    </tr>
+                                    <tr>
+                                        <th>High School CEEB</th>
+                                        <td>${val.demographics.high_school_ceeb}</td>
+                                    </tr>
                                 </table>
                             </div>
-                            <div class="col-4">
-                                <h5 class="mx-2">Student Academic Information</h5>
-                                <table class="table my-0 col-4">
+                            <div class="col-3">
+                                <h5 class="mx-3">Student Academic Information</h5>
+                                <table class="table my-0 col-3">
                                     <tr>
-                                        <th>Major</th>
-                                        <td>${val.academic_info.major}</td>
+                                        <th>Major 1</th>
+                                        <td>${val.academic_info.major_1}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Major 2</th>
+                                        <td>${val.academic_info.major_2}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Minor</th>
+                                        <td>${val.academic_info.minor_1}</td>
                                     </tr>
                                     <tr>
                                         <th>Concentration</th>
@@ -123,22 +143,6 @@ function createTable(data) {
                                         <td>${val.academic_info.class_year}</td>
                                     </tr>
                                     <tr>
-                                        <th>Cumulative College GPA</th>
-                                        <td>${val.academic_info.college_gpa}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Math Placement Score</th>
-                                        <td>${val.academic_info.math_placement_score}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>SAT Total Score</th>
-                                        <td>${val.academic_info.sat_total}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>SAT Math Score</th>
-                                        <td>${val.academic_info.sat_math}</td>
-                                    </tr>
-                                    <tr>
                                         <th>Admit Term + Year</th>
                                         <td>${val.academic_info.admit_term_year}</td>
                                     </tr>
@@ -146,35 +150,79 @@ function createTable(data) {
                                         <th>Admit Type</th>
                                         <td>${val.academic_info.admit_type}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Cohort</th>
+                                        <td>${val.academic_info.cohort}</td>
+                                    </tr>
                                 </table>
                             </div>
-                            <div class="col-4">
-                                <h5 class="mx-2">Student High School Information</h5>
-                                <table class="table my-0 col-4">
+                            <div class="col-3">
+                                <h5 class="mx-2">Student Academic Scores</h5>
+                                <table class="table my-0 col-3">
+                                    <tr>
+                                        <th>Cumulative College GPA</th>
+                                        <td>${val.academic_scores.college_gpa}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Math Placement Score</th>
+                                        <td>${val.academic_scores.math_placement_score}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>SAT Total Score</th>
+                                        <td>${val.academic_scores.sat_total}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>SAT Math Score</th>
+                                        <td>${val.academic_scores.sat_math}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ACT Score</th>
+                                        <td>${val.academic_scores.act_score}</td>
+                                    </tr>
                                     <tr>
                                         <th>High School GPA</th>
-                                        <td>${val.high_school_info.gpa}</td>
+                                        <td>${val.academic_scores.high_school_gpa}</td>
                                     </tr>
-                                    <tr>
-                                        <th>High School Name</th>
-                                        <td>${val.high_school_info.name}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>High School Location</th>
-                                        <td>${val.high_school_info.location}</td> 
-                                    </tr>
-                                    <tr>
-                                        <th>High School CEEB</th>
-                                        <td>${val.high_school_info.ceeb}</td>
-                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-2">
+                                <h5 class="mx-2">Student MCAS Scores</h5>
+                                <table class="table my-0 col-2">
+                                    <thead>
+                                        <tr>
+                                            <th>MCAS Subject</th>
+                                            <th>RAW Score</th>
+                                            <th>Scaled Score</th>
+                                            <th>Achievement Level</th>
+                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <td>English</td>
+                                                <td>${val.mcas_scores.english_raw}</td>
+                                                <td>${val.mcas_scores.english_scaled}</td>
+                                                <td>${val.mcas_scores.english_achievement_level}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Math</td>
+                                                <td>${val.mcas_scores.math_raw}</td>
+                                                <td>${val.mcas_scores.math_scaled}</td>
+                                                <td>${val.mcas_scores.math_achievement_level}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>STEM</td>
+                                                <td>${val.mcas_scores.stem_raw}</td>
+                                                <td>${val.mcas_scores.stem_scaled}</td>
+                                                <td>${val.mcas_scores.stem_achievement_level}</td>
+                                            </tr>
+                                        </tbody>
+                                    </thead>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </td>
-            </tr>
+            </tr> 
         `;
-        console.log(document.getElementById('tablebody').innerHTML);
         document.getElementById('tablebody').innerHTML += row;
         rowID++;
     }
