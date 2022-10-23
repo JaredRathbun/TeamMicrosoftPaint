@@ -34,21 +34,6 @@ fileUpload.addEventListener('change', () => {
 
 uploadButton.addEventListener('click', () => {
     let file = fileUpload.files[0];
-    // fetch('/upload', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //     },
-    //     body: file
-    // }).then((res) => res.json())
-    // .then((data) => {
-    //     console.log(data);
-    //     // if (res.status == 200) {
-    //     //     alert('Success');
-    //     // } else {
-    //     //     console.log(res);
-    //     // }
-    // });
     const data = new FormData();
     data.append('file', file);
     const req = new XMLHttpRequest();
@@ -63,9 +48,63 @@ uploadButton.addEventListener('click', () => {
     req.send(data);
 });
 
-function changeUserPermissions(element, emailAddress) {
-    console.log(element);
-    console.log(emailAddress);
+function changeUserRole(element, emailAddress) {
+    var currentRole = element.dataset.default;
+    var selectedRole = element.options[element.selectedIndex].text;
+    var name = element.dataset.name;
+
+    const getIndex = (role) => {
+        switch (role) {
+            case 'Admin':
+                return 0;
+            case 'Data Admin':
+                return 1;
+            case 'Viewer':
+                return 2;
+        }
+    }
+    // Pop up a confirmation for the user. 
+    $.confirm({
+        title: 'Confirm Role Change',
+        content: `Are you sure you want to change ${name} from ${currentRole} to ${selectedRole}?`,
+        buttons: {
+            confirm: {
+                btnClass: 'btn-primary',
+                keys: ['enter'],
+                action: () => {
+                    fetch('/change-role', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: emailAddress,
+                            new_role: selectedRole
+                        })
+                    }).then((res) => {
+                        console.log(res.status);
+                        if (res.status == 200) {
+                            $.alert({
+                                title: 'Success!',
+                                content: 'User role changed successfully!',
+                                type: 'green',
+                                typeAnimated: true
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: {
+                btnClass: 'btn-danger',
+                keys: ['escape'],
+                action: () => {
+                    // Move back to the original index.
+                    var defaultIdx = getIndex(currentRole);
+                    element.selectedIndex = defaultIdx;
+                }
+            } 
+        }
+    })
 }
 
 function logout(evt) {

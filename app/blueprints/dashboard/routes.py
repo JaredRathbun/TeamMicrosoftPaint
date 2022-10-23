@@ -25,7 +25,7 @@ from flask import render_template, request
 from flask_login import login_required, current_user
 from app import admin_required
 from app.blueprints.dashboard.data_upload import upload_csv_file
-from app.models import User, ClassData, Course, Student
+from app.models import RoleEnum, User, ClassData, Course, Student
 
 @dash_bp.route('/dashboard', methods = ['GET'])
 @login_required
@@ -72,33 +72,67 @@ def get_admin():
         Returns a `str` representation of whether or not the user is admin.
         '''
         if u:
+            if (u.role == RoleEnum.ADMIN):
+                role = 'Admin'
+            elif (u.role == RoleEnum.DATA_ADMIN):
+                role = 'Data Admin'
+            else:
+                role = 'Viewer'
+
             return {
                 'name': u.first_name + ' ' + u.last_name,
                 'email': u.email,
-                'permissions': lambda x: 'Admin' if u.is_admin else 'User'
+                'role': role
             }
         return None
 
-    if (current_user.is_admin):
+    if (current_user.is_admin()):
         user_query = User.query
-        total_admins = len(user_query.filter_by(is_admin=True).all())
+        total_admins = len(user_query.filter_by(role=RoleEnum.ADMIN).all())
         total_users = len(user_query.all())
         total_students = len(Student.query.all())
         rows_in_dataset = len(ClassData.query.all())
-        user_admin_list = [get_user_dict(u) for u in User.query.all()]
+        user_list = [get_user_dict(u) for u in User.query.all()]
         name = current_user.first_name + ' ' + current_user.last_name
 
         return render_template('dashboard/admin.html', current_user=current_user, 
             user_name=name, total_admins=total_admins, total_users=total_users,
             total_students=total_students, rows_in_dataset=rows_in_dataset,
-            user_admin_list=user_admin_list)
+            user_list=user_list)
     else:
         return render_template('errors/403.html'), 403
 
 
+@dash_bp.route('/change-role', methods = ['POST'])
+@admin_required
+@login_required
+def change_role():
+    body = request.get_json()
+    if ('email' in body and 'new_role' in body):
+        email = body['email']
+        new_role = body['new_role']
+
+        usr = User.query.get(email)
+        
+        if (usr):
+            match new_role:
+                case 'Admin':
+                    usr.set_admin()
+                case 'Data Admin':
+                    usr.set_data_admin()
+                case 'Viewer':
+                    usr.set_viewer()
+            return {'message': 'Success'}, 200
+        else:
+            return {'message': 'User not found'}, 400
+    else:
+        return {'message': 'Invalid request.'}, 400
+
+
+
 @dash_bp.route('/upload', methods = ['POST'])
-# @admin_required
-# @login_required
+@admin_required
+@login_required
 def upload_data():
     if 'file' in request.files.keys():
         uploaded_file = request.files['file']

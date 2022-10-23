@@ -23,7 +23,7 @@
 from flask import render_template, request, redirect, url_for
 from . import auth_bp, oauth_client
 from app.models import (ExistingPasswordException, InvalidProviderException, 
-    ProviderEnum, User, InvalidPrivilegeException)
+    ProviderEnum, User, InvalidPrivilegeException, RoleEnum)
 import base64
 from flask_login import current_user, login_user, logout_user, login_required
 from . import app
@@ -118,10 +118,10 @@ def login():
                 return {'message': 'Failed Login'}, 401
 
             if login_success:
-                is_admin = usr.is_admin
+                needs_2fa = (usr.role == RoleEnum.ADMIN or usr.rol == RoleEnum.DATA_ADMIN)
                 login_user(usr)
 
-                if is_admin:
+                if needs_2fa:
                     return redirect(f'/otp/{usr.email}')
                 else: 
                     return redirect('/dashboard')
@@ -170,7 +170,7 @@ def oauth_login_callback():
 
     if usr:
         login_user(usr)
-        if usr.is_admin:
+        if usr.is_admin() or usr.is_data_admin():
             return redirect(f'/otp/{usr.email}')
         else:
             return redirect('/dashboard')
