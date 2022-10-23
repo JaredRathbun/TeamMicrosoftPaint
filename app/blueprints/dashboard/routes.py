@@ -33,12 +33,12 @@ def get_dash():
     name = current_user.first_name + ' ' + current_user.last_name
     dwf_avg = ClassData.get_avg_dwf()
     avg_gpa = Student.get_avg_gpa()
-    high_school_avg_gpa = Student.get_avg_high_school_gpa()
+    avg_course_grade = ClassData.get_avg_grade()
     total_students = len(Student.query.all())
 
     return render_template('dashboard/dashboard.html', current_user=current_user,
         user_name=name, dwf_avg=dwf_avg, avg_gpa=avg_gpa, 
-        high_school_avg_gpa=high_school_avg_gpa, total_students=total_students)
+        avg_course_grade=avg_course_grade, total_students=total_students)
 
 
 @dash_bp.route('/data', methods = ['GET'])
@@ -55,11 +55,11 @@ def get_visualizations():
     name = current_user.first_name + ' ' + current_user.last_name
     dwf_avg = ClassData.get_avg_dwf()
     avg_gpa = Student.get_avg_gpa()
-    high_school_avg_gpa = Student.get_avg_high_school_gpa()
+    avg_course_grade = ClassData.get_avg_grade()
     total_students = len(Student.query.all())
     return render_template('dashboard/visualizations.html', 
         current_user=current_user, user_name=name, dwf_avg=dwf_avg, 
-        avg_gpa=avg_gpa, high_school_avg_gpa=high_school_avg_gpa, 
+        avg_gpa=avg_gpa, avg_course_grade=avg_course_grade, 
         total_students=total_students)
 
 
@@ -91,13 +91,13 @@ def get_admin():
         total_admins = len(user_query.filter_by(role=RoleEnum.ADMIN).all())
         total_users = len(user_query.all())
         total_students = len(Student.query.all())
-        rows_in_dataset = len(ClassData.query.all())
+        total_data_admins = len(User.query.filter(User.role==RoleEnum.DATA_ADMIN).all())
         user_list = [get_user_dict(u) for u in User.query.all()]
         name = current_user.first_name + ' ' + current_user.last_name
 
         return render_template('dashboard/admin.html', current_user=current_user, 
             user_name=name, total_admins=total_admins, total_users=total_users,
-            total_students=total_students, rows_in_dataset=rows_in_dataset,
+            total_students=total_students, total_data_admins=total_data_admins,
             user_list=user_list)
     else:
         return render_template('errors/403.html'), 403

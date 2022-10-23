@@ -676,6 +676,34 @@ class ClassData(db.Model):
             return_list.append(current_dict)
         return return_list
 
+    
+    @staticmethod
+    def get_avg_grade() -> str:
+        '''
+        Returns the average letter grade for all class grades in the database.
+
+        return:
+            A `str` representing the average course grade.
+        '''
+        all_grades = []
+        
+        grade_to_num = { 
+            'A+': 13, 'A': 12, 'A-': 11, 'B+': 10, 'B': 9, 'B-': 8, 'C+': 7,
+            'C': 6, 'C-': 5, 'D+': 4, 'D': 3, 'D-': 2, 'F': 1
+        }
+
+        num_to_grade = {
+            13: 'A+', 12: 'A', 11: 'A-', 10: 'B+', 9: 'B', 8: 'B-', 7: 'C+', 
+            6: 'C', 5: 'C-', 4: 'D+', 3: 'D', 2: 'D-', 1: 'F'
+        }
+
+        for class_data in ClassData.query.all():
+            if (class_data.grade != 'W' and class_data.grade != 'IP' and
+                class_data.grade != 'P'):
+                all_grades.append(grade_to_num[class_data.grade])
+
+        return num_to_grade[round(sum(all_grades) / len(all_grades))]
+
 
 class Course(db.Model):
     '''
