@@ -61,7 +61,7 @@
                             <span>Visualizations</span>
                         </a>
                     </li>
-                    {% if current_user.is_admin %}
+                    {% if is_admin(current_user) %}
                         <li class="nav-item">
                             <a class="nav-link" href="/admin">
                                 <i class="fas fa-user"></i>

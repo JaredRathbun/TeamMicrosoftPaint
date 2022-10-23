@@ -139,8 +139,9 @@ class User(UserMixin, db.Model):
     first_name = Column(Text(), nullable=False)
     hash = Column(Text())
     totp_key = Column(Text())
-    is_admin = Column(Boolean(), nullable=False, default=False)
+    role = Column(Enum(RoleEnum), default=RoleEnum.VIEWER)
     provider = Column(Enum(ProviderEnum))
+
 
     def __init__(self, email, first_name, last_name, password=None):
         '''
@@ -158,6 +159,7 @@ class User(UserMixin, db.Model):
         else:
             self.provider = ProviderEnum.GOOGLE
 
+
     def get_id(self) -> str:
         '''
         Getter for the user's email address.
@@ -166,6 +168,7 @@ class User(UserMixin, db.Model):
             A `str` representing the user's email address.
         '''
         return self.email
+
 
     def is_active() -> bool:
         '''
@@ -176,6 +179,7 @@ class User(UserMixin, db.Model):
         '''
         return True
 
+
     def is_authenticated():
         '''
         Returns whether or not the user is authenticated.
@@ -183,6 +187,17 @@ class User(UserMixin, db.Model):
         return: `True`
         '''
         return True
+
+
+    def get_role(self) -> int:
+        '''
+        Returns the user's role.
+
+        return:
+            The correct `RoleEnum` object.
+        '''
+        return self.role
+
 
     def check_password(self, password: str):
         '''
@@ -199,6 +214,7 @@ class User(UserMixin, db.Model):
             return check_password_hash(self.hash, password)
         else:
             raise InvalidProviderException()
+
 
     def gen_totp_key(self):
         '''
@@ -225,6 +241,7 @@ class User(UserMixin, db.Model):
             logger.error('Unable to insert new user.', e)
             db.session.rollback()
             return False
+
 
     def set_password(self, new_password: str):
         '''
@@ -289,9 +306,25 @@ class User(UserMixin, db.Model):
         '''
         Sets the user to an admin.
         '''
-        self.is_admin = True
+        self.role = RoleEnum.ADMIN
         self.gen_totp_key()
         db.session.commit()
+
+
+    def set_data_admin(self):
+        '''
+        Sets the user to a data admin.
+        '''
+        self.role = RoleEnum.DATA_ADMIN
+        self.gen_totp_key()
+        db.session.commit()
+
+    
+    def set_viewer(self):
+        '''
+        Sets the user to a viewer.
+        '''
+        self.role = RoleEnum.VIEWER
 
 
     def get_otp(self):
@@ -321,6 +354,25 @@ class User(UserMixin, db.Model):
         else:
             return False
 
+
+    def is_admin(self) -> bool:
+        '''
+        Returns whether or not the user is an admin.
+
+        return:
+            A `bool` representing if the user is an admin or not.
+        '''
+        return (self.role == RoleEnum.ADMIN)
+
+    
+    def is_data_admin(self) -> bool:
+        '''
+        Returns whether or not the user is a data admin.
+
+        return:
+            A `bool` representing if the user is a data admin or not.
+        '''
+        return (self.role == RoleEnum.DATA_ADMIN)
 
 class Student(db.Model):
     ''''

@@ -32,6 +32,7 @@ import logging as logger
 from flask_mail import Mail
 from flask_login import current_user
 
+
 app = Flask('STEM Data Dashboard', instance_relative_config=True,
     template_folder=path.abspath('./app/templates'),
     static_folder=path.abspath('./app/static')
@@ -75,17 +76,42 @@ def init_app(config_fname: str = None) -> Flask:
 def admin_required(f):
     @wraps(f)
     def dec_func(*args, **kwargs):
-        try:
-            if current_user.is_admin:
-                return f(*args, **kwargs)
-            else:
-                return {'message': 'User does not have privileges to perform this action.'}, 401
-        except:
-            return {'message': 'User is not an admin.'}, 401
+        from app.models import RoleEnum
+        # try:
+        if current_user.role == RoleEnum.ADMIN:
+            return f(*args, **kwargs)
+        else:
+            return {'message': 'User does not have privileges to perform this action.'}, 401
+        # except:
+        #     return {'message': 'User is not an admin.'}, 401
     return dec_func
 
 
-def change_user_permissions(u: dict):
-    print(u['email'])
+def is_data_admin_or_higher(current_u):
+    from app.models import RoleEnum
+    '''
+    Returns whether or not the user is a data admin or higher role.
 
-app.jinja_env.globals.update(change_user_permissions=change_user_permissions)
+    param:
+        `current_u`: The current user represented in a `User` object.
+    return: 
+        A `bool` representing if the user is a data_admin or a higher role.
+    '''
+    return (current_u.role == RoleEnum.DATA_ADMIN or current_u.role == RoleEnum.ADMIN)
+
+
+def is_admin(current_u):
+    from app.models import RoleEnum
+    '''
+    Returns whether or not the user is an admin role.
+
+    param:
+        `current_u`: The current user represented in a `User` object.
+    return: 
+        A `bool` representing if the user is an admin or not.
+    '''
+    return (current_u.role == RoleEnum.ADMIN)
+
+
+app.jinja_env.globals.update(is_data_admin_or_higher=is_data_admin_or_higher)
+app.jinja_env.globals.update(is_admin=is_admin)
