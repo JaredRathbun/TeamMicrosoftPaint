@@ -23,7 +23,7 @@
 from . import dash_bp
 from flask import render_template, request
 from flask_login import login_required, current_user
-from app import admin_required
+from app import admin_required, data_admin_or_higher_required
 from app.blueprints.dashboard.data_upload import upload_csv_file
 from app.models import RoleEnum, User, ClassData, Course, Student
 
@@ -61,6 +61,15 @@ def get_visualizations():
         current_user=current_user, user_name=name, dwf_avg=dwf_avg, 
         avg_gpa=avg_gpa, avg_course_grade=avg_course_grade, 
         total_students=total_students)
+
+
+@dash_bp.route('/dataadmin', methods = ['GET'])
+@login_required
+@data_admin_or_higher_required
+def get_data_admin():
+    name = current_user.first_name + ' ' + current_user.last_name
+    return render_template('dashboard/dataadmin.html', current_user=current_user, 
+            user_name=name)
 
 
 @dash_bp.route('/admin', methods = ['GET'])

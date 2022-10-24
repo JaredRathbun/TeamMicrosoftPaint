@@ -61,13 +61,21 @@
                             <span>Visualizations</span>
                         </a>
                     </li>
+                    {% if is_data_admin_or_higher(current_user) %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/dataadmin">
+                                <i class="fas fa-chart-simple"></i>
+                                    <span>Data Administration</span>
+                            </a>
+                        </li>
+                    {% endif %}
                     {% if is_admin(current_user) %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin">
-                            <i class="fas fa-user"></i>
-                            <span>Administration</span>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin">
+                                <i class="fas fa-user"></i>
+                                <span>Administration</span>
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
                 <div class="text-center d-none d-md-inline"></div>

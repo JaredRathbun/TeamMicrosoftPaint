@@ -702,7 +702,10 @@ class ClassData(db.Model):
                 class_data.grade != 'P'):
                 all_grades.append(grade_to_num[class_data.grade])
 
-        return num_to_grade[round(sum(all_grades) / len(all_grades))]
+        if (len(all_grades) != 0):
+            return num_to_grade[round(sum(all_grades) / len(all_grades))]
+        else:
+            return 'N/A'
 
 
 class Course(db.Model):

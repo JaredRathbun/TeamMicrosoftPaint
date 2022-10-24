@@ -77,13 +77,22 @@ def admin_required(f):
     @wraps(f)
     def dec_func(*args, **kwargs):
         from app.models import RoleEnum
-        # try:
         if current_user.role == RoleEnum.ADMIN:
             return f(*args, **kwargs)
         else:
-            return {'message': 'User does not have privileges to perform this action.'}, 401
-        # except:
-        #     return {'message': 'User is not an admin.'}, 401
+            return {'message': 'User is not an admin.'}, 401
+    return dec_func
+
+
+def data_admin_or_higher_required(f):
+    @wraps(f)
+    def dec_func(*args, **kwargs):
+        from app.models import RoleEnum
+        if (current_user.role == RoleEnum.DATA_ADMIN or 
+            current_user.role == RoleEnum.ADMIN):
+            return f(*args, **kwargs)
+        else:
+            return {'message': 'User is not a data admin.'}, 401
     return dec_func
 
 

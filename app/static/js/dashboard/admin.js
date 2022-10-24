@@ -20,34 +20,6 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
-
-let fileUpload = document.getElementById('fileUpload');
-let uploadButton = document.getElementById('uploadButton');
-fileUpload.addEventListener('change', () => {
-    if (fileUpload.files.length == 0) {
-        uploadButton.disabled = true;
-    } else {
-        uploadButton.disabled = false;
-    }
-});
-
-
-uploadButton.addEventListener('click', () => {
-    let file = fileUpload.files[0];
-    const data = new FormData();
-    data.append('file', file);
-    const req = new XMLHttpRequest();
-    req.onreadystatechange = () => {
-        if (req.status == 200) {
-            alert('good!');
-        } else {
-            console.log(req.responseText);
-        }
-    };
-    req.open('POST', '/upload');
-    req.send(data);
-});
-
 function changeUserRole(element, emailAddress) {
     var currentRole = element.dataset.default;
     var selectedRole = element.options[element.selectedIndex].text;
@@ -82,7 +54,6 @@ function changeUserRole(element, emailAddress) {
                             new_role: selectedRole
                         })
                     }).then((res) => {
-                        console.log(res.status);
                         if (res.status == 200) {
                             $.alert({
                                 title: 'Success!',

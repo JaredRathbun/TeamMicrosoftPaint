@@ -69,6 +69,7 @@
                             </a>
                         </li>
                     {% endif %}
+
                     {% if is_admin(current_user) %}
                         <li class="nav-item active">
                             <a class="nav-link" href="/admin">
@@ -207,48 +208,31 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-7 col-xl-8">
+                        <div class="col-lg-5 col-xl-4">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h6 class="text-primary fw-bold m-0">Manage Users</h6>
+                                    <h6 class="text-primary fw-bold m-0">Add New Data</h6>
                                 </div>
-                                <div class="card-body">
-                                    <div class="table-responsive mt-2" id="dataTable" role="grid"
-                                            aria-describedby="dataTable_info" style="overflow-y: auto; max-height: 350px">
-                                        <table class="table table-responsive table-striped table-hover my-0" id="dataTable">
-                                            <thead>
-                                                <tr>
-                                                    <th>User's Name</th>
-                                                    <th>Email Address</th>
-                                                    <th>Current Role</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for u in user_list %}
-                                                    <tr>
-                                                        <td>{{ u.name }}</td>
-                                                        <td>{{ u.email }}</td>
-                                                        <td>
-                                                            <select onchange='changeUserRole(this, "{{u.email}}")' class="form-select w-50"  data-default={{u.role}} data-name={{u.name}}>
-                                                                {% if u.role == 'Admin' %}
-                                                                    <option selected value="1">Admin</option>
-                                                                    <option value="2">Data Admin</option>
-                                                                    <option value="3">Viewer</option>
-                                                                {% elif u.role == 'Data Admin' %}
-                                                                    <option value="1">Admin</option>
-                                                                    <option selected value="2">Data Admin</option>
-                                                                    <option value="3">Viewer</option>
-                                                                {% else %}
-                                                                    <option value="1">Admin</option>
-                                                                    <option value="2">Data Admin</option>
-                                                                    <option selected value="3">Viewer</option>
-                                                                {% endif %}
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                                <div class="card-body" style="height: 390px;">
+                                    <div>
+                                        <p>Please upload a file containing the data you would like upload. 
+                                            If you are unsure of what the format should be, click on the 
+                                            "Download Sample Data" button below!</p>
+                                        <div>
+                                            <label class="form-label" for="file-upload"><strong>Upload New Data</strong></label>
+                                            <input type="file" class="form-control" id="fileUpload" accept=".csv"> 
+                                        </div>
+                                        <div style="text-align: center; display: flexbox">
+                                            <ul style="list-style-type: none;">
+                                                <li>
+                                                    <button id="uploadButton" type="button" class="m-3 btn btn-primary" disabled>Upload Data</button>
+                                                </li>
+                                                <li>
+                                                    <button class="m-2 btn btn-primary"><i class="fas fa-light fa-download"></i> Download Sample Data</button>
+                                                </li>
+                                            </ul>
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -272,7 +256,7 @@
     <script src="https://kit.fontawesome.com/177241023b.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@4.3.2/js/bootstrap5-toggle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <script src="../static/js/dashboard/admin.js"></script>
+    <script src="../static/js/dashboard/dataadmin.js"></script>
 </body>
 {% endblock %}
 
