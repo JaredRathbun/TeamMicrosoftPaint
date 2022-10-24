@@ -118,7 +118,7 @@ def login():
                 return {'message': 'Failed Login'}, 401
 
             if login_success:
-                needs_2fa = (usr.role == RoleEnum.ADMIN or usr.rol == RoleEnum.DATA_ADMIN)
+                needs_2fa = (usr.role == RoleEnum.ADMIN or usr.role == RoleEnum.DATA_ADMIN)
                 login_user(usr)
 
                 if needs_2fa:

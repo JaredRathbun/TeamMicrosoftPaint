@@ -37,11 +37,17 @@ failed_students = []
 class InvalidDataException(Exception):
     '''
     An exception to hold an invalid data entry.
+
+    param:
+        `message`: The error message.
+        `line_num`: The line number the error occured on.
+        `col_num`: The column number the error occured on.
     '''
-    def __init__(self, message, line_num):
+    def __init__(self, message, line_num, col_num):
         super().__init__(message)
         self.message = message
         self.line_num = line_num
+        self.col_num = col_num
     
 
     def __repr__(self) -> str:
@@ -157,14 +163,14 @@ def __insert_class_data(csv_file: DataFrame):
         grade = csv_file['Course_Grade'][idx]
 
         if (term is None):
-            error_list.append(InvalidDataException('Missing Term', current_row))
+            error_list.append(InvalidDataException('Missing Term', current_row, 5))
             found_error = True
             valid_course_data = False
         else:
             split_term = term.split(' ')
             if (len(split_term) != 2):
                 error_list.append(InvalidDataException('Invalid Term', 
-                    current_row))
+                    current_row, 5))
                 found_error = True
                 valid_course_data = False
             else:
@@ -173,7 +179,7 @@ def __insert_class_data(csv_file: DataFrame):
                     semester = split_term[0]
                 else:
                     error_list.append(InvalidDataException('Invalid Semester', 
-                        current_row))
+                        current_row, 5))
                     found_error = True
                     valid_course_data = False
                 
@@ -182,19 +188,19 @@ def __insert_class_data(csv_file: DataFrame):
                     year = split_term[1]
                 else:
                     error_list.append(InvalidDataException('Invalid Year', 
-                        current_row))
+                        current_row, 5))
                     found_error = True
                     valid_course_data = False
 
         if (num_term_code is None): 
             error_list.append(InvalidDataException('Numeric term missing.', 
-                current_row))
+                current_row, 6))
             found_error = True
             valid_course_data = False
 
         if (course_id is None):
             error_list.append(InvalidDataException('Course number missing.', 
-                current_row))
+                current_row, 34))
             found_error = True 
             valid_course_data = False
 
@@ -204,22 +210,22 @@ def __insert_class_data(csv_file: DataFrame):
             course = __insert_course(semester, year, num_term_code, course_id)
 
         if (program_level is None):
-            error_list.append(InvalidDataException('Missing Program Lvel', 
-                current_row))
+            error_list.append(InvalidDataException('Missing Program Level', 
+                current_row, 7))
             found_error = True
         elif (program_level not in ('UNDG', 'GRAD')):
             error_list.append(InvalidDataException('Invalid Program Level (Must be either UNDG or GRAD)', 
-                current_row))
+                current_row, 7))
             found_error = True
 
         if (subprogram_code is None):
             error_list.append(InvalidDataException('Missing Subprogram Code', 
-                current_row))
+                current_row, 8))
             found_error = True
 
         if (grade is None):
             error_list.append(InvalidDataException('Missing Course Grade', 
-                    current_row))
+                    current_row, 35))
             found_error = True
             valid_course_data = False
         else:
@@ -233,7 +239,7 @@ def __insert_class_data(csv_file: DataFrame):
 
         if (student_id is None):
             error_list.append(InvalidDataException('Missing Unique_ID', 
-                    current_row))
+                    current_row, 1))
             found_error = True
 
         if (course and not found_error):
@@ -302,65 +308,65 @@ def __insert_students(csv_file: DataFrame):
 
         if (admit_year is None):
             error_list.append(InvalidDataException('Admit year missing.', 
-                current_row))
+                current_row, 2))
             found_error = True
 
         if (admit_term is None):
             error_list.append(InvalidDataException('Admit term missing.', 
-                current_row))
+                current_row, 3))
             found_error = True
 
         if (admit_type is None):
             error_list.append(InvalidDataException('Admit type missing.', 
-                current_row))
+                current_row, 4))
             found_error = True
 
         if (major_1_code is None):
             error_list.append(InvalidDataException('Major1_Code missing.', 
-                current_row))
+                current_row, 9))
             found_error = True
 
         if (major_1_desc is None):
             error_list.append(InvalidDataException('Major1_Desc missing.', 
-                current_row))
+                current_row, 10))
             found_error = True
 
         # Try to parse the class year if it exists, reporting a failed parse.
         if (class_year is None):
             error_list.append(InvalidDataException('Class missing.', 
-                current_row))
+                current_row, 17))
             found_error = True
         else:
             try:
                 class_year = ClassEnum.parse_class(class_year)
             except InvalidClassException:
                 error_list.append(InvalidDataException('Invalid Class', 
-                    current_row))
+                    current_row, 17))
                 found_error = True
 
         if (city is None):
             error_list.append(InvalidDataException('City missing.', 
-                current_row))
+                current_row, 18))
             found_error = True
 
         if (postal_code is None):
             error_list.append(InvalidDataException('Postal_Code missing.', 
-                current_row))
+                current_row, 19))
             found_error = True
 
         if (country is None):
             error_list.append(InvalidDataException('Country_Code missing.', 
-                current_row))
+                current_row, 20))
             found_error = True
 
         if (race_ethnicity is None):
             error_list.append(InvalidDataException('Race-Ethnicity missing.', 
-                current_row))
+                current_row, 21))
             found_error = True
         
         if (gender is None):
             error_list.append(InvalidDataException('Sex missing.', 
-                current_row))
+                current_row, 22))
             found_error = True
 
         if (gpa_cumulative is None):
@@ -412,6 +418,9 @@ def __process_errors(errors: list[InvalidDataException]) -> list[dict]:
     return:
         A `list` of `dict` objects that is in a JSON-like format.
     '''
-    return [{'error_message': error.message, 'line_num': error.line_num} for error in errors]
+    return [{
+        'error_message': error.message, 'line_num': error.line_num, 
+        'col_num': error.col_num
+    } for error in errors]
 
 
