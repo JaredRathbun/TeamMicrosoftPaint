@@ -1,0 +1,9 @@
+Unique_ID,Admit_Year,Admit_Term,Admit_Type,Term,Numeric_Term_Code,Program_Level,Subprogram_Code,Major1_Code,Major1_Desc,Major2_Code,Major2_Desc,Minor1_Code,Minor1_Desc,Concentration_Code,Concentration_Desc,Class,City,State,Postal_Code,Country_Code,Race-Ethnicity,Sex,GPA_Cum,SAT_Math,SAT_Total,ACT_Score,Math_Placement,HS_GPA,HS_CEEB,HS_Name,HS_City,HS_State,Course_Number,Course_Grade,Cohort
+FNDMAB,2015,FA,FFFT,FA 2020,202040,UNDG,DAHS,PBH,Public Health,,,,,,,SR,Walpole,MA,02081-2704,USA,WH,M,2.927,540,1020,,68,3.22,221120,Lawrence HS,Lawrence,MA,BIO1027,A,Honors
+FNDMAB,2015,FA,FFFT,FA 2020,202040,UNDG,DAHS,PBH,Public Health,,,,,,,SR,Walpole,MA,02081-2704,USA,WH,M,2.927,540,1020,,68,3.22,221120,Lawrence HS,Lawrence,MA,BIO1027L,A,Honors
+GAUEDFM,2016,FA,FFFT,FA 2021,202140,UNDG,DASE,BI,Biology,,,,,BT,Mol-Cell Bio & Biotech.,JR,Sudbury,MA,01776-2121,USA,WH,M,2.289,510,1050,,94,3.28,220928,Groton-Dunstable HS,Groton,MA,BIO1025,A,Honors
+GAUEKMXO,2016,FA,FFFT,FA 2021,202140,UNDG,DASE,BI,Biology,,,,,BT,Mol-Cell Bio & Biotech.,SR,Claremont,NH,03743-3310,USA,WH,F,2.829,510,1050,,92,3.49,221410,Milford HS,Milford,MA,MTH1217,A,
+"Unique_ID should be unique to each student, and can appear in multiple rows.",Admit year should be less than or equal to the current year.,"Should be either FA, SP, SU, or WI.",,"Must be the semester and year, with a space between each.",,Should be either UNDG or GRAD.,,"Must be filled in, cannot be blank.","Must be filled in, cannot be blank.",,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
