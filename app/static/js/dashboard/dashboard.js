@@ -29,3 +29,80 @@ function logout(evt) {
         }
     });
 }
+
+var lowestEnabled = false;
+function flipHighestLowestTable() {
+    var highestBtn = document.getElementById('highest-btn');
+    var lowestBtn = document.getElementById('lowest-btn');
+
+    if (lowestEnabled) {
+        lowestEnabled = false;
+        highestBtn.disabled = true;
+        lowestBtn.disabled = false;
+        highestBtn.classList.add('btn-secondary');
+        highestBtn.classList.remove('btn-primary');
+        lowestBtn.classList.remove('btn-secondary');
+        lowestBtn.classList.add('btn-primary');
+
+        fetch('/average-dwf-rates', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({part: 'highest'})
+        })
+        .then((res) => res.json())
+        .then((data) => buildAVGDWFTable(data));
+    } else {
+        lowestEnabled = true;
+        highestBtn.disabled = false;
+        lowestBtn.disabled = true;
+        highestBtn.classList.remove('btn-secondary');
+        highestBtn.classList.add('btn-primary');
+        lowestBtn.classList.add('btn-secondary');
+        lowestBtn.classList.remove('btn-primary');
+
+        fetch('/average-dwf-rates', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({part: 'lowest'})
+        })
+        .then((res) => res.json())
+        .then((data) => buildAVGDWFTable(data));
+    }
+}
+
+function buildAVGDWFTable(data) {
+    var bodyString = '';
+    
+    // Build the table.
+    for (const course of data) {
+        var row = `
+            <tr class='d-flex'>
+                <td class='col-3'>${course.course_num}</td>
+                <td class='col-3'>${course.semester}</td>
+                <td class='col-3'>${course.year}</td>
+                <td class='col-3'>${course.avg_dwf}%</td>
+            </tr>
+        `
+        bodyString += row;
+    }
+
+    // Set the body of the table.
+    document.getElementById('dwf-rates-table-body').innerHTML = bodyString;
+}
+
+window.onload = () => {
+    // Get the highest DWF rates.
+    fetch('/average-dwf-rates', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({part: 'highest'})
+    })
+    .then((res) => res.json())
+    .then((data) => buildAVGDWFTable(data));
+}
