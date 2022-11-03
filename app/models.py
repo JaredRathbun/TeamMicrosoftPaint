@@ -31,7 +31,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import sqlalchemy
 from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
     Enum, ForeignKey)
-
+from itertools import groupby
+from operator import attrgetter
 
 class ProviderEnum(enum.Enum):
     '''
@@ -501,6 +502,110 @@ class ClassData(db.Model):
             ClassData.grade=='D-' or ClassData.grade=='D+').all())
         
         return '%.2f' % ((num_with_dwf / num_grades) * 100) if num_grades > 0 else 0.0 
+
+
+    @classmethod
+    def get_avg_dwf_per_course(cls) -> list[dict]:
+        '''
+        Returns a `list` of `dict` objects with the average DWF for each course.
+
+        return:
+            A `list` of `dict` objects with each course's number, the DWF rate, 
+            and semester it ran.
+        '''
+        dwf_list = []
+        grouped_courses = ClassData.query.order_by(ClassData.course).all()
+        grouped_courses = [list(c) for i, c in groupby(grouped_courses, attrgetter('course_obj'))]
+        # Loop over every group, getting the class and DWF rate for each class.
+        for course_group in grouped_courses:
+            course_obj = course_group[0].course_obj
+            semester = course_obj.semester
+            course_num = course_obj.course_num
+            year = course_obj.year
+            
+            # Get the grades, then make a call to get the avg DWF.
+            course_grades = [c.grade for c in course_group]
+            length = len(course_grades)
+            dwf_len = len(list(filter(lambda c: c == 'W' or c == 'D+' or c == 'D' 
+                or c == 'D-' or c == 'F', course_grades)))
+            avg_dwf = ((dwf_len / length) * 100) if length > 0 else 0.0
+
+            # Add a dict to the list of each class.
+            dwf_list.append({
+                'course_num': course_num,
+                'semester': semester,
+                'year': year,
+                'avg_dwf':  avg_dwf
+            })
+
+        # Sort the list, then return it.
+        sorted_list = sorted(dwf_list, key=lambda e: e['avg_dwf'], reverse=True)
+
+        # Format the DWF rates in each class to be 2 decimal places.
+        for clazz in sorted_list:
+            clazz['avg_dwf'] = '%.2f' % clazz['avg_dwf']
+        
+        return sorted_list
+        
+
+    @staticmethod
+    def get_avg_dwf_head() -> list[dict]:
+        '''
+        Returns the top 5 courses with the highest DWF rates.
+
+        return:
+            A `list` of `dict` objects with the top 5 courses.
+        '''
+        
+        # Get the list of sorted classes.
+        dwf_list = ClassData.get_avg_dwf_per_course()
+        
+        if (len(dwf_list) < 5):
+            return dwf_list
+        else:
+            return dwf_list[0:5]
+
+    
+    @staticmethod
+    def get_avg_dwf_tail() -> list[dict]:
+        '''
+        Returns the top 5 courses with the lowest DWF rates.
+
+        return:
+            A `list` of `dict` objects with the top 5 courses.
+        '''
+        
+        # Get the list of sorted classes.
+        dwf_list = ClassData.get_avg_dwf_per_course()
+        
+        if (len(dwf_list) < 5):
+            return dwf_list
+        else:
+            dwf_list = dwf_list[-5:]
+            dwf_list.reverse()
+            return dwf_list
+
+
+    @staticmethod
+    def get_awg_dwf_head_and_tail():
+        '''
+        Returns the top 5 courses with the highest DWF rates and the top 5 
+        courses with the lowest DWF rates.
+
+        return:
+            A `list` of `dict` objects containing information about each course.
+        '''
+
+        # Get the list of sorted classes.
+        dwf_list = ClassData.get_avg_dwf_per_course()
+
+        return_list = dwf_list[0:5] 
+        return_list.append({})
+        lowest = dwf_list[-5:]
+        lowest.reverse()
+        return_list += lowest
+
+        return return_list
 
 
     @staticmethod

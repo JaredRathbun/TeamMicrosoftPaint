@@ -21,11 +21,12 @@
 
 
 from . import dash_bp
-from flask import render_template, request
+from flask import render_template, request, make_response
 from flask_login import login_required, current_user
 from app import admin_required, data_admin_or_higher_required
 from app.blueprints.dashboard.data_upload import upload_csv_file
 from app.models import RoleEnum, User, ClassData, Course, Student
+import pandas as pd
 
 @dash_bp.route('/dashboard', methods = ['GET'])
 @login_required
@@ -151,6 +152,7 @@ def upload_data():
 
 
 @dash_bp.route('/all-data', methods = ['GET'])
+@login_required
 def all_data():
     if (len(request.data) != 0):
         body = request.get_json()
@@ -166,3 +168,46 @@ def all_data():
         data = ClassData.get_data(limit)
         return data, 200
         
+
+@dash_bp.route('/average-dwf-rates', methods = ['POST'])
+@login_required
+def get_average_dwf_rates():
+    body = request.get_json()
+
+    if ('part' in body):
+        part = body['part']
+        if (part == 'highest'):
+            return ClassData.get_avg_dwf_head(), 200
+        elif (part == 'lowest'):
+            return ClassData.get_avg_dwf_tail(), 200
+        else:
+            return {'message': 'Invalid part.'}, 400
+    else:
+        return {'message': 'Part missing.'}, 400
+
+
+@dash_bp.route('/dwf-rates-csv/<part>', methods = ['GET'])
+@login_required
+def get_highest_and_lowest_dwf_rates(part: str):
+    if (part != 'lowest' and part != 'highest' and part != 'both'):
+        return {'message': 'Invalid part'}, 400
+    else:
+        if (part == 'lowest'):
+            data_list = ClassData.get_avg_dwf_tail()
+        elif (part == 'highest'):
+            data_list = ClassData.get_avg_dwf_head()
+        else:
+            data_list = ClassData.get_awg_dwf_head_and_tail()
+            part = 'highest_and_lowest'
+
+        # Convert the data list to a pandas dataframe, then convert it to CSV.
+        df = pd.DataFrame(data_list)
+        csv_bytes = bytes(df.to_csv(lineterminator='\r\n', index=False),
+             encoding='utf-8')
+
+        # Return the CSV Bytes as a download to the user.
+        res = make_response(csv_bytes)
+        res.headers.set('Content-Type', 'text/csv')
+        res.headers.set( 'Content-Disposition', 'attachment', 
+            filename='%s_dwf_rates.csv' % part)
+        return res
