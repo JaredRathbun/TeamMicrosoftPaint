@@ -48,3 +48,6 @@ div.btn-group[data-toggle=buttons-radio] input[type=radio] {
     opacity:    hidden;
     visibility: hidden;
 }
+
+/* Found at: https://stackoverflow.com/questions/36213275/html2canvas-does-not-render-full-div-only-what-is-visible-on-screen */
+/* .html2canvas-container { width: 1000px !important; height: 3000px !important; } */

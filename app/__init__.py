@@ -121,6 +121,12 @@ def is_admin(current_u):
     '''
     return (current_u.role == RoleEnum.ADMIN)
 
+@app.context_processor
+def utility_functions():
+    def print_in_console(message):
+        print(str(message))
+
+    return dict(print_debug=print_in_console)
 
 app.jinja_env.globals.update(is_data_admin_or_higher=is_data_admin_or_higher)
 app.jinja_env.globals.update(is_admin=is_admin)
