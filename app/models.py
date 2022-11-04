@@ -470,6 +470,40 @@ class Student(db.Model):
         return '%.2f' % (gpa_sum / total_students) if total_students > 0 else 0.0 
 
 
+    @staticmethod
+    def get_num_students_per_major() -> dict:
+
+        def get_bootstrap_class(percentage: float):
+            match percentage:
+                case percentage if percentage >= 0 and percentage <= 20:
+                    return 'bg-danger'
+                case percentage if percentage >= 21 and percentage <= 40:
+                    return 'bg-warning'
+                case percentage if percentage >= 41 and percentage <= 60:
+                    return 'bg-primary'
+                case percentage if percentage >= 61 and percentage <= 80:
+                    return 'bg-info'
+                case percentage if percentage >= 81 and percentage <= 100:
+                    return 'bg-success'
+
+        grouped_students = Student.query.order_by(Student.major_1_desc).all()
+        total_num_students = len(grouped_students)
+        grouped_students = [list(s) for i, s in groupby(grouped_students, 
+            attrgetter('major_1_desc'))]
+        return_dict = {'Total # of Students': total_num_students}
+        for group in grouped_students:
+            num_of_students = len(group)
+            major = group[0].major_1_desc
+            percentage = round((num_of_students / total_num_students) * 100, 2)
+            return_dict[major] = {
+                'num_of_students': num_of_students,
+                'percentage': '{percent}%'.format(percent=percentage),
+                'bootstrap_class': get_bootstrap_class(percentage)
+            }
+        
+        return return_dict
+
+
 class ClassData(db.Model):
     '''
     A Class to hold Class Data.

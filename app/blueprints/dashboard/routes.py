@@ -36,10 +36,12 @@ def get_dash():
     avg_gpa = Student.get_avg_gpa()
     avg_course_grade = ClassData.get_avg_grade()
     total_students = len(Student.query.all())
-
+    num_students_per_major = Student.get_num_students_per_major()
+    
     return render_template('dashboard/dashboard.html', current_user=current_user,
         user_name=name, dwf_avg=dwf_avg, avg_gpa=avg_gpa, 
-        avg_course_grade=avg_course_grade, total_students=total_students)
+        avg_course_grade=avg_course_grade, total_students=total_students,
+        num_students_per_major=num_students_per_major)
 
 
 @dash_bp.route('/data', methods = ['GET'])
@@ -211,3 +213,30 @@ def get_highest_and_lowest_dwf_rates(part: str):
         res.headers.set( 'Content-Disposition', 'attachment', 
             filename='%s_dwf_rates.csv' % part)
         return res
+
+
+@dash_bp.route('/num-students-per-major-csv', methods = ['GET'])
+@login_required
+def get_num_students_per_major_as_csv():
+    # Get the list of dict objects, then convert it to a cleaner readable format.
+    data_list = Student.get_num_students_per_major()
+    formatted_list = []
+    for major_name in data_list:
+        if (major_name != 'Total # of Students'):
+            formatted_list.append({
+                'major': major_name,
+                'num_of_students': data_list[major_name]['num_of_students'],
+                'percentage': data_list[major_name]['percentage']
+            })
+
+    # Create the dataframe, then convert it to CSV.
+    df = pd.DataFrame(formatted_list)
+    csv_bytes = bytes(df.to_csv(lineterminator='\r\n', index=False),
+             encoding='utf-8')
+
+    # Return the CSV Bytes as a download to the user.
+    res = make_response(csv_bytes)
+    res.headers.set('Content-Type', 'text/csv')
+    res.headers.set( 'Content-Disposition', 'attachment', 
+        filename='num_students_per_major.csv')
+    return res

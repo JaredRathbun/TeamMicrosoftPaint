@@ -106,3 +106,33 @@ window.onload = () => {
     .then((res) => res.json())
     .then((data) => buildAVGDWFTable(data));
 }
+
+// This page is super helpful: https://stackoverflow.com/questions/6887183/how-to-take-screenshot-of-a-div-with-javascript
+function downloadNumOfStudentsPerMajorAsPNG(e) {
+    e.preventDefault();
+
+    const div = document.getElementById('num-students-per-major-div');
+    
+    window.scrollTo(0,0); 
+    html2canvas(div, {
+        scale: 1
+    }).then((canvas) => {
+        canvas.toBlob(function(blob) {
+            saveAs(blob, "num_of_students_per_course.png"); 
+        });
+    });
+}
+
+function downloadNumOfStudentsPerMajorAsJPG(e) {
+    e.preventDefault();
+
+    const div = document.getElementById('num-students-per-major-div');
+    
+    window.scrollTo(0,0); 
+    html2canvas(div).then((canvas) => {
+        canvas.toBlob(function(blob) {
+            
+            saveAs(blob, "num_of_students_per_course.jpg"); 
+        });
+    });
+}
