@@ -10,3 +10,6 @@ Our Capstone Project repository.
 
 ## Important Implementation Notes
 - This project is written using Python 3.10.6. Please make sure you have this version or greater installed in order for code to run and interpret correctly.
+
+## Security Implementation
+- This project is TLS encryption ready. In order for the server to successfully encrypt data, a private/public key pair must be provided in the `instance` folder. Please generate a key pair using OpenSSL, or contact Jared Rathbun (rathbunj@merrimack.edu) for a test key pair.

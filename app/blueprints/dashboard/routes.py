@@ -257,3 +257,63 @@ def avg_gpa_per_semester():
         }
 
     return return_dict, 200
+
+
+@dash_bp.route('/avg-gpa-and-dwf-per-semester-csv', methods = ['GET'])
+@login_required
+def avg_gpa_per_semester_csv_download():
+    avg_gpas = Student.get_avg_gpa_per_semester()
+    avg_dwfs = ClassData.get_dwf_rate_per_semester()
+
+    formatted_list = []
+    # Loop over the keys, creating a nested dict object.
+    for key in avg_gpas.keys():
+        formatted_list.append({
+            'semester': key,
+            'avg_gpa': avg_gpas[key],
+            'dwf_rate (percentage)': avg_dwfs[key]
+        })
+
+    # Create the dataframe, then convert it to CSV.
+    df = pd.DataFrame(formatted_list)
+    csv_bytes = bytes(df.to_csv(lineterminator='\r\n', index=False),
+             encoding='utf-8')
+
+    # Return the CSV Bytes as a download to the user.
+    res = make_response(csv_bytes)
+    res.headers.set('Content-Type', 'text/csv')
+    res.headers.set( 'Content-Disposition', 'attachment', 
+        filename='avg_gpa_and_dwf_per_semester.csv')
+    return res
+
+
+@dash_bp.route('/avg-gpa-per-cohort', methods = ['GET'])
+@login_required
+def avg_gpa_per_cohort():
+    avg_gpas = ClassData.get_avg_gpa_per_cohort()
+    return avg_gpas, 200
+
+
+@dash_bp.route('/avg-gpa-per-cohort-csv', methods = ['GET'])
+@login_required
+def avg_gpa_per_cohort_csv_download():
+     # Get the list of dict objects, then convert it to a cleaner readable format.
+    data_list = ClassData.get_avg_gpa_per_cohort()
+    formatted_list = []
+    for cohort in data_list:
+        formatted_list.append({
+            'cohort': cohort,
+            'avg_gpa': data_list[cohort]
+        })
+
+    # Create the dataframe, then convert it to CSV.
+    df = pd.DataFrame(formatted_list)
+    csv_bytes = bytes(df.to_csv(lineterminator='\r\n', index=False),
+             encoding='utf-8')
+
+    # Return the CSV Bytes as a download to the user.
+    res = make_response(csv_bytes)
+    res.headers.set('Content-Type', 'text/csv')
+    res.headers.set( 'Content-Disposition', 'attachment', 
+        filename='avg_gpa_per_cohort.csv')
+    return res

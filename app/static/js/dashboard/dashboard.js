@@ -20,6 +20,8 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
+window.jsPDF = window.jspdf.jsPDF;
+
 function logout(evt) {
     evt.preventDefault();
     fetch('/logout', { method: 'POST' }).then((res) => {
@@ -108,6 +110,86 @@ window.onload = () => {
     fetch('/avg-gpa-and-dwf-per-semester')
         .then((res) => res.json())
         .then((data) => buildAvgGpaAndDwfPerSemesterChart(data));
+
+    fetch('/avg-gpa-per-cohort')
+        .then((res) => res.json())
+        .then((data) => buildAvgGpaPerCohortChart(data));
+}
+
+function buildAvgGpaPerCohortChart(data) {
+    var cohorts = [], gpas = [];
+
+    cohorts.push('Freshman');
+    gpas.push(data['Freshman']);
+
+    cohorts.push('Sophomore');
+    gpas.push(data['Sophomore']);
+
+    cohorts.push('Junior');
+    gpas.push(data['Junior']);
+
+    cohorts.push('Senior');
+    gpas.push(data['Senior']);
+
+    var data = [
+        {
+            x: cohorts,
+            y: gpas,
+            type: 'bar',
+            marker: {
+                color: 'rgb(0, 123, 255)'
+            }
+        }
+    ];
+
+    var layout = {
+        margin: {
+            l: 45,
+            r: 45,
+            b: 45,
+            t: 45
+        },
+        xaxis: {
+            title: {
+              text: 'Class Cohort'
+            },
+          },
+        yaxis: {
+            autorange: false,
+            range: [0.0, 4.0],
+            title: {
+                text: 'GPA'
+            }
+        },
+    };
+
+    Plotly.newPlot('avg-gpa-per-cohort-div', data, layout, {responsive: true});
+}
+
+function downloadAvgStudentGPADWFRateAsPDF() {
+    var div = document.getElementById('avg-gpa-and-course-dwf-per-semester');
+
+    html2canvas(div, {
+        scale: 1
+    }).then((canvas) => {
+        var imgData = canvas.toDataURL('image/png');
+        var doc = new jsPDF('l', 'in', [11, 5]);
+        doc.addImage(imgData, 'PNG', 0, 0);
+        doc.save('average_gpa_an_dwf_per_semester.pdf');
+    });
+}
+
+function downloadAvgGPAPerCohortAsPDF() {
+    var div = document.getElementById('avg-gpa-per-cohort-div');
+
+    html2canvas(div, {
+        scale: 1
+    }).then((canvas) => {
+        var imgData = canvas.toDataURL('image/png');
+        var doc = new jsPDF('p', 'in', [5, 5]);
+        doc.addImage(imgData, 'PNG', 0, 0);
+        doc.save('average_gpa_per_cohort.pdf');
+    });
 }
 
 function buildAvgGpaAndDwfPerSemesterChart(json) {
@@ -146,9 +228,9 @@ function buildAvgGpaAndDwfPerSemesterChart(json) {
             b: 30,
             t: 30
         }
-    }
+    };
 
-    Plotly.newPlot('avgGPAPerSemesterDiv', data, layout, {responsive: true});
+    Plotly.newPlot('avg-gpa-and-course-dwf-per-semester', data, layout, {responsive: true});
 }
 
 

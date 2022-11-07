@@ -61,8 +61,12 @@ class ClassEnum(enum.Enum):
     '''
     An Enum to represent a student's class (year of education).
     '''
-    FRESHMAN, SOPHOMORE, JUNIOR, SENIOR = range(4)
+    FRESHMAN = 'Freshman'
+    SOPHOMORE = 'Sophomore'
+    JUNIOR = 'Junior' 
+    SENIOR = 'Senior'
  
+
     @staticmethod
     def parse_class(class_str: str) -> int:
         '''
@@ -899,6 +903,22 @@ class ClassData(db.Model):
             return num_to_grade[round(sum(all_grades) / len(all_grades))]
         else:
             return 'N/A'
+
+
+    def get_avg_gpa_per_cohort():
+        '''
+        Returns a `dict` containing the average student GPA for each class cohort.
+
+        return:
+            A `dict` containing the average student gpa per cohort.
+        '''
+        grouped_cohorts = Utils.group_table_by_column(Student, Student.class_year)
+        return_dict = {}
+        for group in grouped_cohorts:
+            gpas = [s.gpa_cumulative for s in group]
+            summed_gpa = sum(gpas)
+            return_dict[group[0].class_year.value] = round(summed_gpa / len(gpas), 2) if len(gpas) > 0 else 0
+        return return_dict
 
 
 class Course(db.Model):
