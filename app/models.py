@@ -34,6 +34,15 @@ from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
 from itertools import groupby
 from operator import attrgetter
 
+
+class Utils:
+    @staticmethod
+    def group_table_by_column(table, column):
+        grouped_table = table.query.order_by(column).all()
+        return [list(s) for i, s in groupby(grouped_table, 
+            attrgetter(str(column).split('.')[1]))]
+
+
 class ProviderEnum(enum.Enum):
     '''
     An Enum to represent the method of how a user is authenticating to the system.
@@ -417,6 +426,29 @@ class Student(db.Model):
     cohort = Column(Text())
     mcas_score_obj = db.relationship('MCASScore', uselist=False)
 
+
+    @staticmethod
+    def get_avg_gpa_per_semester() -> dict:
+        '''
+        Generates a dictionary containing the average gpa for each semester in
+        the database.
+
+        return:
+            A `dict` containing the average gpa for each semester.
+        '''
+        semester_groups = Utils.group_table_by_column(ClassData, ClassData.course)
+
+        return_dict = {}
+        for group in semester_groups:
+            semester = group[0].course_obj.semester
+            year = group[0].course_obj.year
+
+            avg_gpa = sum([g.student_obj.gpa_cumulative for g in group]) / len(group)
+            term = f'{semester} {year}'
+            return_dict[term] = round(avg_gpa, 2)
+        return return_dict
+
+
     @staticmethod
     def get_avg_gpa() -> str:
         '''
@@ -640,6 +672,28 @@ class ClassData(db.Model):
         return_list += lowest
 
         return return_list
+
+    @staticmethod 
+    def get_dwf_rate_per_semester():
+        '''
+        Returns a dictionary with the dwf rate per semester.
+
+        return:
+            A `dict` of semesters mapped to each DWF rate.
+        '''
+        grouped_class_data = Utils.group_table_by_column(ClassData, 
+            ClassData.course)
+        return_dict = {}
+        for course_group in grouped_class_data:
+             # Get the grades, then make a call to get the avg DWF.
+            course_grades = [c.grade for c in course_group]
+            length = len(course_grades)
+            dwf_len = len(list(filter(lambda c: c == 'W' or c == 'D+' or c == 'D' 
+                or c == 'D-' or c == 'F', course_grades)))
+            term = f'{course_group[0].course_obj.semester} {course_group[0].course_obj.year}'
+            return_dict[term] = round((dwf_len / length) * 100, 2) if length > 0 else 0
+
+        return return_dict
 
 
     @staticmethod

@@ -20,10 +20,9 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
-
 function logout(evt) {
     evt.preventDefault();
-    fetch('/logout', {method: 'POST'}).then((res) => {
+    fetch('/logout', { method: 'POST' }).then((res) => {
         if (res.redirected) {
             window.location.href = res.url;
         }
@@ -49,10 +48,10 @@ function flipHighestLowestTable() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({part: 'highest'})
+            body: JSON.stringify({ part: 'highest' })
         })
-        .then((res) => res.json())
-        .then((data) => buildAVGDWFTable(data));
+            .then((res) => res.json())
+            .then((data) => buildAVGDWFTable(data));
     } else {
         lowestEnabled = true;
         highestBtn.disabled = false;
@@ -67,16 +66,16 @@ function flipHighestLowestTable() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({part: 'lowest'})
+            body: JSON.stringify({ part: 'lowest' })
         })
-        .then((res) => res.json())
-        .then((data) => buildAVGDWFTable(data));
+            .then((res) => res.json())
+            .then((data) => buildAVGDWFTable(data));
     }
 }
 
 function buildAVGDWFTable(data) {
     var bodyString = '';
-    
+
     // Build the table.
     for (const course of data) {
         var row = `
@@ -101,24 +100,70 @@ window.onload = () => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({part: 'highest'})
+        body: JSON.stringify({ part: 'highest' })
     })
-    .then((res) => res.json())
-    .then((data) => buildAVGDWFTable(data));
+        .then((res) => res.json())
+        .then((data) => buildAVGDWFTable(data));
+
+    fetch('/avg-gpa-and-dwf-per-semester')
+        .then((res) => res.json())
+        .then((data) => buildAvgGpaAndDwfPerSemesterChart(data));
 }
+
+function buildAvgGpaAndDwfPerSemesterChart(json) {
+    var semesters = [], gpas = [], dwfs = [];
+    for (var semester in json) {
+        semesters.push(semester);
+        gpas.push(json[semester]['avg_gpa']);
+        dwfs.push(json[semester]['avg_dwf'])
+    }
+
+    var data = [
+        {
+            x: semesters,
+            y: gpas,
+            name: 'Average GPA',
+            type: 'bar',
+            marker: {
+                color: 'rgb(0, 123, 255)'
+            }
+        },
+        {
+            x: semesters,
+            y: dwfs,
+            name: 'DWF Rate',
+            type: 'bar',
+            marker: {
+                color: 'rgb(40, 167, 69)'
+            }
+        }
+    ];
+
+    var layout = {
+        margin: {
+            l: 30,
+            r: 30,
+            b: 30,
+            t: 30
+        }
+    }
+
+    Plotly.newPlot('avgGPAPerSemesterDiv', data, layout, {responsive: true});
+}
+
 
 // This page is super helpful: https://stackoverflow.com/questions/6887183/how-to-take-screenshot-of-a-div-with-javascript
 function downloadNumOfStudentsPerMajorAsPNG(e) {
     e.preventDefault();
 
     const div = document.getElementById('num-students-per-major-div');
-    
-    window.scrollTo(0,0); 
+
+    window.scrollTo(0, 0);
     html2canvas(div, {
         scale: 1
     }).then((canvas) => {
-        canvas.toBlob(function(blob) {
-            saveAs(blob, "num_of_students_per_course.png"); 
+        canvas.toBlob(function (blob) {
+            saveAs(blob, "num_of_students_per_course.png");
         });
     });
 }
@@ -127,12 +172,12 @@ function downloadNumOfStudentsPerMajorAsJPG(e) {
     e.preventDefault();
 
     const div = document.getElementById('num-students-per-major-div');
-    
-    window.scrollTo(0,0); 
+
+    window.scrollTo(0, 0);
     html2canvas(div).then((canvas) => {
-        canvas.toBlob(function(blob) {
-            
-            saveAs(blob, "num_of_students_per_course.jpg"); 
+        canvas.toBlob(function (blob) {
+
+            saveAs(blob, "num_of_students_per_course.jpg");
         });
     });
 }
