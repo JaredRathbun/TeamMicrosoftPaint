@@ -240,3 +240,20 @@ def get_num_students_per_major_as_csv():
     res.headers.set( 'Content-Disposition', 'attachment', 
         filename='num_students_per_major.csv')
     return res
+
+
+@dash_bp.route('/avg-gpa-and-dwf-per-semester', methods = ['GET'])
+@login_required
+def avg_gpa_per_semester():
+    avg_gpas = Student.get_avg_gpa_per_semester()
+    avg_dwfs = ClassData.get_dwf_rate_per_semester()
+
+    return_dict = {}
+    # Loop over the keys, creating a nested dict object.
+    for key in avg_gpas.keys():
+        return_dict[key] = {
+            'avg_gpa': avg_gpas[key],
+            'avg_dwf': avg_dwfs[key]
+        }
+
+    return return_dict, 200
