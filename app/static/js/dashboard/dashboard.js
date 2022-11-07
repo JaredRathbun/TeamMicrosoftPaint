@@ -141,10 +141,10 @@ function buildAvgGpaAndDwfPerSemesterChart(json) {
 
     var layout = {
         margin: {
-            l: 20,
-            r: 20,
-            b: 20,
-            t: 20
+            l: 30,
+            r: 30,
+            b: 30,
+            t: 30
         }
     }
 
