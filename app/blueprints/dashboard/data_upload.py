@@ -134,8 +134,8 @@ def __insert_class_data(csv_file: DataFrame):
         return:
             The ID of the `Course` object.
         '''
-        course_obj = Course.query.filter(Course.term_code==num_term_code and 
-            Course.course_num==course_id and Course.semester==semester and 
+        course_obj = Course.query.filter(Course.term_code==num_term_code, 
+            Course.course_num==course_id, Course.semester==semester, 
             Course.year==year).first()
 
         # If the course already exists, return the ID of it.
@@ -200,6 +200,11 @@ def __insert_class_data(csv_file: DataFrame):
 
         if (course_id is None):
             error_list.append(InvalidDataException('Course number missing.', 
+                current_row, 34))
+            found_error = True 
+            valid_course_data = False
+        elif (len(course_id) < 6 or len(course_id) > 9):
+            error_list.append(InvalidDataException('Invalid Course number.', 
                 current_row, 34))
             found_error = True 
             valid_course_data = False
