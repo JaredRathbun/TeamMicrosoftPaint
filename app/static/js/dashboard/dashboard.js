@@ -223,14 +223,15 @@ function buildAvgGpaAndDwfPerSemesterChart(json) {
 
     var layout = {
         margin: {
-            l: 30,
-            r: 30,
-            b: 30,
-            t: 30
+            l: 40,
+            r: 40,
+            b: 40,
+            t: 40
         }
     };
 
-    Plotly.newPlot('avg-gpa-and-course-dwf-per-semester', data, layout, {responsive: true});
+    Plotly.newPlot('avg-gpa-and-course-dwf-per-semester', data, layout, 
+        {responsive: true, scrollZoom: true});
 }
 
 
