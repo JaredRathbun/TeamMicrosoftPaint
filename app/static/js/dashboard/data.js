@@ -66,8 +66,8 @@ window.onload = () => {
 function createTable(data) {
     const convertToNA = (val) => (val == null) ? 'N/A' : val;
     const convertBooleanToString = (val) => (val) ? 'Yes' : 'No';
-    console.log(data);
     let rowID = 0;
+    let bodyString = '';
     for (const val of data) {
         const row = `
             <tr class="d-flex">
@@ -190,9 +190,31 @@ function createTable(data) {
                 </td>
             </tr> 
         `;
-        document.getElementById('tablebody').innerHTML += row;
+        bodyString += row;
+        // document.getElementById('tablebody').innerHTML += row;
         rowID++;
     }
+
+    let tableString = `
+        <table class="table table-responsive table-striped my-0">
+            <thead>
+                <tr class="d-flex sticky-header" style="position: sticky;">
+                    <th class="col-1"></th>
+                    <th class="col-2">Student ID #</th>
+                    <th class="col-2">Course Code</th>
+                    <th class="col-2">Program Level</th>
+                    <th class="col-2">Subprogram Code</th>
+                    <th class="col-1">Semester</th>
+                    <th class="col-1">Year</th>
+                    <th class="col-1">Final Grade</th>
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+                ${bodyString}
+            </tbody>
+        </table>
+    `;
+    document.getElementById('dataTable').innerHTML = tableString;
 
     applyShowHideToggle();
 }
