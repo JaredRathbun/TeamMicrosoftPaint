@@ -38,7 +38,7 @@ app = Flask('STEM Data Dashboard', instance_relative_config=True,
     static_folder=path.abspath('./app/static')
 )
 
-db = SQLAlchemy(app)
+db = None
 jwt_manager = JWTManager()
 mail = Mail()
 login_manager = LoginManager(app)
@@ -48,6 +48,7 @@ def init_app(config_fname: str = None) -> Flask:
     config_loaded = app.config.from_pyfile(config_fname)
     if config_loaded:
         # Blueprints need to be registered here.
+        db = SQLAlchemy(app)
         from app.blueprints.auth.routes import auth_bp
         from app.blueprints.dashboard.routes import dash_bp
         app.register_blueprint(auth_bp)
