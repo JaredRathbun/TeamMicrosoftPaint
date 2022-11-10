@@ -196,17 +196,17 @@ function createTable(data) {
     }
 
     let tableString = `
-        <table class="table table-responsive table-striped my-0">
+        <table class="table table-responsive table-striped my-0" style="overflow: auto;">
             <thead>
                 <tr class="d-flex sticky-header" style="position: sticky;">
-                    <th class="col-1"></th>
-                    <th class="col-2">Student ID #</th>
-                    <th class="col-2">Course Code</th>
-                    <th class="col-2">Program Level</th>
-                    <th class="col-2">Subprogram Code</th>
-                    <th class="col-1">Semester</th>
-                    <th class="col-1">Year</th>
-                    <th class="col-1">Final Grade</th>
+                    <th class="col-1 sticky-header"></th>
+                    <th class="col-2 sticky-header">Student ID #</th>
+                    <th class="col-2 sticky-header">Course Code</th>
+                    <th class="col-2 sticky-header">Program Level</th>
+                    <th class="col-2 sticky-header">Subprogram Code</th>
+                    <th class="col-1 sticky-header">Semester</th>
+                    <th class="col-1 sticky-header">Year</th>
+                    <th class="col-1 sticky-header">Final Grade</th>
                 </tr>
             </thead>
             <tbody id="tablebody">
