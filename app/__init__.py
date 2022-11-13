@@ -27,7 +27,7 @@ from flask_session import Session
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from os import path
+from os import path, environ
 import logging as logger
 from flask_mail import Mail
 from flask_login import current_user
@@ -38,39 +38,84 @@ app = Flask('STEM Data Dashboard', instance_relative_config=True,
     static_folder=path.abspath('./app/static')
 )
 
+env = environ['env']
+if (env not in ('dev', 'prod')):
+    logger.critical("Invalid environment. Please use either 'dev' or 'prod'.")
+    raise SystemExit()
+else:
+    config_loaded = app.config.from_pyfile(f'{env}.cfg')
+
+    if (not config_loaded):
+        logger.critical('Failed to load configuration and start correctly.')
+        raise SystemExit('Failed to load configuration and start correctly.')
+
 db = SQLAlchemy(app)
 jwt_manager = JWTManager()
 mail = Mail()
 login_manager = LoginManager(app)
 login_manager.login_view = 'routes.login'
 
-def init_app(config_fname: str = None) -> Flask:
-    config_loaded = app.config.from_pyfile(config_fname)
-    if config_loaded:
-        # Blueprints need to be registered here.
-        from app.blueprints.auth.routes import auth_bp
-        from app.blueprints.dashboard.routes import dash_bp
-        app.register_blueprint(auth_bp)
-        app.register_blueprint(dash_bp)
+def init_app() -> Flask:
+    # Blueprints need to be registered here.
+    from app.blueprints.auth.routes import auth_bp
+    from app.blueprints.dashboard.routes import dash_bp
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(dash_bp)
+    
+    # Init the DB, create all tables.
+    with app.app_context():
+        db.init_app(app)
+        # from app.models import User, Student, ClassData
+        db.create_all()
+
+    jwt_manager.init_app(app)
+
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    # Set up the SMTP connection for Gmail.
+    mail.init_app(app)
+
+    return app
+
+# app = Flask('STEM Data Dashboard', instance_relative_config=True,
+#     template_folder=path.abspath('./app/templates'),
+#     static_folder=path.abspath('./app/static')
+# )
+
+# db = SQLAlchemy(app)
+# jwt_manager = JWTManager()
+# mail = Mail()
+# login_manager = LoginManager(app)
+# login_manager.login_view = 'routes.login'
+
+# def init_app(config_fname: str = None) -> Flask:
+#     config_loaded = app.config.from_pyfile(config_fname)
+#     if config_loaded:
+#         # Blueprints need to be registered here.
+#         from app.blueprints.auth.routes import auth_bp
+#         from app.blueprints.dashboard.routes import dash_bp
+#         app.register_blueprint(auth_bp)
+#         app.register_blueprint(dash_bp)
         
-        # Init the DB, create all tables.
-        with app.app_context():
-            db.init_app(app)
-            from app.models import User, Student, ClassData
-            db.create_all()
+#         # Init the DB, create all tables.
+#         with app.app_context():
+#             db.init_app(app)
+#             from app.models import User, Student, ClassData
+#             db.create_all()
 
-        jwt_manager.init_app(app)
+#         jwt_manager.init_app(app)
 
-        login_manager.login_view = "auth.login"
-        login_manager.init_app(app)
+#         login_manager.login_view = "auth.login"
+#         login_manager.init_app(app)
 
-        # Set up the SMTP connection for Gmail.
-        mail.init_app(app)
+#         # Set up the SMTP connection for Gmail.
+#         mail.init_app(app)
 
-        return app
-    else:
-        logger.critical('Failed to load config file. Please make sure it exists in the /instance directory.')
-        raise SystemExit()
+#         return app
+#     else:
+#         logger.critical('Failed to load config file. Please make sure it exists in the /instance directory.')
+#         raise SystemExit()
     
 
 def admin_required(f):
