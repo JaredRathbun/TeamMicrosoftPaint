@@ -32,7 +32,8 @@ from sqlalchemy.orm import declarative_base
 
 @pytest.fixture(scope='module')
 def test_client():
-    app = init_app('test.cfg')
+    app = init_app()
+    app.config.from_pyfile('test.cfg')
     app.testing = True
     app.config['DEBUG'] = False
     app.config['SECRET_KEY'] = 'dev'
@@ -49,8 +50,10 @@ def init_db(test_client):
 
     from app.models import User
     
-    base.metadata.drop_all(db.engine)
-    base.metadata.create_all(db.engine)
+    db.create_all()
+    
+    # base.metadata.drop_all(bind=db.engine)
+    # base.metadata.create_all(bind=db.engine)
     local_usr = User('dummy@dummy.com', 'dummy', 'user', 'test123')
     google_usr = User('dummy@gmail.com', 'dummy', 'googleuser')
     admin_usr = User('admin.teammspaint@gmail.com', 'dummy', 'admin', 'test123')
@@ -65,6 +68,6 @@ def init_db(test_client):
     yield
 
     db.session.close()
-    base.metadata.drop_all(bind=db.engine)
+    # base.metadata.drop_all(bind=db.engine)
     db.drop_all()
  

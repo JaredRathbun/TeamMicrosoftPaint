@@ -317,3 +317,9 @@ def avg_gpa_per_cohort_csv_download():
     res.headers.set( 'Content-Disposition', 'attachment', 
         filename='avg_gpa_per_cohort.csv')
     return res
+
+
+@dash_bp.route('/course-semester-mapping', methods = ['GET'])
+def get_course_semester_mapping():
+    course_semester_mapping = Course.get_course_semester_mapping()
+    return course_semester_mapping, 200

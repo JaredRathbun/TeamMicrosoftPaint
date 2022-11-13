@@ -33,6 +33,7 @@ from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
     Enum, ForeignKey)
 from itertools import groupby
 from operator import attrgetter
+from functools import cmp_to_key
 
 
 class Utils:
@@ -933,6 +934,52 @@ class Course(db.Model):
     semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI", "SU")'), 
         nullable=False)
     year = Column(Integer(), nullable=False)
+
+    @staticmethod
+    def get_course_semester_mapping() -> dict[str, list]:
+        '''
+        Returns a mapping of all the semesters each class has data in the 
+        database for.
+
+        return:
+            A `dict` object mapping each class to the semesters it ran.
+        '''
+        def semester_sort(semester1: str, semester2: str) -> int:
+            '''
+            Sorting function for semesters in the semester_list for each course.
+
+            params:
+                semester1: The first semester to compare.
+                semester2: The second semester to compare.
+            return:
+                A `int` representing the order of the sorting.
+            '''
+            semester1_split = semester1.split(' ')
+            semester2_split = semester2.split(' ')
+
+            semester1_year = int(semester1_split[1])
+            semester2_year = int(semester2_split[1])
+
+            if (semester1_year < semester2_year):
+                return -1
+            elif (semester1_year > semester2_year):
+                return 1
+            else:
+                return 0
+
+        grouped_course_nums = Utils.group_table_by_column(Course, Course.course_num)
+        mapping_dict = {}
+
+        # Walk over every group of each course, getting each semester and adding
+        # to a list.
+        for group in grouped_course_nums:
+            course_num = group[0].course_num
+            semester_list = []
+            for course in group:
+                semester_list.append(f'{course.semester} {course.year}')
+            semester_list.sort(key=cmp_to_key(semester_sort))
+            mapping_dict[course_num] = semester_list
+        return mapping_dict
 
 
 class MCASScore(db.Model):
