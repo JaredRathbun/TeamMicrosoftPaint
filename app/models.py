@@ -20,7 +20,7 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+import jwt
 from flask import current_app
 import logging as logger
 from flask_login import UserMixin
@@ -291,8 +291,8 @@ class User(UserMixin, db.Model):
         param: duration=1800 The amount of time the token is valid for.
         return: The token represented as a string.
         '''
-        return Serializer(current_app.config['SECRET_KEY'], duration).dumps(
-            {'email': self.email}).decode('utf-8')
+        return jwt.encode({'email': self.email}, 
+            current_app.config['SECRET_KEY'], algorithm='HS256')
 
     
     @staticmethod
@@ -308,8 +308,8 @@ class User(UserMixin, db.Model):
         '''
         if token:
             try:
-                email = Serializer(current_app.config['SECRET_KEY']).loads(
-                    token)['email']
+                email = jwt.decode(token, current_app.config['SECRET_KEY'], 
+                    algorithms=['HS256'])['email']
                 return User.query.get(email)
             except Exception as e:
                 return None
