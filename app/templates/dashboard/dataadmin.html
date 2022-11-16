@@ -26,9 +26,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard - STEM Data Dashboard</title>
-    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
     <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link rel="stylesheet" href="../../static/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 </head>
 
@@ -62,8 +62,8 @@
                         </a>
                     </li>
                     {% if is_data_admin_or_higher(current_user) %}
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/dataadmin">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/dataadmin">
                                 <i class="fas fa-chart-simple"></i>
                                     <span>Data Administration</span>
                             </a>
@@ -71,7 +71,7 @@
                     {% endif %}
 
                     {% if is_admin(current_user) %}
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a class="nav-link" href="/admin">
                                 <i class="fas fa-user"></i>
                                     <span>Administration</span>
@@ -109,7 +109,7 @@
                                         <span class="d-none d-lg-inline me-2 text-gray-600 small">
                                             {{ user_name }}
                                         </span>
-                                        <img class="border rounded-circle img-profile" src="../static/img/avatars/avatar1.jpeg">
+                                        <i class="fas fa-user fa-lg fa-fw me-2 text-gray-400"></i>
                                     </a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                         <button class="dropdown-item" onclick="logout(event)">

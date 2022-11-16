@@ -25,7 +25,7 @@ from flask import render_template, request, make_response
 from flask_login import login_required, current_user
 from app import admin_required, data_admin_or_higher_required
 from app.blueprints.dashboard.data_upload import upload_csv_file
-from app.models import RoleEnum, User, ClassData, Course, Student
+from app.models import RoleEnum, User, ClassData, Course, Student, Utils
 import pandas as pd
 
 @dash_bp.route('/dashboard', methods = ['GET'])
@@ -320,6 +320,25 @@ def avg_gpa_per_cohort_csv_download():
 
 
 @dash_bp.route('/course-semester-mapping', methods = ['GET'])
+@login_required
 def get_course_semester_mapping():
     course_semester_mapping = Course.get_course_semester_mapping()
     return course_semester_mapping, 200
+
+
+@dash_bp.route('/class-by-class-comparisons', methods = ['POST'])
+# @login_required
+def class_by_class_comparisons():
+    body = request.get_json()
+
+    if ('column' not in body or 'selectedCourses' not in body):
+        return {'message': 'Body missing information.'}, 400
+    else:
+        # Check to make sure at least 2 courses were selected.
+        if (len(body['selectedCourses']) < 2):
+            return {'message': 'At least 2 courses must be selected.'}, 400
+        
+        column = body['column']
+        selected_courses = body['selectedCourses']
+
+        return Utils.get_class_by_class_data(column, selected_courses), 200
