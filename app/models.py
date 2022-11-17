@@ -21,7 +21,7 @@
 
 
 import jwt
-from flask import current_app, Response
+from flask import current_app
 import logging as logger
 from flask_login import UserMixin
 import enum
@@ -37,6 +37,9 @@ from functools import cmp_to_key
 
 
 class Utils:
+    '''
+    A utility class that contains static methods only.
+    '''
     @staticmethod
     def group_table_by_column(table, column):
         '''
@@ -58,13 +61,15 @@ class Utils:
     @staticmethod
     def get_class_by_class_data(column: str, selected_courses: dict) -> dict:
         '''
-        Returns a `Response` object with the data requested for each class 
-        specified.
+        Returns a `dict` with the data requested for each class specified.
 
         params:
             `column`: The column to compare each class by.
             `selected_courses`: A `dict` containing the courses and the semesters
             to compare each course.
+
+        return: 
+            A `dict` containing the calculated/found data for each course.
         '''
 
         def get_class_data_column(column: str, course: str, semester: str, 
@@ -635,8 +640,27 @@ class Student(db.Model):
 
     @staticmethod
     def get_num_students_per_major() -> dict:
+        '''
+        Returns a `dict` containing each majors' number of students, the 
+        percentage of the total students, and the correct bootstrap class to 
+        style the colored bar with. The total number of students in the database
+        is returned as a key in the `dict`.
 
-        def get_bootstrap_class(percentage: float):
+        return:
+            A `dict` containing each major in the database.
+        '''
+        def get_bootstrap_class(percentage: float) -> str:
+            '''
+            Returns the correct bootstrap class to style the colored bar with
+            based on the percentage of students in a given major.
+            
+            param:
+                `percentage`: A float containing the percentage of students in
+                the major.
+            return:
+                A `str` containing the proper bootstrap class to style the
+                colored bar with.
+            '''
             match percentage:
                 case percentage if percentage >= 0 and percentage <= 20:
                     return 'bg-danger'
@@ -648,6 +672,7 @@ class Student(db.Model):
                     return 'bg-info'
                 case percentage if percentage >= 81 and percentage <= 100:
                     return 'bg-success'
+
 
         grouped_students = Student.query.order_by(Student.major_1_desc).all()
         total_num_students = len(grouped_students)

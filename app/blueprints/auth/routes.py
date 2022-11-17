@@ -120,7 +120,6 @@ def login():
             if login_success:
                 needs_2fa = (usr.role == RoleEnum.ADMIN or usr.role == RoleEnum.DATA_ADMIN)
                 login_user(usr)
-
                 if needs_2fa:
                     return redirect(f'/otp/{usr.email}')
                 else: 
@@ -167,7 +166,7 @@ def oauth_login_callback():
     res = requests.get(uri, headers=headers, data=body).json()
 
     usr = User.query.get(res['email'])
-
+    
     if usr:
         login_user(usr)
         if usr.is_admin() or usr.is_data_admin():

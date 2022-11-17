@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
 #
 # This file is part of STEM Data Dashboard.
@@ -19,30 +21,5 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
-from app import init_app
-import logging
-from os import environ
-
-
-if __name__ == '__main__':
-    '''
-    Launches the app.
-    '''
-    # Call the function in the app module to create the Flask object.
-    app = init_app()
-    app.app_context().push()
-
-    # Get the environment variable set by the run script.
-    env = environ['env']
-
-    # Run the app based on the environment. 
-    if (env == 'dev'):
-        app.run('0.0.0.0', port=app.config['PORT'], debug=app.config['DEBUG'], ssl_context=('instance/cert.pem', 'instance/key.pem'))
-    elif (env == 'prod'): 
-        from waitress import serve
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
-        serve(app, listen=f'127.0.0.1:{app.config["PORT"]}')
-    else:
-        print('Incorrect environment, please use either "dev" or "prod."')
-        exit(1)
+export env='prod'
+python3.11 app.py
