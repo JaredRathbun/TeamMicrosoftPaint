@@ -64,11 +64,11 @@ uploadButton.addEventListener('click', async () => {
 
     if (response.status == 200) {
         $.alert({
-                title: 'Success!',
-                content: 'Data uploaded successfully!',
-                type: 'green',
-                typeAnimated: true
-            });
+            title: 'Success!',
+            content: 'Data uploaded successfully!',
+            type: 'green',
+            typeAnimated: true
+        });
     } else {
         const json = await response.json();
         $.dialog({

@@ -37,11 +37,142 @@ from functools import cmp_to_key
 
 
 class Utils:
+    '''
+    A utility class that contains static methods only.
+    '''
     @staticmethod
     def group_table_by_column(table, column):
+        '''
+        Groups the specified table by the specified column.
+        
+        params:
+            `table`: The table to query. `Ex. ClassData`
+            `column`: The column to query. `Ex. ClassData.grade`
+
+        return:
+            A `list` of `list` objects, where each element in the list is each 
+            group, and each element in the lists is an `object` of the table.
+        '''
         grouped_table = table.query.order_by(column).all()
         return [list(s) for i, s in groupby(grouped_table, 
             attrgetter(str(column).split('.')[1]))]
+
+
+    @staticmethod
+    def get_class_by_class_data(column: str, selected_courses: dict) -> dict:
+        '''
+        Returns a `dict` with the data requested for each class specified.
+
+        params:
+            `column`: The column to compare each class by.
+            `selected_courses`: A `dict` containing the courses and the semesters
+            to compare each course.
+
+        return: 
+            A `dict` containing the calculated/found data for each course.
+        '''
+
+        def get_class_data_column(column: str, course: str, semester: str, 
+            year: int) -> list[str] | float:
+            '''
+            Generates the correct calculated value for the provided column, 
+            course, semester, and year.
+
+            params:
+                `column`: A `str` holding the calculation to perform. 
+                Should be either 'grade' or 'avg_dwf_rate'.
+                `course`: A `str` containing the course to get the data for.
+                `semester`: A `str` containing the semester the course ran.
+                `year`: An `int` containing the year the course ran.
+            return:
+                A `list` containing each of the grades for the course in the 
+                database or a float representing the average dwf rate for the 
+                course.
+            '''
+            course = Course.query.filter(Course.course_num == 
+                    course and Course.semester == semester and Course.year == 
+                    year).first()
+
+            if (column == 'grade'):
+                class_data_entries = ClassData.query.filter(
+                    ClassData.course_obj == course).all()
+                return [course.grade for course in class_data_entries]
+            else:
+                class_data_entries = ClassData.query.filter(
+                    ClassData.course_obj == course)
+                dwf_grades = class_data_entries.filter(ClassData.grade == 'D' or
+                    ClassData.grade == 'D+' or ClassData.grade == 'D-' or 
+                    ClassData.grade == 'W' or ClassData.grade == 'F').count()
+                total_grades = class_data_entries.count()
+                return round((dwf_grades / total_grades) * 100, 2) if total_grades > 0 else 0.0
+
+
+        def get_student_data_column(column: str, course: str, semester: str, 
+            year: int) -> list | float:
+            '''
+            Generates the correct calculation for the given column, course, 
+            semester and year from the Student table.
+            '''
+            course = Course.query.filter(Course.course_num == course and 
+                Course.semester == semester and Course.year == year).first()
+            class_data_objs = ClassData.query.filter(ClassData.course_obj == 
+                    course).all()
+            if (column == 'avg_high_school_gpa'):
+                gpa_list = []
+                for class_data_obj in class_data_objs:
+                    hs_gpa = class_data_obj.student_obj.high_school_gpa
+
+                    # Only get grades that are in the database, since 
+                    # high_school_gpa is nullable in the database.
+                    if (hs_gpa is not None):
+                        gpa_list.append(hs_gpa)
+                
+                gpa_list_len = len(gpa_list)
+                return round(sum(gpa_list) / gpa_list_len, 2) if gpa_list_len > 0 else 0
+            elif (column == 'avg_gpa'):
+                gpa_list = []
+                for class_data_obj in class_data_objs:
+                    gpa = class_data_obj.student_obj.gpa_cumulative
+
+                    # Only get grades that are in the database, since gpa is 
+                    # nullable in the database.
+                    if (gpa is not None):
+                        gpa_list.append(gpa)
+                
+                gpa_list_len = len(gpa_list)
+                return round(sum(gpa_list) / gpa_list_len, 2) if gpa_list_len > 0 else 0
+            else:
+                column_list = []
+                for class_data_obj in class_data_objs:
+                    student = class_data_obj.student_obj
+
+                    # Get the column of the Student table we are looking for.
+                    column_val = getattr(student, column)
+
+                    # If the column is a gpa, round it to 2 decimal places.
+                    if (column == 'gpa_cumulative' or column == 
+                        'high_school_gpa'):
+                        column_val = round(column_val, 2)
+
+                    # If the value is not None, add it to the column_list.
+                    if (column_val is not None):
+                        column_list.append(column_val)
+                return column_list
+        
+        # Based on what column was selected, find which function to call.
+        if (column == 'grade' or column == 'avg_dwf_rate'):
+            function_to_call = get_class_data_column
+        else:
+            function_to_call = get_student_data_column
+
+        return_data = {}
+        for course_num in selected_courses:
+            term = selected_courses[course_num]
+            split_term = term.split(' ')
+            semester = split_term[0]
+            year = int(split_term[1])
+            return_data[course_num] = function_to_call(column, course_num, semester, year)
+        return return_data             
 
 
 class ProviderEnum(enum.Enum):
@@ -509,8 +640,27 @@ class Student(db.Model):
 
     @staticmethod
     def get_num_students_per_major() -> dict:
+        '''
+        Returns a `dict` containing each majors' number of students, the 
+        percentage of the total students, and the correct bootstrap class to 
+        style the colored bar with. The total number of students in the database
+        is returned as a key in the `dict`.
 
-        def get_bootstrap_class(percentage: float):
+        return:
+            A `dict` containing each major in the database.
+        '''
+        def get_bootstrap_class(percentage: float) -> str:
+            '''
+            Returns the correct bootstrap class to style the colored bar with
+            based on the percentage of students in a given major.
+            
+            param:
+                `percentage`: A float containing the percentage of students in
+                the major.
+            return:
+                A `str` containing the proper bootstrap class to style the
+                colored bar with.
+            '''
             match percentage:
                 case percentage if percentage >= 0 and percentage <= 20:
                     return 'bg-danger'
@@ -522,6 +672,7 @@ class Student(db.Model):
                     return 'bg-info'
                 case percentage if percentage >= 81 and percentage <= 100:
                     return 'bg-success'
+
 
         grouped_students = Student.query.order_by(Student.major_1_desc).all()
         total_num_students = len(grouped_students)

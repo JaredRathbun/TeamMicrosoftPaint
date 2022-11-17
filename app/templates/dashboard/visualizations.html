@@ -26,10 +26,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard - STEM Data Dashboard</title>
-    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
     <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
-    <link rel="stylesheet" href="../static/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link rel="stylesheet" href="../../static/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
 </head>
 
 <body id="page-top">
@@ -109,8 +111,7 @@
                                         <span class="d-none d-lg-inline me-2 text-gray-600 small">
                                             {{ user_name }}
                                         </span>
-                                        <img class="border rounded-circle img-profile"
-                                            src="../static/img/avatars/avatar1.jpeg">
+                                        <i class="fas fa-user fa-lg fa-fw me-2 text-gray-400"></i>
                                     </a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                         <button class="dropdown-item" onclick="logout(event)">
@@ -186,21 +187,52 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-lg-6 col-md-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center align-middle">
                                     <h6 class="text-primary fw-bold m-0">Class by Class Comparisons</h6>
                                     <p class="text-primary m-0">To compare classes, pick which classes you would like to analyze.</p>
                                 </div>
-                                <div class="card-body align-items-center align-middle" style="max-height: 300px;">
+                                <div class="card-body align-items-center align-middle" style="min-height: 380px;">
                                     <div class="row">
-                                        <div class="col-9">
-                                            <div id="courseDropdownDiv" class='align-items-center align-middle' style="overflow-y: auto; overflow-x: hidden; height: 200px">
+                                        <div class="col-8">
+                                            <div id="courseDropdownDiv" class='align-items-center align-middle' style="overflow-y: auto; overflow-x: hidden; height: 305px">
                                             </div>
                                             <button class="m-1 mt-2 btn btn-primary" onclick="addNewCourseDropdowns(true)">Add New Course</button>  
                                         </div>
-                                        <div class="col-2 d-flex align-items-center align-middle">
-                                            <button id='showChartGraphButton' onclick='getSelectedCourseData()' disabled class="btn btn-primary mr-2">Show Chart/Graph Selections</button>
+                                        <div class="col-4 align-items-center align-middle">
+                                            <div class="d-inline-flex mb-1">
+                                                <h7><strong>Select Data Column</strong></h7>
+                                                <span class='mx-1' data-toggle="tooltip" data-placement="auto" title="A column/field on the data page to compare classes with."><i class="fa fa-light fa-circle-info"></i></span>
+                                            </div>
+                                            <select class="form-select mb-3" id="columnSelect" onchange="fillValidGraphTypes(); checkDropdowns();">
+                                                <option selected disabled value="">Select a Column</option>
+                                                <option value="avg_gpa">Average College GPA</option>
+                                                <option value="gpa_cumulative">College GPA</option>
+                                                <option value="avg_high_school_gpa">Average High School GPA</option>
+                                                <option value="high_school_gpa">High School GPA</option>
+                                                <option value="grade">Course Grade</option>
+                                                <option value="avg_dwf_rate">Average DWF Rate</option>
+                                                <option value="race_ethnicity">Race/Ethnicity</option>
+                                                <option value="gender">Gender</option>
+                                                <option value="math_placement_score">Math Placement Score</option>
+                                                <option value="sat_total">Total SAT Score</option>
+                                                <option value="sat_math">SAT Math Score</option>
+                                                <option value="act_score">ACT Score</option>
+                                            </select>
+                                            <h7 class="mb-1"><strong>Select a Chart/Graph Type</strong></h7>
+                                            <select class="form-select my-2 mb-3" id="chartOrGraphTypeSelect" onchange="checkDropdowns();">
+                                                <option selected disabled value="Select a Chart/Graph Type">Select a Chart/Graph Type</option>
+                                            </select>
+                                            <!-- <div class="d-inline-flex">
+                                                <input checked type="checkbox" id='includeSemesterInRange'>
+                                                <h7 style="margin-left: 10px">Include Data In Selected Range</h7>
+                                            </div>
+                                            <div class="d-inline-flex">
+                                                <input checked type="checkbox" id='includeWinterAndSummerSemesters'>
+                                                <h7 style="margin-left: 10px">Include Winter/Summer Data</h7>
+                                            </div> -->
+                                            <button id='showChartGraphButton' onclick='genChartOrGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                         </div>
                                     </div>
                                 </div>
@@ -459,11 +491,19 @@
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../static/js/chart.min.js"></script>
-    <script src="../static/js/bs-init.js"></script>
-    <script src="../static/js/theme.js"></script>
-    <script src="../static/js/dashboard/visualizations.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/js/theme.js"></script>
+    <script src="../../static/js/FileSaver.min.js"></script>
+    <script src="../../static/js/html2canvas.min.js"></script>
+    <script src="https://kit.fontawesome.com/177241023b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@4.3.2/js/bootstrap5-toggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="../../static/js/plotly-2.16.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script src="../../static/js/dashboard/visualizations.js"></script>
 </body>
 
 </html>
