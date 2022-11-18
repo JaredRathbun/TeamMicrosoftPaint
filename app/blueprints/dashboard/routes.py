@@ -71,9 +71,16 @@ def get_visualizations():
 @data_admin_or_higher_required
 def get_data_admin():
     name = current_user.first_name + ' ' + current_user.last_name
+    
+    user_query = User.query
+    total_admins = len(user_query.filter_by(role=RoleEnum.ADMIN).all())
+    total_users = len(user_query.all())
+    total_students = len(Student.query.all())
+    total_data_admins = len(User.query.filter(User.role==RoleEnum.DATA_ADMIN).all())
+    
     return render_template('dashboard/dataadmin.html', current_user=current_user, 
-            user_name=name)
-
+            user_name=name, total_admins=total_admins, total_users=total_users,
+            total_students=total_students, total_data_admins=total_data_admins)
 
 @dash_bp.route('/admin', methods = ['GET'])
 @login_required
