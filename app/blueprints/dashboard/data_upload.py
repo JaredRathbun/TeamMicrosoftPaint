@@ -427,5 +427,3 @@ def __process_errors(errors: list[InvalidDataException]) -> list[dict]:
         'error_message': error.message, 'line_num': error.line_num, 
         'col_num': error.col_num
     } for error in errors]
-
-
