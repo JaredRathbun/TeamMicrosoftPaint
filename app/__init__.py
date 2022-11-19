@@ -127,9 +127,19 @@ def is_admin(current_u):
     '''
     return (current_u.role == RoleEnum.ADMIN)
 
+
 @app.context_processor
 def utility_functions():
+    '''
+    Utility functions used with the Jinja templating engine.
+    '''
     def print_in_console(message):
+        '''
+        Prints the given message to the console.
+
+        param:
+            `message`: The message to print.
+        '''
         print(str(message))
 
     return dict(print_debug=print_in_console)
