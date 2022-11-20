@@ -21,6 +21,8 @@
 
 
 from . import dash_bp
+from app import app, mail
+from flask_mail import Message
 from flask import render_template, request, make_response
 from flask_login import login_required, current_user
 from app import admin_required, data_admin_or_higher_required
@@ -113,6 +115,14 @@ def get_admin():
             user_list=user_list)
     else:
         return render_template('errors/403.html'), 403
+
+
+@dash_bp.route('/faq', methods = ['GET'])
+@login_required
+def get_faq():
+    name = current_user.first_name + ' ' + current_user.last_name
+    return render_template('dashboard/faq.html', user_name=name, 
+        current_user=current_user)
 
 
 @dash_bp.route('/change-role', methods = ['POST'])
@@ -327,7 +337,7 @@ def get_course_semester_mapping():
 
 
 @dash_bp.route('/class-by-class-comparisons', methods = ['POST'])
-# @login_required
+@login_required
 def class_by_class_comparisons():
     body = request.get_json()
 
@@ -342,3 +352,22 @@ def class_by_class_comparisons():
         selected_courses = body['selectedCourses']
 
         return Utils.get_class_by_class_data(column, selected_courses), 200
+
+
+@dash_bp.route('/email-suggestion', methods = ['POST'])
+def send_email_suggestion():
+    body = request.get_json()
+
+    if ('name' not in body or 'email' not in body or 'subject' not in body or 
+        'message' not in body):
+        return {'message': 'Invalid body.'}, 400
+    else:
+        name = body['name']
+        email = body['email']
+        subject = body['subject']
+        body = body['message']
+
+        msg = Message(subject, sender=email, recipients=[app.config['MAIL_USERNAME']])
+        msg.body = f'SENDER NAME: {name}\nSUBJECT: {subject}\MESSAGE:\n{body}'
+        mail.send(msg)
+        return {'message': 'Success'}, 200

@@ -57,14 +57,14 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/visualizations">
-                            <i class="far fa-chart-bar"></i>
+                            <i class="fas fa-chart-simple"></i>
                             <span>Visualizations</span>
                         </a>
                     </li>
                     {% if is_data_admin_or_higher(current_user) %}
                         <li class="nav-item">
                             <a class="nav-link active" href="/dataadmin">
-                                <i class="fas fa-chart-simple"></i>
+                                <i class="fas fa-solid fa-file-csv"></i>
                                     <span>Data Administration</span>
                             </a>
                         </li>
@@ -78,6 +78,12 @@
                             </a>
                         </li>
                     {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/faq">
+                            <i class="fas fa-regular fa-circle-question"></i>
+                            <span>FAQ and User Manual</span>
+                        </a>
+                    </li>
                 </ul>
                 <div class="text-center d-none d-md-inline"></div>
             </div>

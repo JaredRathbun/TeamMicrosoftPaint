@@ -1,0 +1,411 @@
+<!-- 
+- Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
+- This file is part of STEM Data Dashboard.
+-  
+- STEM Data Dashboard is free software: you can redistribute it and/or modify it
+- under the terms of the GNU General Public License as published by the Free 
+- Software Foundation, either version 3 of the License, or (at your option) any 
+- later version.
+- STEM Data Dashboard is distributed in the hope that it will be useful, but 
+- WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+- FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+- details. You should have received a copy of the GNU General Public License 
+- along with STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
+- 
+- This Source Code Form is subject to the terms of the Mozilla Public
+- License, v. 2.0. If a copy of the MPL was not distributed with this
+- file, You can obtain one at https://mozilla.org/MPL/2.0/.
+-
+- Template built using: https://bootstrapstudio.io/
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard - STEM Data Dashboard</title>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/dashboard.css">
+    <link rel="stylesheet" href="../../static/css/faq.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+</head>
+
+{% block content %}
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion blue-bg p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a
+                    class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#"
+                    style="padding-top: 115px;"><img src="../static/img/mc-logo.png" height="135"></a><span
+                    style="padding-top: 70px;text-align: center;color: var(--bs-accordion-bg);font-size: 19px;">STEM
+                    Education Data Dashboard</span>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="padding-top: 33px;">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/data">
+                            <i class="fas fa-table"></i>
+                            <span>Data</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/visualizations">
+                            <i class="fas fa-chart-simple"></i>
+                            <span>Visualizations</span>
+                        </a>
+                    </li>
+                    {% if is_data_admin_or_higher(current_user) %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dataadmin">
+                            <i class="fas fa-solid fa-file-csv"></i>
+                            <span>Data Administration</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if is_admin(current_user) %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">
+                            <i class="fas fa-user"></i>
+                            <span>Administration</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/faq">
+                            <i class="fas fa-regular fa-circle-question"></i>
+                            <span>FAQ and User Manual</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="text-center d-none d-md-inline"></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3"
+                            id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button><span>Welcome to the
+                            STEM Education Data Dashboard!</span>
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link"
+                                    aria-expanded="false" data-bs-toggle="dropdown" href="#"><i
+                                        class="fas fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in"
+                                    aria-labelledby="searchDropdown">
+                                    <form class="me-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small"
+                                                type="text" placeholder="Search for ...">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0"
+                                                    type="button"><i class="fas fa-search"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow">
+                                <div class="nav-item dropdown no-arrow">
+                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
+                                        href="#">
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">
+                                            {{ user_name }}
+                                        </span>
+                                        <i class="fas fa-user fa-lg fa-fw me-2 text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                        <button class="dropdown-item" onclick="logout(event)">
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                            &nbsp;Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Frequently Asked Questions and User Manual</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8 col-xl-8">
+                            <div class="card shadow mb-4" id="faqDiv">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">Frequently Asked Questions</h6>
+                                </div>
+                                <div class="card-body d-flex align-items-center">
+                                    <!-- FAQ referenced from: https://mdbootstrap.com/docs/standard/extended/faq/  -->
+                                    <section>
+                                        <h3 class="text-center mb-4 pb-2 text-primary fw-bold">FAQ</h3>
+                                        <p class="text-center mb-5">
+                                            Find the answers for the most frequently asked questions below
+                                        </p>
+
+                                        <div class="row">
+                                            <div class="col-md-6 col-lg-4 mb-4">
+                                                <h6 class="mb-3 text-primary">
+                                                    <i
+                                                        class="fas fa-regular fa-circle-question text-primary pe-2"></i>What
+                                                    is the purpose of the STEM Data Dashboard?
+                                                </h6>
+                                                <p>The STEM Data Dashboard was created to assist Merrimack's faculty
+                                                    with applying
+                                                    for grants and performing research. The dashboard was created to
+                                                    serve as a
+                                                    proof of concept of a new, innovative way to perform research.</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-lg-4 mb-4">
+                                                <h6 class="mb-3 text-primary">
+                                                    <i
+                                                        class="fas fa-regular fa-circle-question text-primary pe-2"></i>How
+                                                    do I use the STEM Data Dashboard?
+                                                </h6>
+                                                <p>
+                                                    A user has many abilities on the dashboard. For example, to view all
+                                                    of the data in the database,
+                                                    visit the <a href="/data">data</a> page. To generate visuals based
+                                                    on the data, visit the
+                                                    <a href="/visualizations">visualizations</a> page.
+                                                </p>
+                                            </div>
+
+                                            <div class="col-md-6 col-lg-4 mb-4">
+                                                <h6 class="mb-3 text-primary">
+                                                    <i
+                                                        class="fas fa-regular fa-circle-question text-primary pe-2"></i>What
+                                                    devices does the Dashboard work on?
+                                                </h6>
+                                                <p>
+                                                    Currently, the dashboard works on all Laptops and Desktop computers.
+                                                    It has been tested
+                                                    on Chrome, Safari, and Edge. There is also some support for tablets
+                                                    such as iPads.
+                                                </p>
+                                            </div>
+
+                                            <div class="col-md-6 col-lg-4 mb-4">
+                                                <h6 class="mb-3 text-primary">
+                                                    <i
+                                                        class="fas fa-regular fa-circle-question text-primary pe-2"></i>Can
+                                                    I upload my own data?
+                                                </h6>
+                                                <p>
+                                                    No, not as a viewer. If you would like to have access to add data,
+                                                    please reach out to an
+                                                    administrator, who can grant you data administrator privileges.
+                                                </p>
+                                            </div>
+
+                                            <div class="col-md-6 col-lg-4 mb-4">
+                                                <h6 class="mb-3 text-primary">
+                                                    <i
+                                                        class="fas fa-regular fa-circle-question text-primary pe-2"></i>Can
+                                                    I access data for a specific student?
+                                                </h6>
+                                                <p>Yes, however the STEM Data Dashboard stores anonymized data. Because
+                                                    of this, Merrimack student
+                                                    ID numbers and names are not saved in the database.</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-lg-4 mb-4">
+                                                <h6 class="mb-3 text-primary">
+                                                    <i
+                                                        class="fas fa-regular fa-circle-question text-primary pe-2"></i>Can
+                                                    I download a spreadsheet of the data?
+                                                </h6>
+                                                <p>
+                                                    Yes! Visit the <a href="/data">data</a> page and click on the
+                                                    "Download All Data"
+                                                    button at the top of the page.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-xl-4">
+                            <div id="privacyAndContactDiv">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="text-primary fw-bold m-0">Data Privacy Policy</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>The STEM Data Dashboard does not store personally identifiable information
+                                            (PII). The data that is stored in the database is
+                                            anonymized by the Merrimack College Provost's Office prior to being
+                                            uploaded. Because of this, the dashboard does not store
+                                            information such as the correct Merrimack student ID number, first names, or
+                                            last names. Demographic data such as a student's
+                                            home location, high school, race/ethnicity, gender, and SAT/ACT scores are
+                                            stored in the database.</p>
+                                    </div>
+                                </div>
+                                <div class="card shadow mb-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="text-primary fw-bold m-0">Submit a Suggestion</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6>Have an idea for a new visualization or feature? Let us know!</h6>
+                                        
+                                        <form id="contact-form" name="contact-form">
+                                            <div class="row mt-4">
+                                                <div class="col-md-6">
+                                                    <div class="md-form mb-0">
+                                                        <label for="name" class="">Your name</label>
+                                                        <input type="text" id="nameField" name="name" class="form-control" onchange="checkFields()">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="md-form mb-0">
+                                                        <label for="email" class="">Your email</label>
+                                                        <input type="email" id="emailField" name="email" class="form-control" onchange="checkFields()">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-md-12">
+                                                    <div class="md-form mb-0">
+                                                        <label for="subject" class="">Subject</label>
+                                                        <input type="text" id="subjectField" name="subject" class="form-control" onchange="checkFields()">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="md-form">
+                                                        <label for="message">Your message</label>
+                                                        <textarea type="text" id="messageField" name="message" rows="2" class="form-control md-textarea" onchange="checkFields()"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="mt-4 btn btn-primary" id="submitButton" disabled onclick="sendContactEmail(event)">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">User Manual</h6>
+                                </div>
+                                <div class="card-body align-items-center">
+                                    <div class="row">
+                                        <div class="card shadow mb-4">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h6 class="text-primary m-0">Dashboard Page</h6>
+                                            </div>
+                                            <div class="card-body align-items-center">
+                                                <p>The dashboard page is designed to have important and commonly used 
+                                                    data present and easy to access. For example at the top of the page, 4 
+                                                    common data values are shown. A screenshot of them is shown below:
+                                                </p>
+                                                <img src="../../static/img/usermanual/dashboard-top-cards.png" width="100%">
+                                                <div class="mt-3 d-flex">
+                                                    <img src="../../static/img/usermanual/avg-gpa-per-class-cohort.png" width="40%">
+                                                    <div class="mx-2">
+                                                        <p class="mx-2">
+                                                            Four boxes live below the top row of easily accessible data points. Each section has data visuals 
+                                                            that you are allowed to view, interact with, and download. An example of the Average GPA Per Class Cohort graph can be 
+                                                            seen on the left. 
+                                                            For this specific visual, each bar in the chart is hoverable with the your mouse. 
+                                                            To download this graph, follow these steps:
+                                                        </p>
+                                                        <ol>
+                                                            <li class="bold-number">Click on the three dots in the top right corner. (As seen in the red box)</li>
+                                                            <li class="bold-number">A popup will appear, which looks like: 
+                                                                <img src="../../static/img/usermanual/avg-gpa-per-class-cohort-download-options.png" width="20%">
+                                                            </li>
+                                                            <li class="bold-number">
+                                                                <br>
+                                                                <ol type="a">
+                                                                    <li class="bold-number">To download the graph as a .pdf file, click on the "Download as PDF" button. This will immediately download the .pdf file to your browser.</li>
+                                                                    <li class="bold-number">To download the graph's data as a .csv file, click on the "Download as CSV" button. This will immediately download the .csv file to your browser.</li>
+                                                                </ol>
+                                                            </li>
+                                                        </ol>
+                                                        <p class="mx-2">If you would like to download the graph as a .png image, click on the camera icon (as seen in the green box). A .png image will immediately be downloaded in your browser.</p>
+                                                        <p class="mx-2">Please note that this camera icon is visible on any graph/chart that is generated with the STEM Data Dashboard. You will also see that there are many icons available next to the camera icon. If you hover over each icon, a tooltip will appear telling you what the respective button does.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card shadow mb-4">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h6 class="text-primary m-0">Data Page</h6>
+                                            </div>
+                                            <div class="card-body align-items-center">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card shadow mb-4">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h6 class="text-primary m-0">Visualizations Page</h6>
+                                            </div>
+                                            <div class="card-body align-items-center">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if is_data_admin_or_higher(current_user) %}
+                                    <div class="row">
+                                        <div class="card shadow mb-4">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h6 class="text-primary m-0">Data Administration Page</h6>
+                                            </div>
+                                            <div class="card-body align-items-center">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if is_admin(current_user) %}
+                                    <div class="row">
+                                        <div class="card shadow mb-4">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h6 class="text-primary m-0">Administration Page</h6>
+                                            </div>
+                                            <div class="card-body align-items-center">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Jared Rathbun and Katie O'Neil
+                            2022</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/js/theme.js"></script>
+    <script src="https://kit.fontawesome.com/177241023b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@4.3.2/js/bootstrap5-toggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="../static/js/dashboard/faq.js"></script>
+</body>
+{% endblock %}
+
+</html>
