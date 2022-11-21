@@ -392,13 +392,51 @@
                                                         <option value="1">Some Year</option>
                                                     </select>
                                                 </td>
-                                                <td class="col-3">
+                                                <td class="row-3">
                                                     <select class="form-select">
                                                         <option selected disabled>Choose an End Year...</option>
                                                         <option value="1">Some Year</option>
                                                     </select>
                                                 </td>
-                                                <td class="col-3">
+                                                <td class="col-3"> <div class="card-body">
+                                                    <div class="table-responsive mt-2" id="dataTable" role="grid"
+                                                            aria-describedby="dataTable_info" style="overflow-y: auto; max-height: 390px">
+                                                        <table class="table table-responsive table-striped table-hover my-0" id="dataTable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>User's Name</th>
+                                                                    <th>Email Address</th>
+                                                                    <th>Current Role</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for u in user_list %}
+                                                                    <tr>
+                                                                        <td>{{ u.name }}</td>
+                                                                        <td>{{ u.email }}</td>
+                                                                        <td>
+                                                                            <select onchange='changeUserRole(this, "{{u.email}}")' class="form-select w-50"  data-default={{u.role}} data-name={{u.name}}>
+                                                                                {% if u.role == 'Admin' %}
+                                                                                    <option selected value="1">Admin</option>
+                                                                                    <option value="2">Data Admin</option>
+                                                                                    <option value="3">Viewer</option>
+                                                                                {% elif u.role == 'Data Admin' %}
+                                                                                    <option value="1">Admin</option>
+                                                                                    <option selected value="2">Data Admin</option>
+                                                                                    <option value="3">Viewer</option>
+                                                                                {% else %}
+                                                                                    <option value="1">Admin</option>
+                                                                                    <option value="2">Data Admin</option>
+                                                                                    <option selected value="3">Viewer</option>
+                                                                                {% endif %}
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                                     <select class="form-select">
                                                         <option selected disabled>Choose a column.</option>
                                                         <option value="1">Average GPA</option>

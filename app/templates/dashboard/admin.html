@@ -207,7 +207,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-7 col-xl-8">
+                        <div class="col-lg-10 col-xl-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary fw-bold m-0">Manage Users</h6>
@@ -253,7 +253,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-xl-4">
+                        </div>
+                        <div class="row">
+                        <div class="col-lg-6 col-xl-8">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary fw-bold m-0">Description of Each User</h6>
@@ -269,16 +271,31 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                    <tr>
-                                                        <td>Viewer: </td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>Viewer: </td>
+                                                    <td>Can only view and analyze data, only has access
+                                                        to the Dashboard, Data and Visualization Pages.
+                                                    </td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Data Administrator: </td>
+                                                    <td>Can view and analyze data, as well as upload data 
+                                                        to the dashboard, but does not have access to the Administration 
+                                                        Page.
+                                                    </td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>Administrator: </td>
+                                                    <td>Highest level and has access to all pages, can view, analyze, and upload
+                                                        data as well as change a users access type.
+                                                    </td>
+                                                  </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
             <footer class="bg-white sticky-footer">
