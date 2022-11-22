@@ -501,3 +501,108 @@ function genChartOrGraph() {
         showChartOrGraphPopUp(div);
     });
 }
+
+function fillValidHighestYears(lowestSelectElement, highestYear){
+
+     /**
+     * Returns the value of the selected option element inside of the specified 
+     * select element.
+     * @param {HTMLElement} selectElement The HTML Select element.
+     * @returns A string containing the value of the selected option element.
+     */
+      function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    var lowestSelectedValue = getSelectedValue(lowestSelectElement);
+    var highestSelect = document.getElementById('highestYearSelect');
+
+    var optionsString = '<option selected disabled value="Choose an End Year: ">Select an End Year </option>\n';
+
+    for (var i = lowestSelectedValue; i <= highestYear; i++){
+        optionsString += `<option value="${i}"> ${i}</option>\n`;
+    }
+    highestSelect.innerHTML = optionsString;
+}
+
+function genScatterplot(){
+        /**
+         * Returns the value of the selected option element inside of the specified 
+         * select element.
+         * @param {HTMLElement} selectElement The HTML Select element.
+         * @returns A string containing the value of the selected option element.
+         */
+        function getSelectedValue(selectElement) {
+            return selectElement.options[selectElement.selectedIndex].value;
+        }
+    
+        /**
+         * Gets the label/text that is inside of the selected option in the given
+         * select element.
+         * 
+         * @param {HTMLSelectElement} selectElement The Select Element to get the 
+         * label of.
+         * 
+         * @returns A string containing the label of the selected option. 
+         */
+        function getSelectedLabel(selectElement) {
+            return selectElement.options[selectElement.selectedIndex].text;
+        }
+    
+        // Get the column the user selected.
+        var lowestYearSelect = document.getElementById('lowestYearSelect');
+        var highestYearSelect = document.getElementById('highestYearSelect');
+        const xAxisLabel = 'Years';
+
+}
+
+function fillCovidGraph(){
+    /**
+     * Returns the value of the selected option element inside of the specified 
+     * select element.
+     * @param {HTMLElement} selectElement The HTML Select element.
+     * @returns A string containing the value of the selected option element.
+     */
+     function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+     /**
+     * Gets the label/text that is inside of the selected option in the given
+     * select element.
+     * 
+     * @param {HTMLSelectElement} selectElement The Select Element to get the 
+     * label of.
+     * 
+     * @returns A string containing the label of the selected option. 
+     */
+      function getSelectedLabel(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].text;
+    }
+
+    var selectedData = {};
+
+    // Get the column the user selected.
+    var columnSelect = document.getElementById('dataSelect');
+    selectedData.column = getSelectedValue(columnSelect);
+    const yAxisLabel = getSelectedLabel(columnSelect);
+}
+
+function getYValueRange(){
+    /**
+     * Returns the value of the selected option element inside of the specified 
+     * select element.
+     * @param {HTMLElement} selectElement The HTML Select element.
+     * @returns A string containing the value of the selected option element.
+     */
+    function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    var selectedY = document.getElementById('dataSelected');
+    var yValueRange;
+
+    if(selectedY == "Average College GPA"){
+        
+    }
+}
