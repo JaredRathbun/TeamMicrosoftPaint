@@ -59,6 +59,21 @@ class Utils:
 
 
     @staticmethod
+    def get_avg_for_column(column, year):
+        '''
+        '''
+        all_class_data_objects = ClassData.query.filter(ClassData.course_obj.year == year).all()
+        
+        # data_list = []
+        if (column != 'dwf_rate'):
+            data_list = [cd.column for cd in all_class_data_objects]
+            data_list_len = len(data_list)
+            return round(sum(data_list) / data_list_len, 2) if data_list_len > 0 else 0
+        else:
+            
+
+
+    @staticmethod
     def get_class_by_class_data(column: str, selected_courses: dict) -> dict:
         '''
         Returns a `dict` with the data requested for each class specified.
@@ -691,7 +706,6 @@ class Student(db.Model):
         
         return return_dict
 
-
 class ClassData(db.Model):
     '''
     A Class to hold Class Data.
@@ -1131,6 +1145,50 @@ class Course(db.Model):
             semester_list.sort(key=cmp_to_key(semester_sort))
             mapping_dict[course_num] = semester_list
         return mapping_dict
+
+
+    @staticmethod
+    def get_list_of_years() -> list:
+        '''
+        Returns a list of all the years input into the database.
+
+        return:
+            A `list` of years.
+        '''
+        years = set()
+        course_list = Course.query.all()
+        for course in course_list:
+            years.add(course.year)
+
+        return sorted(list(years))
+
+    @staticmethod
+    def get_highest_lowest_years() -> dict:
+        '''
+        Returns the lowest and highest year in the data.
+
+        return:
+            An 'dict' that shows the lowest and highest year.
+        '''
+        year_list = Course.get_list_of_years()
+
+        years = {
+            'lowest': year_list[0],
+            'highest': year_list[-1]
+        }
+
+        return years
+
+    @staticmethod
+    def getAvgPerYear():
+        '''
+        Returns the lowest and highest year in the data.
+
+        return:
+            An 'dict' that shows the lowest and highest year.
+        '''
+
+        return avg
 
 
 class MCASScore(db.Model):
