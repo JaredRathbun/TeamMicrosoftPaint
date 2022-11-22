@@ -295,6 +295,13 @@
                             </div>
                         </div>
                     </div>
+                    <script type="text/javascript">
+                        var privacyAndContactDiv = document.getElementById('privacyAndContactDiv');
+                        var faqDiv = document.getElementById('faqDiv');
+                        
+                        // Set the 2 divs to the same height for a cleaner look.
+                        faqDiv.style.height = `${privacyAndContactDiv.clientHeight}px`;
+                    </script>
                     <div class="row">
                         <div>
                             <div class="card shadow mb-4">
@@ -385,6 +392,58 @@
                                                 <h6 class="text-primary m-0">Data Administration Page</h6>
                                             </div>
                                             <div class="card-body align-items-center">
+                                                <div class="d-flex">
+                                                    <img src="../../static/img/usermanual/how_to_upload_data_card.png" width="25%">
+                                                    <div class="mx-2">
+                                                        <p>The <a href='/dataadmin'>Data Administration</a> page is designed to allow users to upload new data into the database. 
+                                                            Because the format of the data can be confusing, the first thing a Data Administrator should do is read the "How to Upload Data" 
+                                                            box (as seen on the left) and download the sample data. To do this, click on the <span class='text-danger'>"Download Sample Data"
+                                                            </span> button <span class='text-danger'>(as seen in the red box)</span>. Once the button is clicked, a .xlsx file will be 
+                                                            downloaded to your browser. This file can be either opened in Microsoft Excel, or imported into Google Sheets.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-4">On first sight, the "Add New Data" box will look similar to the <strong>File Not Uploaded Example</strong> seen below. Because no file 
+                                                    has been selected, the <span class='text-danger'>"Upload Data"</span> button <span class="text-danger">(as seen in the red box)</span> 
+                                                    will be disabled.
+                                                </p>
+                                                <div class="d-flex">
+                                                    <div class="text-center">
+                                                        <img src="../../static/img/usermanual/add_data_file_not_selected.png" width="85%">
+                                                        <p><strong>File Not Uploaded</strong></p>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <img src="../../static/img/usermanual/add_data_file_selected.png" width="85%">
+                                                        <p><strong>File Uploaded</strong></p>
+                                                    </div>
+                                                </div>
+                                                <p>To upload a file follow these steps:</p>
+                                                <div class="d-flex">
+                                                    <ol>
+                                                        <li>Click on the <span class='text-success'>"Choose File"</span> button (<strong>File Uploaded Example</strong>, <span class='text-success'>
+                                                            green box</span>)
+                                                        </li>
+                                                        <li>Select a file. A system dialog will popup asking you to select a file. Depending on your device's operating system the dialog 
+                                                            may look like the example below:
+                                                            <div class="mx-5 mt-2">
+                                                                <img src="../../static/img/usermanual/select_file.png" width="60%">
+                                                            </div>
+                                                        </li>
+                                                        <li class="mt-2">Click the <span class='text-danger'>"Upload Data"</span> button. This can be seen in the <strong>File Not Uploaded</strong> 
+                                                            and <strong>File Uploaded</strong> examples above, in the <span class='text-danger'>red boxes.</span>
+                                                        </li>
+                                                        <li>After uploading the data, a popup will appear alerting you to the status of the upload. An example of both a good and bad data upload can be 
+                                                            seen below:
+                                                            <div class="d-flex mx-5 mt-2 align-items-center">
+                                                                <img class='mx-2' src="../../static/img/usermanual/good_data_upload.png" height="10%">
+                                                                <img class='mx-2' src="../../static/img/usermanual/bad_data_upload.png" height="20%">
+                                                            </div>
+                                                            <ol type="I">
+                                                                <li>Please note that when a data upload fails, a table is shown with what line number and column the error was found at.</li>
+                                                            </ol>
+                                                        </li>
+                                                    </ol>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -396,7 +455,51 @@
                                                 <h6 class="text-primary m-0">Administration Page</h6>
                                             </div>
                                             <div class="card-body align-items-center">
-                                                
+                                                <p>The <a href='/admin'>Administration</a> page is designed to allow administrators to manage other users' permissions. 
+                                                    This page allows administrators to change other administrator's permissions, so please do that abuse this ability.
+                                                </p>
+                                                <p>Upon navigating to the page, you will see a basic information bar along the top of the page. This bar is very similar to the bars on the 
+                                                    top of the Dashboard, Visualizations, and Data Administration pages, however this data bar has information tailored more towards administrators. 
+                                                    An example of this bar can be seen below:
+                                                </p>
+                                                <img src="../../static/img/usermanual/administration_top_bar.png" width="100%">
+                                                <p class="mt-2">Directly below this basic information bar is a table explaining what each user role is and what permissions the given user is allowed to perform. Please consult this table if you are
+                                                    unsure what role a user should be assigned. This table will look similar to the following example:
+                                                </p>
+                                                <div class="d-flex justify-content-center">
+                                                    <img src="../../static/img/usermanual/user_descriptions.png" width="75%">
+                                                </div>
+                                                <p class="mt-2">
+                                                    Following the "Description of Each User" table is the more important part of the Administration page. 
+                                                    The following table is the "Manage Users" table, which allows an administrator the ability to change each given user's role. Please note that every 
+                                                    user will have a dropdown box under the "Current Role" column of the table, which allows for changing that user's role. An example of this table can be seen below:
+                                                </p>
+                                                <div class="d-flex justify-content-center">
+                                                    <img src="../../static/img/usermanual/manage_users.png" width="50%">
+                                                </div>
+                                                <p>To change a user's role, follow these steps:</p>
+                                                <ol>
+                                                    <li>Click on the given user's <span class='text-danger'>current role</span> dropdown <span class='text-danger'>(as seen in the red box)</span>.</li>
+                                                    <li>
+                                                        The dropdown will expand to show each role, and you can select one. Please note that the current role will be highlighted.
+                                                        <div>
+                                                            <img class='mx-5' src="../../static/img/usermanual/admin_dropdown.png">
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Click on the desired role for the user. A popup will appear that looks similar to:
+                                                        <div>
+                                                            <img class='mx-5' src="../../static/img/usermanual/admin_confirm.png" width="25%">
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        Click on confirm. You will see a popup that looks similar to:
+                                                        <div>
+                                                            <img class="mx-5" src="../../static/img/usermanual/admin_success.png" width="25%">
+                                                        </div>
+                                                        After this, the user's role has been changed.
+                                                    </li>
+                                                </ol>
                                             </div>
                                         </div>
                                     </div>

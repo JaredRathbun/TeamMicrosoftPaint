@@ -30,26 +30,12 @@ function logout(evt) {
     });
 }
 
-window.onload = () => {
-    var privacyAndContactDiv = document.getElementById('privacyAndContactDiv');
-    var faqDiv = document.getElementById('faqDiv');
-
-    console.log(privacyAndContactDiv, faqDiv);
-    
-    // Set the 2 divs to the same height for a cleaner look.
-    faqDiv.style.height = `${privacyAndContactDiv.clientHeight}px`;
-}
-
 const checkFields = () => {
     const name = document.getElementById('nameField').value;
     const email = document.getElementById('emailField').value;
     const subject = document.getElementById('subjectField').value;
     const message = document.getElementById('messageField').value;
     const submitButton = document.getElementById('submitButton');
-
-    console.log(name, email, subject, message);
-    console.log(name.trim() != '' && email.trim() != '' && subject.trim() != '' && 
-    message.trim() != '');
 
     if (name.trim() != '' && email.trim() != '' && subject.trim() != '' && 
         message.trim() != '') {
