@@ -224,15 +224,7 @@
                                             <select class="form-select my-2 mb-3" id="chartOrGraphTypeSelect" onchange="checkDropdowns();">
                                                 <option selected disabled value="Select a Chart/Graph Type">Select a Chart/Graph Type</option>
                                             </select>
-                                            <!-- <div class="d-inline-flex">
-                                                <input checked type="checkbox" id='includeSemesterInRange'>
-                                                <h7 style="margin-left: 10px">Include Data In Selected Range</h7>
-                                            </div>
-                                            <div class="d-inline-flex">
-                                                <input checked type="checkbox" id='includeWinterAndSummerSemesters'>
-                                                <h7 style="margin-left: 10px">Include Winter/Summer Data</h7>
-                                            </div> -->
-                                            <button id='showChartGraphButton' onclick='genChartOrGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                            <button id='scatterPlotGeneration' onclick='genScatterPlot()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                         </div>
                                     </div>
                                 </div>
@@ -258,33 +250,23 @@
                                             <tbody> 
                                                 <tr>
                                                     <td class="col-3">
-                                                        <select class="form-select">
+                                                        <select class="form-select" id = "dataSelected" onchange ="fillCovidGraph()">
                                                             <option selected disabled>Choose a column...</option>
-                                                            <option value="1">Admit Term</option>
-                                                            <option value="2">Admit Year</option>
-                                                            <option value="3">Admit Type</option>
-                                                            <option value="4">Program Level</option>
-                                                            <option value="5">Sub-Program Code</option>
-                                                            <option value="6">1st Major</option>
-                                                            <option value="7">2nd Major</option>
-                                                            <option value="8">1st Minor</option>
-                                                            <option value="9">Concentration</option>
-                                                            <option value="10">Class</option>
-                                                            <option value="11">City</option>
-                                                            <option value="12">State</option>
-                                                            <option value="13">Race</option>
-                                                            <option value="14">Gender</option>
-                                                            <option value="15">High School Name</option>
-                                                            <option value="16">High School State</option>
-                                                            <option value="17">Course</option>
-                                                            <option value="18">Course Grade</option>
+                                                            <option value="avg_gpa">Average College GPA</option>
+                                                            <option value="avg_high_school_gpa">Average High School GPA</option>
+                                                            <option value="avg_dwf_rate">Average DWF Rate</option>
+                                                            <option value="avg_math_placement_score">Math Placement Score</option>
+                                                            <option value="avg_sat_total">Total SAT Score</option>
+                                                            <option value="avg_sat_math">SAT Math Score</option>
+                                                            <option value="avg_act_score">ACT Score</option>
                                                         </select>
                                                     </td>
                                                     <td class="col-3">
-                                                        <select class="form-select">
-                                                            <option selected disabled>Choose a column...</option>
+                                                        <select class="form-select" id = "graphSelected">
+                                                            <option selected disabled>Choose a Graph/Chart...</option>
                                                             <option value="1">Bar Chart</option>
                                                             <option value="2">Scatter Plot</option>
+                                                            <option value="3">Stacked Bar Chart</option>
                                                         </select>
                                                     </td>
                                                     <td class="col-3">         
@@ -320,7 +302,7 @@
                                         <tbody> 
                                             <tr>
                                                 <td class="col-3">
-                                                    <select class="form-select">
+                                                    <select class="form-select" id = "xAxisSelect">
                                                         <option selected disabled>Choose a column...</option>
                                                         <option value="1">Admit Term</option>
                                                         <option value="2">Admit Year</option>
@@ -343,7 +325,7 @@
                                                     </select>
                                                 </td>
                                                 <td class="col-3">
-                                                    <select class="form-select">
+                                                    <select class="form-select" id = "yAxisSelect">
                                                         <option selected disabled>Choose a column...</option>
                                                         <option value="1">Average Cumulative GPA</option>
                                                         <option value="2">Average Math SAT</option>
@@ -386,65 +368,29 @@
                                         </thead>
                                         <tbody> 
                                             <tr>
-                                                <td class="col-3">
-                                                    <select class="form-select">
-                                                        <option selected disabled>Choose a Start Year...</option>
-                                                        <option value="1">Some Year</option>
-                                                    </select>
-                                                </td>
                                                 <td class="row-3">
-                                                    <select class="form-select">
-                                                        <option selected disabled>Choose an End Year...</option>
-                                                        <option value="1">Some Year</option>
+                                                    <select class="form-select" id="lowestYearSelect" onchange ="fillValidHighestYears(this, {{ lowest_highest_years.highest }})">
+                                                        <option selected disabled>Choose a Start Year...</option>
+                                                        {% for i in range( lowest_highest_years.lowest, lowest_highest_years.highest +1 )%}
+                                                            <option value= {{ i }}>{{ i }}</option>
+                                                         {% endfor %}
+                        
                                                     </select>
-                                                </td>
-                                                <td class="col-3"> <div class="card-body">
-                                                    <div class="table-responsive mt-2" id="dataTable" role="grid"
-                                                            aria-describedby="dataTable_info" style="overflow-y: auto; max-height: 390px">
-                                                        <table class="table table-responsive table-striped table-hover my-0" id="dataTable">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>User's Name</th>
-                                                                    <th>Email Address</th>
-                                                                    <th>Current Role</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {% for u in user_list %}
-                                                                    <tr>
-                                                                        <td>{{ u.name }}</td>
-                                                                        <td>{{ u.email }}</td>
-                                                                        <td>
-                                                                            <select onchange='changeUserRole(this, "{{u.email}}")' class="form-select w-50"  data-default={{u.role}} data-name={{u.name}}>
-                                                                                {% if u.role == 'Admin' %}
-                                                                                    <option selected value="1">Admin</option>
-                                                                                    <option value="2">Data Admin</option>
-                                                                                    <option value="3">Viewer</option>
-                                                                                {% elif u.role == 'Data Admin' %}
-                                                                                    <option value="1">Admin</option>
-                                                                                    <option selected value="2">Data Admin</option>
-                                                                                    <option value="3">Viewer</option>
-                                                                                {% else %}
-                                                                                    <option value="1">Admin</option>
-                                                                                    <option value="2">Data Admin</option>
-                                                                                    <option selected value="3">Viewer</option>
-                                                                                {% endif %}
-                                                                            </select>
-                                                                        </td>
-                                                                    </tr>
-                                                                {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                    <select class="form-select">
-                                                        <option selected disabled>Choose a column.</option>
-                                                        <option value="1">Average GPA</option>
-                                                        <option value="2">Average Class Size</option> 
+                                                    </td>
+                                                    <td class="row-3">
+                                                    <select class="form-select" id = "highestYearSelect">
+                                                        <option selected disabled>Choose an End Year...</option>
+                                                    </select>
+                                                    </td>
+                                                    <td class="row-3">                                                  
+                                                        <select class="form-select" id = "xAxisData">
+                                                        <option selected disabled>Choose a Value...</option>
+                                                        <option value="1">Types</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-2">
-                                                    <button class="btn btn-primary">Generate Visual</button>
+                                                    <button id='showChartGraphButton' onclick='genScatterPlot()' 
+                                                    disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>

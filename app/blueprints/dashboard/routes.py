@@ -60,10 +60,11 @@ def get_visualizations():
     avg_gpa = Student.get_avg_gpa()
     avg_course_grade = ClassData.get_avg_grade()
     total_students = len(Student.query.all())
+    lowest_highest_years = Course.get_highest_lowest_years()
     return render_template('dashboard/visualizations.html', 
         current_user=current_user, user_name=name, dwf_avg=dwf_avg, 
         avg_gpa=avg_gpa, avg_course_grade=avg_course_grade, 
-        total_students=total_students)
+        total_students=total_students, lowest_highest_years = lowest_highest_years)
 
 
 @dash_bp.route('/dataadmin', methods = ['GET'])
@@ -349,3 +350,11 @@ def class_by_class_comparisons():
         selected_courses = body['selectedCourses']
 
         return Utils.get_class_by_class_data(column, selected_courses), 200
+
+@dash_bp.route('/test', methods = ['POST'])
+def katie_test():
+    body = request.get_json()
+
+    # Check for valid keys in body.
+
+    column = body['column']
