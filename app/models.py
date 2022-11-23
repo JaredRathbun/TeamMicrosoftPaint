@@ -208,6 +208,7 @@ class Utils:
         
             return round((dwf_column_sum /dwf_column_entry_count), 2) if dwf_column_entry_count > 0 else 0 
 
+
     @staticmethod
     def get_covid_data(column: str) -> dict:
         semesters = ['SP 2020', 'FA 2020', 'SP 2021', 'FA 2021']

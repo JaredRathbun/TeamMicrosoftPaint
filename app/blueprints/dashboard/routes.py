@@ -363,10 +363,10 @@ def class_by_class_comparisons():
 def covid_data_comparison():
     body = request.get_json()
 
-    if ('covidData' not in body):
+    if ('column' not in body):
         return {'message': 'Body missing information.'}, 400
         
     # Check for valid keys in body.
-    column = body['covidData']
+    column = body['column']
     data = Utils.get_covid_data(column)
     return data, 200

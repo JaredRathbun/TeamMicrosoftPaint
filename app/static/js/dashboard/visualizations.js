@@ -29,7 +29,7 @@ alertify.defaults.theme.input = "form-control";
 
 function logout(evt) {
     evt.preventDefault();
-    fetch('/logout', {method: 'POST'}).then((res) => {
+    fetch('/logout', { method: 'POST' }).then((res) => {
         if (res.redirected) {
             window.location.href = res.url;
         }
@@ -64,7 +64,7 @@ window.onload = () => {
             // Add 2 dropdowns for courses.
             addNewCourseDropdowns(false);
             addNewCourseDropdowns(false);
-    });
+        });
 }
 
 /**
@@ -153,7 +153,7 @@ function fillValidGraphTypes() {
     for (var chartGraphType of validChartGraphTypes) {
         optionsString += `<option value="${chartGraphType}">${chartGraphType}</option>\n`;
     }
-    
+
     document.getElementById('chartOrGraphTypeSelect').innerHTML = optionsString;
 }
 
@@ -181,7 +181,7 @@ function checkDropdowns() {
         var semesterSelect = document.getElementById(`semester-${i}`);
 
         if (courseSelect != null && semesterSelect != null) {
-            validDropdowns = validDropdowns && (hasValidSelection(courseSelect) 
+            validDropdowns = validDropdowns && (hasValidSelection(courseSelect)
                 && hasValidSelection(semesterSelect));
         }
     }
@@ -253,10 +253,10 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
         };
 
         var barList = [];
-        
+
         for (var course in data) {
             // Check to see if the data is a single value or list.
-            var yData = (typeof data[course] === Array ) ? data[course] : 
+            var yData = (typeof data[course] === Array) ? data[course] :
                 [data[course]];
             barList.push({
                 x: course,
@@ -296,7 +296,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
                 name: course
             });
         }
-        
+
         Plotly.newPlot(chartOrGraphDiv, courseTraceList, layout);
     };
 
@@ -322,7 +322,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
             for (var course in data) {
                 gradeObj = {
                     'A': 0, 'A-': 0, 'B+': 0, 'B': 0, 'B-': 0, 'C+': 0, 'C': 0,
-                    'C-': 0, 'D+': 0, 'D': 0, 'D-': 0, 'W': 0, 'F': 0, 'P': 0, 
+                    'C-': 0, 'D+': 0, 'D': 0, 'D-': 0, 'W': 0, 'F': 0, 'P': 0,
                     'W': 0
                 };
 
@@ -336,7 +336,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
                     gradeList.push(key);
                     gradeCountList.push(gradeObj[key]);
                 });
-                
+
                 barList.push({
                     x: gradeList,
                     y: gradeCountList,
@@ -346,8 +346,8 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
             }
         } else if (yAxisLabel == 'Race/Ethnicity') {
             for (var course in data) {
-                var whiteCount = 0, hispCount = 0, blackCount = 0, 
-                    asianCount = 0, americanIndianOrAlaskaNativeCount = 0, 
+                var whiteCount = 0, hispCount = 0, blackCount = 0,
+                    asianCount = 0, americanIndianOrAlaskaNativeCount = 0,
                     nativeHawaiianOrOtherCount = 0;
 
                 for (var raceEthnicity of data[course]) {
@@ -375,10 +375,10 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
 
                 barList.push({
                     x: ['White', 'Black/African American', 'Hispanic/Latino',
-                         'Asian', 'American Indian/Alaska Native', 
-                         'Native Hawaiian/Other'],
-                    y: [whiteCount, blackCount, hispCount, asianCount, 
-                        americanIndianOrAlaskaNativeCount, 
+                        'Asian', 'American Indian/Alaska Native',
+                        'Native Hawaiian/Other'],
+                    y: [whiteCount, blackCount, hispCount, asianCount,
+                        americanIndianOrAlaskaNativeCount,
                         nativeHawaiianOrOtherCount],
                     name: course,
                     type: 'bar'
@@ -472,16 +472,16 @@ function genClassByClassChartOrGraph() {
     // Get the graph/chart type the user selected.
     const chartGraphType = getSelectedValue(document
         .getElementById('chartOrGraphTypeSelect'));
-    
+
     // Walk over every course dropdown, and get the course and semester.
     selectedCourses = {};
     for (var i = 1; i <= currentDropdownID; i++) {
         var selectedCourse = getSelectedValue(document
-                .getElementById(`course-${i}`));
+            .getElementById(`course-${i}`));
         var selectedSemester = getSelectedValue(document
-                .getElementById(`semester-${i}`));
-        
-        if (selectedCourse != null && selectedSemester != null){
+            .getElementById(`semester-${i}`));
+
+        if (selectedCourse != null && selectedSemester != null) {
             selectedCourses[selectedCourse] = selectedSemester;
         }
     }
@@ -501,15 +501,15 @@ function genClassByClassChartOrGraph() {
     });
 }
 
-function fillValidHighestYears(lowestSelectElement, highestYear){
+function fillValidHighestYears(lowestSelectElement, highestYear) {
 
-     /**
-     * Returns the value of the selected option element inside of the specified 
-     * select element.
-     * @param {HTMLElement} selectElement The HTML Select element.
-     * @returns A string containing the value of the selected option element.
-     */
-      function getSelectedValue(selectElement) {
+    /**
+    * Returns the value of the selected option element inside of the specified 
+    * select element.
+    * @param {HTMLElement} selectElement The HTML Select element.
+    * @returns A string containing the value of the selected option element.
+    */
+    function getSelectedValue(selectElement) {
         return selectElement.options[selectElement.selectedIndex].value;
     }
 
@@ -518,21 +518,21 @@ function fillValidHighestYears(lowestSelectElement, highestYear){
 
     var optionsString = '<option selected disabled value="Choose an End Year: ">Select an End Year </option>\n';
 
-    for (var i = lowestSelectedValue; i <= highestYear; i++){
+    for (var i = lowestSelectedValue; i <= highestYear; i++) {
         optionsString += `<option value="${i}"> ${i}</option>\n`;
     }
     highestSelect.innerHTML = optionsString;
 }
 
 
-function genCovidGraph(){
-     /**
-     * Returns the value of the selected option element inside of the specified 
-     * select element.
-     * @param {HTMLElement} selectElement The HTML Select element.
-     * @returns A string containing the value of the selected option element.
-     */
-      function getSelectedValue(selectElement) {
+function genCovidGraph() {
+    /**
+    * Returns the value of the selected option element inside of the specified 
+    * select element.
+    * @param {HTMLElement} selectElement The HTML Select element.
+    * @returns A string containing the value of the selected option element.
+    */
+    function getSelectedValue(selectElement) {
         return selectElement.options[selectElement.selectedIndex].value;
     }
 
@@ -549,15 +549,10 @@ function genCovidGraph(){
         return selectElement.options[selectElement.selectedIndex].text;
     }
 
-    var selectedData = {};
-
     // Get the column the user selected.
     var columnSelect = document.getElementById('covidData');
-    selectedData.column = getSelectedValue(columnSelect);
+    var selectedColumn = getSelectedValue(columnSelect);
     const yAxisLabel = getSelectedLabel(columnSelect);
-    
-    // 
-    var avgColumnData = Utils.get_covid_data('covidData');
 
     // Make the request to the backend to get the data.
     fetch('/covid-data-comparison', {
@@ -566,7 +561,7 @@ function genCovidGraph(){
             'Content-Type': 'application/json',
             accept: 'application/json'
         },
-        body: JSON.stringify(avgColumnData)
+        body: JSON.stringify({column: selectedColumn})
     }).then((res) => res.json()).then((json) => {
         // Build the div containing the appropriate chart/graph, then show it.
         var div = buildCovidChart(json, yAxisLabel);
@@ -589,12 +584,10 @@ function buildCovidChart(data, yAxisLabel) {
         }
     }
 
-    genBarGraph();
-
     /**
      * Generates a Bar Graph.
      */
-    const genBarGraph = () => {
+    const genBarGraph = (data) => {
         layout.title = {
             text: `${yAxisLabel} per Year`
         };
@@ -605,27 +598,22 @@ function buildCovidChart(data, yAxisLabel) {
             title: yAxisLabel
         };
 
-        var xValue = ['SP 2020', 'FA 2020','SP 2021','FA 2021'];
+        var xValues = ['SP 2020', 'FA 2020', 'SP 2021', 'FA 2021'];
+        var yValues = [];
+        for (var semester of xValues) {
+            yValues.push(data[semester]);
+        }
+        
+        var data = [{
+            x: xValues,
+            y: yValues,
+            type: 'bar'
+        }];
 
-        var yValue = data;
-
-        var barList = {
-             x: xValue,
-             y: yValue,
-            type: 'bar',
-            text: yValue.map(String),
-            textposition: 'auto',
-            hoverinfo: 'none',
-            marker: {
-            color: 'rgb(158,202,225)',
-            opacity: 0.6,
-            line: {
-            color: 'rgb(8,48,107)',
-            width: 1.5
-             }
-         }
-        };
-
-        Plotly.newPlot(chartOrGraphDiv, barList, layout);
+        Plotly.newPlot(chartOrGraphDiv, data, layout);
     };
+
+    genBarGraph(data);
+
+    return chartOrGraphDiv;
 }
