@@ -241,38 +241,30 @@
                                         <table class="table table-responsive my-0">
                                             <thead>
                                                 <tr>
-                                                    <th class="col-3">Select Data Column</th>
-                                                    <th class="col-3">Select Graph/Chart Type</th>
+                                                    <th class="col-3">Select Y-Axis Data</th>
+                                                    <th class="col-3"></th>
                                                     <th class="col-3"></th>
                                                     <th class="col-2"></th>
                                                 </tr>
                                             </thead>
                                             <tbody> 
                                                 <tr>
-                                                    <td class="col-3">
-                                                        <select class="form-select" id = "dataSelected" onchange ="fillCovidGraph()">
+                                                    <td class="col-5">
+                                                        <select class="form-select" id = "covidData">
                                                             <option selected disabled>Choose a column...</option>
                                                             <option value="avg_gpa">Average College GPA</option>
                                                             <option value="avg_high_school_gpa">Average High School GPA</option>
-                                                            <option value="avg_dwf_rate">Average DWF Rate</option>
+                                                            <option value="dwf_avg">Average DWF Rate</option>
                                                             <option value="avg_math_placement_score">Math Placement Score</option>
                                                             <option value="avg_sat_total">Total SAT Score</option>
                                                             <option value="avg_sat_math">SAT Math Score</option>
                                                             <option value="avg_act_score">ACT Score</option>
                                                         </select>
                                                     </td>
-                                                    <td class="col-3">
-                                                        <select class="form-select" id = "graphSelected">
-                                                            <option selected disabled>Choose a Graph/Chart...</option>
-                                                            <option value="1">Bar Chart</option>
-                                                            <option value="2">Scatter Plot</option>
-                                                            <option value="3">Stacked Bar Chart</option>
-                                                        </select>
-                                                    </td>
                                                     <td class="col-3">         
                                                     </td>
                                                     <td class="col-2">
-                                                        <button class="btn btn-primary">Generate Visual</button>
+                                                        <button id='covidGenerateButton' onclick='genCovidGraph()' class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -336,8 +328,7 @@
                                                 <td class="col-3">
                     
                                                 </td>
-                                                <td class="col-2">
-                                                    <button class="btn btn-primary">Generate Visual</button>
+                                                <td class="col-2"><button id='barChartGenerateButton' onclick='genBarChart()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button><button class="btn btn-primary">Generate Visual</button>
                                                 </td>
                                             </tr>
                                         </tbody>

@@ -106,7 +106,6 @@ class Utils:
                 total_grades = class_data_entries.count()
                 return round((dwf_grades / total_grades) * 100, 2) if total_grades > 0 else 0.0
 
-
         def get_student_data_column(column: str, course: str, semester: str, 
             year: int) -> list | float:
             '''
@@ -199,7 +198,15 @@ class Utils:
             return round((column_sum / column_entry_count), 2) if column_entry_count > 0 else 0 
         else:
             # Average DWF needs to go here
-            return None
+            dwf_column_sum = 0
+            dwf_column_entry_count = 0
+            for cd in all_class_data_objects:
+                dwf_attribute = getattr(cd.course_obj, column)
+                if dwf_attribute != 0.0:
+                    dwf_column_sum += dwf_attribute
+                    dwf_column_entry_count += 1
+        
+            return round((dwf_column_sum /dwf_column_entry_count), 2) if dwf_column_entry_count > 0 else 0 
 
     @staticmethod
     def get_covid_data(column: str) -> dict:
@@ -211,8 +218,25 @@ class Utils:
             case 'avg_gpa':
                 # The column needed to get the student's gpa.
                 column_to_query = 'gpa_cumulative'
+
             case 'avg_high_school_gpa':
                 column_to_query = 'high_school_gpa'
+
+            case 'avg_dwf_rate':
+                column_to_query = 'dwf_rate'
+
+            case 'avg_math_placement_score':
+                column_to_query = 'math_placement_score'
+
+            case 'avg_sat_total':
+                column_to_query = 'sat_total'
+            
+            case 'avg_sat_math':
+                column_to_query = 'sat_math'
+
+            case 'avg_act_score':
+                column_to_query = 'act_score'
+
             # You'll need to add these as you add more columns
             # avg_dwf is going to be a little harder since each grade lives in
             # the ClassData object and not the Student objects
@@ -743,6 +767,114 @@ class Student(db.Model):
         
         return return_dict
 
+    @staticmethod
+    def get_avg_math_placement() -> str:
+        '''
+        Calculates the average math placement scores for all students in the database.
+
+        return: 
+            The average math placement scores of all students in the database represented by a `str`.
+        '''
+        def __sum_math_placement() -> int:
+            '''
+            Calculates the sum of all math placement scores in the database.
+
+            return:
+                An `int` holding the sum of all math placement scores in the database.
+            '''
+            sum = 0
+            for student in Student.query.all():
+                student_math_placement = student.math_placement_score
+                if (student_math_placement is not None):
+                    sum += student.math_placement_score
+            return sum
+
+        total_students = len(Student.query.all())
+        math_score =__sum_math_placement()
+
+        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0
+
+    @staticmethod
+    def get_avg_sat_total() -> str:
+        '''
+        Calculates the average math placement scores for all students in the database.
+
+        return: 
+            The average math placement scores of all students in the database represented by a `str`.
+        '''
+        def __sum_math_placement() -> int:
+            '''
+            Calculates the sum of all math placement scores in the database.
+
+            return:
+                An `int` holding the sum of all math placement scores in the database.
+            '''
+            sum = 0
+            for student in Student.query.all():
+                student_math_placement = student.math_placement_score
+                if (student_math_placement is not None):
+                    sum += student.math_placement_score
+            return sum
+
+        total_students = len(Student.query.all())
+        math_score =__sum_math_placement()
+
+        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0    
+
+    @staticmethod
+    def get_avg_sat_math() -> str:
+        '''
+        Calculates the average math sat scores for all students in the database.
+
+        return: 
+            The average math sat scores of all students in the database represented by a `str`.
+        '''
+        def __sum_math() -> int:
+            '''
+            Calculates the sum of all math sat scores in the database.
+
+            return:
+                An `int` holding the sum of all math sat scores in the database.
+            '''
+            sum = 0
+            for student in Student.query.all():
+                student_math_sat = student.sat_math
+                if (student_math_sat is not None):
+                    sum += student.sat_math
+            return sum
+
+        total_students = len(Student.query.all())
+        math_score =__sum_math()
+
+        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0   
+
+    @staticmethod
+    def get_avg_act() -> str:
+        '''
+        Calculates the average math sat scores for all students in the database.
+
+        return: 
+            The average math sat scores of all students in the database represented by a `str`.
+        '''
+        def __sum_math() -> int:
+            '''
+            Calculates the sum of all math sat scores in the database.
+
+            return:
+                An `int` holding the sum of all math sat scores in the database.
+            '''
+            sum = 0
+            for student in Student.query.all():
+                student_math_sat = student.sat_math
+                if (student_math_sat is not None):
+                    sum += student.sat_math
+            return sum
+
+        total_students = len(Student.query.all())
+        math_score =__sum_math()
+
+        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0  
+         
 class ClassData(db.Model):
     '''
     A Class to hold Class Data.

@@ -61,10 +61,18 @@ def get_visualizations():
     avg_course_grade = ClassData.get_avg_grade()
     total_students = len(Student.query.all())
     lowest_highest_years = Course.get_highest_lowest_years()
+    avg_high_school_gpa = Student.get_avg_high_school_gpa()
+    avg_math_placement = Student.get_avg_math_placement()
+    avg_sat_total = Student.get_avg_sat_total()
+    avg_sat_math = Student.get_avg_sat_math()
+    avg_act_score = Student.get_avg_act()
     return render_template('dashboard/visualizations.html', 
         current_user=current_user, user_name=name, dwf_avg=dwf_avg, 
         avg_gpa=avg_gpa, avg_course_grade=avg_course_grade, 
-        total_students=total_students, lowest_highest_years = lowest_highest_years)
+        total_students=total_students, lowest_highest_years = lowest_highest_years,
+        avg_high_school_gpa = avg_high_school_gpa, avg_math_placement = avg_math_placement,
+        avg_sat_total = avg_sat_total, avg_sat_math = avg_sat_math,
+        avg_act_score = avg_act_score)
 
 
 @dash_bp.route('/dataadmin', methods = ['GET'])
@@ -351,11 +359,14 @@ def class_by_class_comparisons():
 
         return Utils.get_class_by_class_data(column, selected_courses), 200
 
-@dash_bp.route('/test', methods = ['POST'])
-def katie_test():
+@dash_bp.route('/covid-data-comparison', methods = ['POST'])
+def covid_data_comparison():
     body = request.get_json()
 
+    if ('covidData' not in body):
+        return {'message': 'Body missing information.'}, 400
+        
     # Check for valid keys in body.
-    column = body['column']
+    column = body['covidData']
     data = Utils.get_covid_data(column)
     return data, 200

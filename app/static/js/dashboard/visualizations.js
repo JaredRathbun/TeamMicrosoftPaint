@@ -524,49 +524,19 @@ function fillValidHighestYears(lowestSelectElement, highestYear){
     highestSelect.innerHTML = optionsString;
 }
 
-function genScatterplot(){
-        /**
-         * Returns the value of the selected option element inside of the specified 
-         * select element.
-         * @param {HTMLElement} selectElement The HTML Select element.
-         * @returns A string containing the value of the selected option element.
-         */
-        function getSelectedValue(selectElement) {
-            return selectElement.options[selectElement.selectedIndex].value;
-        }
-    
-        /**
-         * Gets the label/text that is inside of the selected option in the given
-         * select element.
-         * 
-         * @param {HTMLSelectElement} selectElement The Select Element to get the 
-         * label of.
-         * 
-         * @returns A string containing the label of the selected option. 
-         */
-        function getSelectedLabel(selectElement) {
-            return selectElement.options[selectElement.selectedIndex].text;
-        }
-    
-        // Get the column the user selected.
-        var lowestYearSelect = document.getElementById('lowestYearSelect');
-        var highestYearSelect = document.getElementById('highestYearSelect');
-        const xAxisLabel = 'Years';
 
-}
-
-function fillCovidGraph(){
-    /**
+function genCovidGraph(){
+     /**
      * Returns the value of the selected option element inside of the specified 
      * select element.
      * @param {HTMLElement} selectElement The HTML Select element.
      * @returns A string containing the value of the selected option element.
      */
-     function getSelectedValue(selectElement) {
+      function getSelectedValue(selectElement) {
         return selectElement.options[selectElement.selectedIndex].value;
     }
 
-     /**
+    /**
      * Gets the label/text that is inside of the selected option in the given
      * select element.
      * 
@@ -575,33 +545,87 @@ function fillCovidGraph(){
      * 
      * @returns A string containing the label of the selected option. 
      */
-      function getSelectedLabel(selectElement) {
+    function getSelectedLabel(selectElement) {
         return selectElement.options[selectElement.selectedIndex].text;
     }
 
     var selectedData = {};
 
     // Get the column the user selected.
-    var columnSelect = document.getElementById('dataSelect');
+    var columnSelect = document.getElementById('covidData');
     selectedData.column = getSelectedValue(columnSelect);
     const yAxisLabel = getSelectedLabel(columnSelect);
+    
+    // 
+    var avgColumnData = Utils.get_covid_data('covidData');
+
+    // Make the request to the backend to get the data.
+    fetch('/covid-data-comparison', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json'
+        },
+        body: JSON.stringify(avgColumnData)
+    }).then((res) => res.json()).then((json) => {
+        // Build the div containing the appropriate chart/graph, then show it.
+        var div = buildCovidChart(json, yAxisLabel);
+        showChartOrGraphPopUp(div);
+    });
 }
 
-function getYValueRange(){
+function buildCovidChart(data, yAxisLabel) {
+    const chartOrGraphDiv = document.createElement('div');
+    const layout = {
+        autosize: false,
+        width: 920,
+        height: 450,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        }
+    }
+
+    genBarGraph();
+
     /**
-     * Returns the value of the selected option element inside of the specified 
-     * select element.
-     * @param {HTMLElement} selectElement The HTML Select element.
-     * @returns A string containing the value of the selected option element.
+     * Generates a Bar Graph.
      */
-    function getSelectedValue(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].value;
-    }
+    const genBarGraph = () => {
+        layout.title = {
+            text: `${yAxisLabel} per Year`
+        };
+        layout.xaxis = {
+            title: 'Covid Years'
+        };
+        layout.yaxis = {
+            title: yAxisLabel
+        };
 
-    var selectedY = document.getElementById('dataSelected');
-    var yValueRange;
+        var xValue = ['SP 2020', 'FA 2020','SP 2021','FA 2021'];
 
-    if(selectedY == "Average College GPA"){
-        
-    }
+        var yValue = data;
+
+        var barList = {
+             x: xValue,
+             y: yValue,
+            type: 'bar',
+            text: yValue.map(String),
+            textposition: 'auto',
+            hoverinfo: 'none',
+            marker: {
+            color: 'rgb(158,202,225)',
+            opacity: 0.6,
+            line: {
+            color: 'rgb(8,48,107)',
+            width: 1.5
+             }
+         }
+        };
+
+        Plotly.newPlot(chartOrGraphDiv, barList, layout);
+    };
 }
