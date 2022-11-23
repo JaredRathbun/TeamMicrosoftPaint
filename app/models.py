@@ -191,22 +191,25 @@ class Utils:
             column_entry_count = 0
             for cd in all_class_data_objects:
                 attribute = getattr(cd.student_obj, column)
-                if attribute != 0.0:
+                if attribute != 0.0 and attribute != None:
                     column_sum += attribute
                     column_entry_count += 1
         
             return round((column_sum / column_entry_count), 2) if column_entry_count > 0 else 0 
         else:
-            # Average DWF needs to go here
-            dwf_column_sum = 0
-            dwf_column_entry_count = 0
+            dwf_count = 0
+            total_num_grades_count = 0
             for cd in all_class_data_objects:
-                dwf_attribute = getattr(cd.course_obj, column)
-                if dwf_attribute != 0.0:
-                    dwf_column_sum += dwf_attribute
-                    dwf_column_entry_count += 1
+                # Access the grade for each ClassData entry
+                grade = cd.grade
+
+                # If there is a grade, its in ('D', 'D-', 'D+', 'W', 'F'), add 
+                # 1 to the count.
+                if grade != None and grade in ('D', 'D-', 'D+', 'W', 'F'):
+                    dwf_count += 1
+                total_num_grades_count += 1
         
-            return round((dwf_column_sum /dwf_column_entry_count), 2) if dwf_column_entry_count > 0 else 0 
+            return round(((dwf_count / total_num_grades_count) * 100), 2) if total_num_grades_count > 0 else 0 
 
 
     @staticmethod
