@@ -524,6 +524,27 @@ function fillValidHighestYears(lowestSelectElement, highestYear) {
     highestSelect.innerHTML = optionsString;
 }
 
+/**
+ * Checks to make sure all dropdowns have a valid selection and enables the 
+ * "Generate Graph/Chart" button if they are.
+ */
+ function checkCovidDropdowns() {
+    function hasValidSelection(selectElement) {
+        return selectElement.selectedIndex != 0;
+    }
+
+    var validDropdowns = true;
+
+    // Check to make sure a column in the dataset was selected.
+    validDropdowns = validDropdowns && hasValidSelection(document
+        .getElementById('covidData'));
+
+    if (validDropdowns) {
+        document.getElementById('covidGenerateButton').disabled = false;
+    } else {
+        document.getElementById('covidGenerateButton').disabled = true;
+    }
+}
 
 function genCovidGraph() {
     /**
@@ -589,7 +610,7 @@ function buildCovidChart(data, yAxisLabel) {
      */
     const genBarGraph = (data) => {
         layout.title = {
-            text: `${yAxisLabel} per Year`
+            text: `${yAxisLabel} during COVID`
         };
         layout.xaxis = {
             title: 'Covid Years'
@@ -598,7 +619,7 @@ function buildCovidChart(data, yAxisLabel) {
             title: yAxisLabel
         };
 
-        var xValues = ['SP 2020', 'FA 2020', 'SP 2021', 'FA 2021'];
+        var xValues = ['FA 2019', 'SP 2020', 'FA 2020', 'SP 2021', 'FA 2021'];
         var yValues = [];
         for (var semester of xValues) {
             yValues.push(data[semester]);

@@ -214,7 +214,7 @@ class Utils:
 
     @staticmethod
     def get_covid_data(column: str) -> dict:
-        semesters = ['SP 2020', 'FA 2020', 'SP 2021', 'FA 2021']
+        semesters = ['FA 2019', 'SP 2020', 'FA 2020', 'SP 2021', 'FA 2021']
         return_dict = {}
         
         column_to_query = None

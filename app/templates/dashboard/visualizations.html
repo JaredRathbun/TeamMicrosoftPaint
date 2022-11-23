@@ -235,7 +235,7 @@
                                     <div class="card-header d-flex justify-content-between align-items-center align-middle">
                                         <h6 class="text-primary fw-bold m-0">COVID Data Comparisons </h6>
                                         <p class="text-primary m-0">Analyze COVID data by selecting columns and 
-                                            generating a visual that ranges from SP 2020 - FA 2021.</p>
+                                            generating a visual that ranges from FA 2019 - FA 2021.</p>
                                     </div>
                                     <div class="card-body align-items-center align-middle">
                                         <table class="table table-responsive my-0">
@@ -250,7 +250,7 @@
                                             <tbody> 
                                                 <tr>
                                                     <td class="col-5">
-                                                        <select class="form-select" id = "covidData">
+                                                        <select class="form-select" id = "covidData"onchange ="checkCovidDropdowns()">
                                                             <option selected disabled>Choose a column...</option>
                                                             <option value="avg_gpa">Average College GPA</option>
                                                             <option value="avg_high_school_gpa">Average High School GPA</option>
@@ -264,7 +264,7 @@
                                                     <td class="col-3">         
                                                     </td>
                                                     <td class="col-2">
-                                                        <button id='covidGenerateButton' onclick='genCovidGraph()' class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                        <button id='covidGenerateButton' onclick='genCovidGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
