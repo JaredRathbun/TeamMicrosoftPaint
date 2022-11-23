@@ -136,7 +136,7 @@ function addNewCourseDropdowns(addDeleteButton) {
     `;
     dropdownsDiv.innerHTML += row;
     dropdownsDiv.scrollTop = dropdownsDiv.scrollHeight;
-    document.getElementById('showChartGraphButton').disabled = true;
+    document.getElementById('classByClassGenerateButton').disabled = true;
 }
 
 /**
@@ -187,9 +187,9 @@ function checkDropdowns() {
     }
 
     if (validDropdowns) {
-        document.getElementById('showChartGraphButton').disabled = false;
+        document.getElementById('classByClassGenerateButton').disabled = false;
     } else {
-        document.getElementById('showChartGraphButton').disabled = true;
+        document.getElementById('classByClassGenerateButton').disabled = true;
     }
 }
 
@@ -438,7 +438,7 @@ function showChartOrGraphPopUp(div) {
  * Gets the selected options from the user, then calls the appropriate function
  * to generate a chart/graph.
  */
-function genChartOrGraph() {
+function genClassByClassChartOrGraph() {
     /**
      * Returns the value of the selected option element inside of the specified 
      * select element.
@@ -486,7 +486,6 @@ function genChartOrGraph() {
         }
     }
     selectedData.selectedCourses = selectedCourses;
-
     // Make the request to the backend to get the data.
     fetch('/class-by-class-comparisons', {
         method: 'POST',

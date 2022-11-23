@@ -59,21 +59,6 @@ class Utils:
 
 
     @staticmethod
-    def get_avg_for_column(column, year):
-        '''
-        '''
-        all_class_data_objects = ClassData.query.filter(ClassData.course_obj.year == year).all()
-        
-        # data_list = []
-        if (column != 'dwf_rate'):
-            data_list = [cd.column for cd in all_class_data_objects]
-            data_list_len = len(data_list)
-            return round(sum(data_list) / data_list_len, 2) if data_list_len > 0 else 0
-        else:
-            
-
-
-    @staticmethod
     def get_class_by_class_data(column: str, selected_courses: dict) -> dict:
         '''
         Returns a `dict` with the data requested for each class specified.
@@ -187,8 +172,60 @@ class Utils:
             semester = split_term[0]
             year = int(split_term[1])
             return_data[course_num] = function_to_call(column, course_num, semester, year)
-        return return_data             
+        return return_data      
 
+
+    @staticmethod
+    def get_avg_for_column(column, semester, year):
+        '''
+        '''
+        all_class_data_objects = []
+        
+        for class_data_obj in ClassData.query.all():
+            course_obj = class_data_obj.course_obj
+            
+            if (course_obj.semester == semester and course_obj.year == year):
+                all_class_data_objects.append(class_data_obj)
+
+        if (column != 'dwf_rate'):
+            column_sum = 0
+            column_entry_count = 0
+            for cd in all_class_data_objects:
+                attribute = getattr(cd.student_obj, column)
+                if attribute != 0.0:
+                    column_sum += attribute
+                    column_entry_count += 1
+        
+            return round((column_sum / column_entry_count), 2) if column_entry_count > 0 else 0 
+        else:
+            # Average DWF needs to go here
+            return None
+
+    @staticmethod
+    def get_covid_data(column: str) -> dict:
+        semesters = ['SP 2020', 'FA 2020', 'SP 2021', 'FA 2021']
+        return_dict = {}
+        
+        column_to_query = None
+        match column:
+            case 'avg_gpa':
+                # The column needed to get the student's gpa.
+                column_to_query = 'gpa_cumulative'
+            case 'avg_high_school_gpa':
+                column_to_query = 'high_school_gpa'
+            # You'll need to add these as you add more columns
+            # avg_dwf is going to be a little harder since each grade lives in
+            # the ClassData object and not the Student objects
+
+        # Loop over every semester and get the average for that column.
+        for semester in semesters:
+            split_semester = semester.split(' ')
+            semester_abbreviation = split_semester[0]
+            year = int(split_semester[1])
+
+            return_dict[semester] = Utils.get_avg_for_column(column_to_query, 
+                semester_abbreviation, year)
+        return return_dict
 
 class ProviderEnum(enum.Enum):
     '''

@@ -356,5 +356,6 @@ def katie_test():
     body = request.get_json()
 
     # Check for valid keys in body.
-
     column = body['column']
+    data = Utils.get_covid_data(column)
+    return data, 200
