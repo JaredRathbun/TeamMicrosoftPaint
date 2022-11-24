@@ -57,14 +57,14 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/visualizations">
-                            <i class="far fa-chart-bar"></i>
+                            <i class="fas fa-chart-simple"></i>
                             <span>Visualizations</span>
                         </a>
                     </li>
                     {% if is_data_admin_or_higher(current_user) %}
                         <li class="nav-item active">
                             <a class="nav-link" href="/dataadmin">
-                                <i class="fas fa-chart-simple"></i>
+                                <i class="fas fa-solid fa-file-csv"></i>
                                     <span>Data Administration</span>
                             </a>
                         </li>
@@ -77,6 +77,12 @@
                             </a>
                         </li>
                     {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/faq">
+                            <i class="fas fa-regular fa-circle-question"></i>
+                            <span>FAQ and User Manual</span>
+                        </a>
+                    </li>
                 </ul>
                 <div class="text-center d-none d-md-inline"></div>
             </div>
@@ -128,8 +134,9 @@
                             <i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Download All Data</a>
                     </div>
                     <div class="card shadow">
-                        <div class="card-header py-3">
+                        <div class="card-header d-flex justify-content-between py-3">
                             <p class="text-primary m-0 fw-bold">All Data</p>
+                            <span class='mx-2' data-toggle="tooltip" data-placement="left" title="A table of all the data in the database. To analyze a specific row, click on the eye next to that given row."><i class="fa fa-light fa-circle-info"></i></span>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -181,10 +188,11 @@
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../static/js/theme.js"></script>
     <script src="../static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../static/js/dashboard/data.js"></script>
+    <script src="../../static/js/dashboard/data.js"></script>
 </body>
 
 </html>

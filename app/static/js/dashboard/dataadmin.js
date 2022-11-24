@@ -41,19 +41,6 @@ fileUpload.addEventListener('change', () => {
 
 
 uploadButton.addEventListener('click', async () => {
-    // let file = fileUpload.files[0];
-    // const data = new FormData();
-    // data.append('file', file);
-    // const req = new XMLHttpRequest();
-    // req.onreadystatechange = () => {
-    //     if (req.status == 200) {
-    //         
-    //     } else {
-    //         console.log(req.responseText);
-    //     }
-    // };
-    // req.open('POST', '/upload');
-    // req.send(data);
     let file = fileUpload.files[0];
     const data = new FormData();
     data.append('file', file);
