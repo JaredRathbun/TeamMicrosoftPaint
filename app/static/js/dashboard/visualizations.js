@@ -286,15 +286,16 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
         }
 
         var courseTraceList = [];
-
+        var xAxisCount = 1;
         for (var course in data) {
             courseTraceList.push({
-                x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                x: [xAxisCount],
                 y: data[course],
                 mode: 'markers',
                 type: 'scatter',
                 name: course
             });
+            xAxisCount++;
         }
         
         Plotly.newPlot(chartOrGraphDiv, courseTraceList, layout);
@@ -327,7 +328,6 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
                 };
 
                 for (var grade of data[course]) {
-                    console.log(grade);
                     gradeObj[grade] = gradeObj[grade] + 1;
                 }
 
