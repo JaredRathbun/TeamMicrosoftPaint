@@ -134,10 +134,11 @@ def change_role():
     if ('email' in body and 'new_role' in body):
         email = body['email']
         new_role = body['new_role']
-
+        print(new_role)
         usr = User.query.get(email)
         
         if (usr):
+            print('Found user', usr.role)
             match new_role:
                 case 'Admin':
                     usr.set_admin()
@@ -145,6 +146,7 @@ def change_role():
                     usr.set_data_admin()
                 case 'Viewer':
                     usr.set_viewer()
+            print('New role: ', usr.role)
             return {'message': 'Success'}, 200
         else:
             return {'message': 'User not found'}, 400
