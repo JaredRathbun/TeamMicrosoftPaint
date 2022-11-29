@@ -23,12 +23,13 @@
 from . import dash_bp
 from app import app, mail
 from flask_mail import Message
-from flask import render_template, request, make_response
+from flask import render_template, request, make_response, send_file
 from flask_login import login_required, current_user
 from app import admin_required, data_admin_or_higher_required
 from app.blueprints.dashboard.data_upload import upload_csv_file
 from app.models import RoleEnum, User, ClassData, Course, Student, Utils
 import pandas as pd
+from os import getcwd, path
 
 @dash_bp.route('/dashboard', methods = ['GET'])
 @login_required
@@ -390,3 +391,16 @@ def download_all_data():
     res.headers.set('Content-Disposition', 'attachment', 
         filename='stem_data.csv')
     return res
+
+
+@dash_bp.route('/download-sample-data', methods = ['GET'])
+@login_required
+def download_sample_data():
+    return send_file(path.join(getcwd(), 'data/sample_data.xlsx'), 
+        as_attachment=True, download_name='sample_data.xlsx')
+    # Return the CSV Bytes as a download to the user.
+    # res = make_response(csv_bytes)
+    # res.headers.set('Content-Type', 'text/csv')
+    # res.headers.set('Content-Disposition', 'attachment', 
+    #     filename='stem_data.csv')
+    # return res
