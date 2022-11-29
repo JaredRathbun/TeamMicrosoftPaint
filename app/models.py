@@ -259,27 +259,28 @@ class Utils:
         data_dict = {}
 
         match columnX:
-            case 'admit_term':
+            case 'Admit Term':
                 columnX = Student.admit_term
-            case 'admit_year':
+            case 'Admit Year':
                 columnX = Student.admit_year
-            case 'concentration':
+            case 'Concentration':
                 columnX = Student.concentration_desc
-            case 'student_class':
+            case 'Class':
                 columnX = Student.class_year
-            case 'city':
+            case 'City':
                 columnX = Student.city
-            case 'state':
+            case 'State':
                 columnX = Student.state
-            case 'race':
+            case 'Race/Ethnicity':
                 columnX = Student.race_ethnicity
-            case 'gender':
+            case 'Gender':
                 columnX = Student.gender
-            case 'hs_name':
+            case 'High School':
                 columnX = Student.high_school_name
-            case 'hs_state':
+            case 'High School State':
                 columnX = Student.high_school_state
 
+        print(columnX)
         groups = Utils.group_table_by_column(Student, columnX)
         print(groups)
 

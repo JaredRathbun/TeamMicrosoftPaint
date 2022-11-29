@@ -667,9 +667,10 @@ function barChartGeneration(){
     // Get the column the user selected.
     var XValueSelect = document.getElementById('barChartXValues');
     var YValueSelect = document.getElementById('barChartYValues');
-    
-    const yAxisLabel = getSelectedLabel(XValueSelect);
-    const xAxisLabel = getSelectedLabel(YValueSelect);
+    const yAxisLabel = getSelectedLabel(YValueSelect);
+    const xAxisLabel = getSelectedLabel(XValueSelect);
+    var XValue = getSelectedValue(XValueSelect);
+    var YValue = getSelectedValue(YValueSelect);
 
     // Make the request to the backend to get the data.
     fetch('/bar-chart-comparisons', {
@@ -678,7 +679,7 @@ function barChartGeneration(){
             'Content-Type': 'application/json',
             accept: 'application/json'
         },
-        body: JSON.stringify({columnX: XValueSelect, columnY: YValueSelect})
+        body: JSON.stringify({columnX: XValue, columnY: YValue})
     }).then((res) => res.json()).then((json) => {
         // Build the div containing the appropriate chart/graph, then show it.
         var div = buildBarChart(json, yAxisLabel, xAxisLabel);
