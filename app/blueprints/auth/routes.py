@@ -58,7 +58,7 @@ def send_otp_email(usr: User) -> bool:
     if usr is None:
         return False
     else:
-        otp = usr.get_otp().now()
+        otp = usr.get_otp()
         msg = Message('STEM Data Dashboard | 2-Factor Authentication',
             sender=app.config['MAIL_USERNAME'],
             recipients=[usr.email])

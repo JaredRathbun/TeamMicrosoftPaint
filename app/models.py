@@ -545,7 +545,7 @@ class User(UserMixin, db.Model):
         '''
         if self.totp_key is None:
             raise InvalidPrivilegeException('User is not an admin!')
-        return pyotp.TOTP(self.totp_key, interval=120)
+        return pyotp.TOTP(self.totp_key).now()
 
     
     def verify_otp(self, otp: str) -> bool:
@@ -558,7 +558,7 @@ class User(UserMixin, db.Model):
             A `bool` representing the result of the the comparison.
         '''
         if otp: 
-            correct_otp = self.get_otp().now()
+            correct_otp = self.get_otp()
             return correct_otp == otp
         else:
             return False
