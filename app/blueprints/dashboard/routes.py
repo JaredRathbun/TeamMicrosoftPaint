@@ -370,3 +370,17 @@ def covid_data_comparison():
     column = body['column']
     data = Utils.get_covid_data(column)
     return data, 200
+
+
+@dash_bp.route('/bar-chart-comparisons', methods = ['POST'])
+def bar_chart_comparison():
+    body = request.get_json()
+
+    if ('columnX' not in body or 'columnY' not in body):
+        return {'message': 'Body missing information.'}, 400
+        
+    # Check for valid keys in body.
+    columnX = body['columnX']
+    columnY = body['columnY']
+    data = Utils.get_bar_chart_data(columnX, columnY)
+    return data, 200

@@ -1,18 +1,18 @@
-# Copyright (c) 2022 Jared Rathbun and Katie O'Neil. 
+# Copyright (c) 2022 Jared Rathbun and Katie O'Neil.
 #
 # This file is part of STEM Data Dashboard.
-# 
+#
 # STEM Data Dashboard is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free 
+# under the terms of the GNU General Public License as published by the Free
 # Software Foundation, either version 3 of the License, or (at your option) any
 # later version.
 #
-# STEM Data Dashboard is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+# STEM Data Dashboard is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
 # details.
 #
-# You should have received a copy of the GNU General Public License along with 
+# You should have received a copy of the GNU General Public License along with
 # STEM Data Dashboard. If not, see <https://www.gnu.org/licenses/>.
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
@@ -30,7 +30,7 @@ import pyotp
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlalchemy
 from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
-    Enum, ForeignKey)
+                        Enum, ForeignKey)
 from itertools import groupby
 from operator import attrgetter
 from functools import cmp_to_key
@@ -44,19 +44,18 @@ class Utils:
     def group_table_by_column(table, column):
         '''
         Groups the specified table by the specified column.
-        
+
         params:
             `table`: The table to query. `Ex. ClassData`
             `column`: The column to query. `Ex. ClassData.grade`
 
         return:
-            A `list` of `list` objects, where each element in the list is each 
+            A `list` of `list` objects, where each element in the list is each
             group, and each element in the lists is an `object` of the table.
         '''
         grouped_table = table.query.order_by(column).all()
-        return [list(s) for i, s in groupby(grouped_table, 
-            attrgetter(str(column).split('.')[1]))]
-
+        return [list(s) for i, s in groupby(grouped_table,
+                                            attrgetter(str(column).split('.')[1]))]
 
     @staticmethod
     def get_class_by_class_data(column: str, selected_courses: dict) -> dict:
@@ -68,30 +67,30 @@ class Utils:
             `selected_courses`: A `dict` containing the courses and the semesters
             to compare each course.
 
-        return: 
+        return:
             A `dict` containing the calculated/found data for each course.
         '''
 
-        def get_class_data_column(column: str, course: str, semester: str, 
-            year: int) -> list[str] | float:
+        def get_class_data_column(column: str, course: str, semester: str,
+                                  year: int) -> list[str] | float:
             '''
-            Generates the correct calculated value for the provided column, 
+            Generates the correct calculated value for the provided column,
             course, semester, and year.
 
             params:
-                `column`: A `str` holding the calculation to perform. 
+                `column`: A `str` holding the calculation to perform.
                 Should be either 'grade' or 'avg_dwf_rate'.
                 `course`: A `str` containing the course to get the data for.
                 `semester`: A `str` containing the semester the course ran.
                 `year`: An `int` containing the year the course ran.
             return:
-                A `list` containing each of the grades for the course in the 
-                database or a float representing the average dwf rate for the 
+                A `list` containing each of the grades for the course in the
+                database or a float representing the average dwf rate for the
                 course.
             '''
-            course = Course.query.filter(Course.course_num == 
-                    course and Course.semester == semester and Course.year == 
-                    year).first()
+            course = Course.query.filter(Course.course_num ==
+                    course and Course.semester == semester and Course.year ==
+                                         year).first()
 
             if (column == 'grade'):
                 class_data_entries = ClassData.query.filter(
@@ -101,31 +100,31 @@ class Utils:
                 class_data_entries = ClassData.query.filter(
                     ClassData.course_obj == course)
                 dwf_grades = class_data_entries.filter(ClassData.grade == 'D' or
-                    ClassData.grade == 'D+' or ClassData.grade == 'D-' or 
-                    ClassData.grade == 'W' or ClassData.grade == 'F').count()
+                    ClassData.grade == 'D+' or ClassData.grade == 'D-' or
+                                                       ClassData.grade == 'W' or ClassData.grade == 'F').count()
                 total_grades = class_data_entries.count()
                 return round((dwf_grades / total_grades) * 100, 2) if total_grades > 0 else 0.0
 
-        def get_student_data_column(column: str, course: str, semester: str, 
-            year: int) -> list | float:
+        def get_student_data_column(column: str, course: str, semester: str,
+                                    year: int) -> list | float:
             '''
-            Generates the correct calculation for the given column, course, 
+            Generates the correct calculation for the given column, course,
             semester and year from the Student table.
             '''
-            course = Course.query.filter(Course.course_num == course and 
-                Course.semester == semester and Course.year == year).first()
-            class_data_objs = ClassData.query.filter(ClassData.course_obj == 
-                    course).all()
+            course = Course.query.filter(Course.course_num == course and
+                                         Course.semester == semester and Course.year == year).first()
+            class_data_objs = ClassData.query.filter(ClassData.course_obj ==
+                                                     course).all()
             if (column == 'avg_high_school_gpa'):
                 gpa_list = []
                 for class_data_obj in class_data_objs:
                     hs_gpa = class_data_obj.student_obj.high_school_gpa
 
-                    # Only get grades that are in the database, since 
+                    # Only get grades that are in the database, since
                     # high_school_gpa is nullable in the database.
                     if (hs_gpa is not None):
                         gpa_list.append(hs_gpa)
-                
+
                 gpa_list_len = len(gpa_list)
                 return round(sum(gpa_list) / gpa_list_len, 2) if gpa_list_len > 0 else 0
             elif (column == 'avg_gpa'):
@@ -133,11 +132,11 @@ class Utils:
                 for class_data_obj in class_data_objs:
                     gpa = class_data_obj.student_obj.gpa_cumulative
 
-                    # Only get grades that are in the database, since gpa is 
+                    # Only get grades that are in the database, since gpa is
                     # nullable in the database.
                     if (gpa is not None):
                         gpa_list.append(gpa)
-                
+
                 gpa_list_len = len(gpa_list)
                 return round(sum(gpa_list) / gpa_list_len, 2) if gpa_list_len > 0 else 0
             else:
@@ -149,15 +148,15 @@ class Utils:
                     column_val = getattr(student, column)
 
                     # If the column is a gpa, round it to 2 decimal places.
-                    if (column == 'gpa_cumulative' or column == 
-                        'high_school_gpa'):
+                    if (column == 'gpa_cumulative' or column ==
+                            'high_school_gpa'):
                         column_val = round(column_val, 2)
 
                     # If the value is not None, add it to the column_list.
                     if (column_val is not None):
                         column_list.append(column_val)
                 return column_list
-        
+
         # Based on what column was selected, find which function to call.
         if (column == 'grade' or column == 'avg_dwf_rate'):
             function_to_call = get_class_data_column
@@ -170,19 +169,19 @@ class Utils:
             split_term = term.split(' ')
             semester = split_term[0]
             year = int(split_term[1])
-            return_data[course_num] = function_to_call(column, course_num, semester, year)
-        return return_data      
-
+            return_data[course_num] = function_to_call(
+                column, course_num, semester, year)
+        return return_data
 
     @staticmethod
     def get_avg_for_column(column, semester, year):
         '''
         '''
         all_class_data_objects = []
-        
+
         for class_data_obj in ClassData.query.all():
             course_obj = class_data_obj.course_obj
-            
+
             if (course_obj.semester == semester and course_obj.year == year):
                 all_class_data_objects.append(class_data_obj)
 
@@ -194,8 +193,8 @@ class Utils:
                 if attribute != 0.0 and attribute != None:
                     column_sum += attribute
                     column_entry_count += 1
-        
-            return round((column_sum / column_entry_count), 2) if column_entry_count > 0 else 0 
+
+            return round((column_sum / column_entry_count), 2) if column_entry_count > 0 else 0
         else:
             dwf_count = 0
             total_num_grades_count = 0
@@ -203,20 +202,19 @@ class Utils:
                 # Access the grade for each ClassData entry
                 grade = cd.grade
 
-                # If there is a grade, its in ('D', 'D-', 'D+', 'W', 'F'), add 
+                # If there is a grade, its in ('D', 'D-', 'D+', 'W', 'F'), add
                 # 1 to the count.
                 if grade != None and grade in ('D', 'D-', 'D+', 'W', 'F'):
                     dwf_count += 1
                 total_num_grades_count += 1
-        
-            return round(((dwf_count / total_num_grades_count) * 100), 2) if total_num_grades_count > 0 else 0 
 
+            return round(((dwf_count / total_num_grades_count) * 100), 2) if total_num_grades_count > 0 else 0
 
     @staticmethod
     def get_covid_data(column: str) -> dict:
         semesters = ['FA 2019', 'SP 2020', 'FA 2020', 'SP 2021', 'FA 2021']
         return_dict = {}
-        
+
         column_to_query = None
         match column:
             case 'avg_gpa':
@@ -234,7 +232,7 @@ class Utils:
 
             case 'avg_sat_total':
                 column_to_query = 'sat_total'
-            
+
             case 'avg_sat_math':
                 column_to_query = 'sat_math'
 
@@ -251,9 +249,79 @@ class Utils:
             semester_abbreviation = split_semester[0]
             year = int(split_semester[1])
 
-            return_dict[semester] = Utils.get_avg_for_column(column_to_query, 
-                semester_abbreviation, year)
+            return_dict[semester] = Utils.get_avg_for_column(column_to_query,
+                                                             semester_abbreviation, year)
         return return_dict
+
+    @staticmethod
+    def get_bar_chart_data(columnX: str, columnY: str) -> dict:
+        data_dict = {}
+
+        X_value_list = []
+
+        print(columnX)
+        match columnX:
+            case 'admit_term':
+                columnX = Student.admit_term
+            case 'admit_year':
+                columnX = Student.admit_year
+            case 'program_level':
+                columnX = Student.program_level
+            case 'sub_program_code':
+                columnX = Student.sub_program_code
+            case 'concentration':
+                columnX = Student.concentration
+            case 'student_class':
+                columnX = Student.student_class
+            case 'city':
+                columnX = Student.city
+            case 'state':
+                columnX = Student.state
+            case 'race':
+                columnX = Student.race
+            case 'gender':
+                columnX = Student.gender
+            case 'hs_name':
+                columnX = Student.hs_name
+            case 'hs_state':
+                columnX = Student.hs_state
+
+        groups = Utils.group_table_by_column(Student, columnX)
+        #print(groups)
+
+        match columnY:
+            case 'avg_gpa':
+                # The column needed to get the student's gpa.
+                columnY = 'gpa_cumulative'
+
+            case 'avg_high_school_gpa':
+                columnY = 'high_school_gpa'
+
+            case 'avg_math_placement_score':
+                columnY = 'math_placement_score'
+
+            case 'avg_sat_total':
+                columnY = 'sat_total'
+
+            case 'avg_sat_math':
+                columnY = 'sat_math'
+
+        for i in X_value_list:
+            data_dict[X_value_list] = Utils.get_avg_for_bar_data(i,columnY)
+
+        return data_dict
+
+    @staticmethod
+    def get_avg_for_bar_data(bar_value, columnY):
+        '''
+        '''
+        all_data_objects = []
+
+        for student_data_obj in Student.query.all():
+            student_obj = student_data_obj.student_obj
+
+            if (student_obj.columnY == columnY and student_obj.barValue == bar_value):
+                all_data_objects.append(student_data_obj)
 
 class ProviderEnum(enum.Enum):
     '''
@@ -275,9 +343,8 @@ class ClassEnum(enum.Enum):
     '''
     FRESHMAN = 'Freshman'
     SOPHOMORE = 'Sophomore'
-    JUNIOR = 'Junior' 
+    JUNIOR = 'Junior'
     SENIOR = 'Senior'
- 
 
     @staticmethod
     def parse_class(class_str: str) -> int:
@@ -303,8 +370,8 @@ class ClassEnum(enum.Enum):
             case _:
                 raise InvalidClassException('Class not recognized.')
 
-    
-    @staticmethod 
+
+    @staticmethod
     def class_to_str(class_year) -> str:
         '''
         Converts a `ClassEnum` object into a `str` format.
@@ -368,7 +435,6 @@ class User(UserMixin, db.Model):
     role = Column(Enum(RoleEnum), default=RoleEnum.VIEWER)
     provider = Column(Enum(ProviderEnum))
 
-
     def __init__(self, email, first_name, last_name, password=None):
         '''
         Creates a new `User` object.
@@ -385,7 +451,6 @@ class User(UserMixin, db.Model):
         else:
             self.provider = ProviderEnum.GOOGLE
 
-
     def get_id(self) -> str:
         '''
         Getter for the user's email address.
@@ -394,7 +459,6 @@ class User(UserMixin, db.Model):
             A `str` representing the user's email address.
         '''
         return self.email
-
 
     def is_active() -> bool:
         '''
@@ -405,7 +469,6 @@ class User(UserMixin, db.Model):
         '''
         return True
 
-
     def is_authenticated():
         '''
         Returns whether or not the user is authenticated.
@@ -413,7 +476,6 @@ class User(UserMixin, db.Model):
         return: `True`
         '''
         return True
-
 
     def get_role(self) -> int:
         '''
@@ -423,7 +485,6 @@ class User(UserMixin, db.Model):
             The correct `RoleEnum` object.
         '''
         return self.role
-
 
     def check_password(self, password: str):
         '''
@@ -441,13 +502,11 @@ class User(UserMixin, db.Model):
         else:
             raise InvalidProviderException()
 
-
     def gen_totp_key(self):
         '''
         Generates the TOTP Key for this user and saves it.
         '''
         self.totp_key = pyotp.random_base32()
-
 
     @staticmethod
     def insert_user(usr):
@@ -467,7 +526,6 @@ class User(UserMixin, db.Model):
             logger.error('Unable to insert new user.', e)
             db.session.rollback()
             return False
-
 
     def set_password(self, new_password: str):
         '''
@@ -494,23 +552,21 @@ class User(UserMixin, db.Model):
                 db.session.commit()
         return True
 
-
     def get_reset_token(self, duration=1800) -> str:
         '''
         Gets a reset token for the given user.
-        
+
         param: duration=1800 The amount of time the token is valid for.
         return: The token represented as a string.
         '''
-        return jwt.encode({'email': self.email}, 
-            current_app.config['SECRET_KEY'], algorithm='HS256')
+        return jwt.encode({'email': self.email},
+                          current_app.config['SECRET_KEY'], algorithm='HS256')
 
-    
     @staticmethod
     def verify_reset_token(token: str):
         '''
         Verifies whether or not the user's password reset token is valid.
-        
+
         param:
             `token`: A `str` representing the user's token.
 
@@ -519,14 +575,13 @@ class User(UserMixin, db.Model):
         '''
         if token:
             try:
-                email = jwt.decode(token, current_app.config['SECRET_KEY'], 
-                    algorithms=['HS256'])['email']
+                email = jwt.decode(token, current_app.config['SECRET_KEY'],
+                                   algorithms=['HS256'])['email']
                 return User.query.get(email)
             except Exception as e:
                 return None
         else:
             return None
-
 
     def set_admin(self):
         '''
@@ -536,7 +591,6 @@ class User(UserMixin, db.Model):
         self.gen_totp_key()
         db.session.commit()
 
-
     def set_data_admin(self):
         '''
         Sets the user to a data admin.
@@ -545,13 +599,11 @@ class User(UserMixin, db.Model):
         self.gen_totp_key()
         db.session.commit()
 
-    
     def set_viewer(self):
         '''
         Sets the user to a viewer.
         '''
         self.role = RoleEnum.VIEWER
-
 
     def get_otp(self):
         '''
@@ -564,7 +616,6 @@ class User(UserMixin, db.Model):
             raise InvalidPrivilegeException('User is not an admin!')
         return pyotp.TOTP(self.totp_key, interval=120)
 
-    
     def verify_otp(self, otp: str) -> bool:
         '''
         Verifies the user's OTP code.
@@ -574,12 +625,11 @@ class User(UserMixin, db.Model):
         return:
             A `bool` representing the result of the the comparison.
         '''
-        if otp: 
+        if otp:
             correct_otp = self.get_otp().now()
             return correct_otp == otp
         else:
             return False
-
 
     def is_admin(self) -> bool:
         '''
@@ -590,7 +640,6 @@ class User(UserMixin, db.Model):
         '''
         return (self.role == RoleEnum.ADMIN)
 
-    
     def is_data_admin(self) -> bool:
         '''
         Returns whether or not the user is a data admin.
@@ -599,6 +648,7 @@ class User(UserMixin, db.Model):
             A `bool` representing if the user is a data admin or not.
         '''
         return (self.role == RoleEnum.DATA_ADMIN)
+
 
 class Student(db.Model):
     ''''
@@ -625,23 +675,22 @@ class Student(db.Model):
     math_placement_score = Column(Integer())
     race_ethnicity = Column(Text(), nullable=False)
     gender = Column(Text(), nullable=False)
-    gpa_cumulative = Column(Float(), 
-        CheckConstraint('gpa_cumulative >= 0.0 AND gpa_cumulative <= 4.0'))
-    high_school_gpa = Column(Float(), 
-        CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
-    sat_math = Column(Integer(), 
-        CheckConstraint(f'sat_math >= {app.config["SAT_SCORE_MIN"]} AND sat_math <= {app.config["SAT_SCORE_MAX"]}'))
-    sat_total = Column(Integer(), 
-        CheckConstraint(f'sat_total >= {app.config["SAT_SCORE_MIN"]} AND sat_total <= {app.config["SAT_SCORE_MAX"]}'))
-    act_score = Column(Integer(), 
-        CheckConstraint(f'act_score >= {app.config["ACT_SCORE_MIN"]} AND act_score <= {app.config["ACT_SCORE_MAX"]}'))
+    gpa_cumulative = Column(Float(),
+                            CheckConstraint('gpa_cumulative >= 0.0 AND gpa_cumulative <= 4.0'))
+    high_school_gpa = Column(Float(),
+                             CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
+    sat_math = Column(Integer(),
+                      CheckConstraint(f'sat_math >= {app.config["SAT_SCORE_MIN"]} AND sat_math <= {app.config["SAT_SCORE_MAX"]}'))
+    sat_total = Column(Integer(),
+                       CheckConstraint(f'sat_total >= {app.config["SAT_SCORE_MIN"]} AND sat_total <= {app.config["SAT_SCORE_MAX"]}'))
+    act_score = Column(Integer(),
+                       CheckConstraint(f'act_score >= {app.config["ACT_SCORE_MIN"]} AND act_score <= {app.config["ACT_SCORE_MAX"]}'))
     high_school_name = Column(Text())
     high_school_city = Column(Text())
     high_school_state = Column(Text())
     high_school_ceeb = Column(Integer())
     cohort = Column(Text())
     mcas_score_obj = db.relationship('MCASScore', uselist=False)
-
 
     @staticmethod
     def get_avg_gpa_per_semester() -> dict:
@@ -652,18 +701,19 @@ class Student(db.Model):
         return:
             A `dict` containing the average gpa for each semester.
         '''
-        semester_groups = Utils.group_table_by_column(ClassData, ClassData.course)
+        semester_groups = Utils.group_table_by_column(
+            ClassData, ClassData.course)
 
         return_dict = {}
         for group in semester_groups:
             semester = group[0].course_obj.semester
             year = group[0].course_obj.year
 
-            avg_gpa = sum([g.student_obj.gpa_cumulative for g in group]) / len(group)
+            avg_gpa = sum(
+                [g.student_obj.gpa_cumulative for g in group]) / len(group)
             term = f'{semester} {year}'
             return_dict[term] = round(avg_gpa, 2)
         return return_dict
-
 
     @staticmethod
     def get_avg_gpa() -> str:
@@ -692,7 +742,6 @@ class Student(db.Model):
 
         return '%.2f' % (gpa_sum / total_students) if total_students > 0 else 0.0
 
-
     @staticmethod
     def get_avg_high_school_gpa() -> str:
         '''
@@ -715,8 +764,7 @@ class Student(db.Model):
         total_students = len(Student.query.all())
         gpa_sum = __sum_gpa()
 
-        return '%.2f' % (gpa_sum / total_students) if total_students > 0 else 0.0 
-
+        return '%.2f' % (gpa_sum / total_students) if total_students > 0 else 0.0
 
     @staticmethod
     def get_num_students_per_major() -> dict:
@@ -733,7 +781,7 @@ class Student(db.Model):
             '''
             Returns the correct bootstrap class to style the colored bar with
             based on the percentage of students in a given major.
-            
+
             param:
                 `percentage`: A float containing the percentage of students in
                 the major.
@@ -753,11 +801,10 @@ class Student(db.Model):
                 case percentage if percentage >= 81 and percentage <= 100:
                     return 'bg-success'
 
-
         grouped_students = Student.query.order_by(Student.major_1_desc).all()
         total_num_students = len(grouped_students)
-        grouped_students = [list(s) for i, s in groupby(grouped_students, 
-            attrgetter('major_1_desc'))]
+        grouped_students = [list(s) for i, s in groupby(grouped_students,
+                                                        attrgetter('major_1_desc'))]
         return_dict = {'Total # of Students': total_num_students}
         for group in grouped_students:
             num_of_students = len(group)
@@ -768,7 +815,7 @@ class Student(db.Model):
                 'percentage': '{percent}%'.format(percent=percentage),
                 'bootstrap_class': get_bootstrap_class(percentage)
             }
-        
+
         return return_dict
 
     @staticmethod
@@ -794,7 +841,7 @@ class Student(db.Model):
             return sum
 
         total_students = len(Student.query.all())
-        math_score =__sum_math_placement()
+        math_score = __sum_math_placement()
 
         return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0
 
@@ -821,9 +868,9 @@ class Student(db.Model):
             return sum
 
         total_students = len(Student.query.all())
-        math_score =__sum_math_placement()
+        math_score = __sum_math_placement()
 
-        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0    
+        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0
 
     @staticmethod
     def get_avg_sat_math() -> str:
@@ -848,9 +895,9 @@ class Student(db.Model):
             return sum
 
         total_students = len(Student.query.all())
-        math_score =__sum_math()
+        math_score = __sum_math()
 
-        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0   
+        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0
 
     @staticmethod
     def get_avg_act() -> str:
@@ -875,10 +922,11 @@ class Student(db.Model):
             return sum
 
         total_students = len(Student.query.all())
-        math_score =__sum_math()
+        math_score = __sum_math()
 
-        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0  
-         
+        return '%.2f' % (math_score / total_students) if total_students > 0 else 0.0
+
+
 class ClassData(db.Model):
     '''
     A Class to hold Class Data.
@@ -888,12 +936,11 @@ class ClassData(db.Model):
     student_id = Column(Integer(), ForeignKey('students.id'), nullable=False)
     program_level = Column(Text(), nullable=False)
     subprogram_code = Column(Integer(), nullable=False)
-    grade = Column(Text(), CheckConstraint("grade in ('A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'W', 'IP', 'P')"), 
-        nullable=False)
+    grade = Column(Text(), CheckConstraint("grade in ('A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'W', 'IP', 'P')"),
+                   nullable=False)
     course = Column(Integer(), ForeignKey('courses.id'), nullable=False)
     course_obj = db.relationship('Course', uselist=False)
     student_obj = db.relationship('Student', uselist=False)
-
 
     @staticmethod
     def get_avg_dwf() -> float:
@@ -906,12 +953,11 @@ class ClassData(db.Model):
         '''
         class_data = ClassData.query
         num_grades = len(class_data.all())
-        num_with_dwf = len(class_data.filter(ClassData.grade=='F' or 
-            ClassData.grade=='W' or ClassData.grade=='D' or 
-            ClassData.grade=='D-' or ClassData.grade=='D+').all())
-        
-        return '%.2f' % ((num_with_dwf / num_grades) * 100) if num_grades > 0 else 0.0 
+        num_with_dwf = len(class_data.filter(ClassData.grade =='F' or 
+            ClassData.grade =='W' or ClassData.grade=='D' or 
+            ClassData.grade =='D-' or ClassData.grade=='D+').all())
 
+        return '%.2f' % ((num_with_dwf / num_grades) * 100) if num_grades > 0 else 0.0
 
     @classmethod
     def get_avg_dwf_per_course(cls) -> list[dict]:
@@ -924,19 +970,20 @@ class ClassData(db.Model):
         '''
         dwf_list = []
         grouped_courses = ClassData.query.order_by(ClassData.course).all()
-        grouped_courses = [list(c) for i, c in groupby(grouped_courses, attrgetter('course_obj'))]
+        grouped_courses = [list(c) for i, c in groupby(
+            grouped_courses, attrgetter('course_obj'))]
         # Loop over every group, getting the class and DWF rate for each class.
         for course_group in grouped_courses:
             course_obj = course_group[0].course_obj
             semester = course_obj.semester
             course_num = course_obj.course_num
             year = course_obj.year
-            
+
             # Get the grades, then make a call to get the avg DWF.
             course_grades = [c.grade for c in course_group]
             length = len(course_grades)
-            dwf_len = len(list(filter(lambda c: c == 'W' or c == 'D+' or c == 'D' 
-                or c == 'D-' or c == 'F', course_grades)))
+            dwf_len = len(list(filter(lambda c: c == 'W' or c == 'D+' or c == 'D'
+                                      or c == 'D-' or c == 'F', course_grades)))
             avg_dwf = ((dwf_len / length) * 100) if length > 0 else 0.0
 
             # Add a dict to the list of each class.
@@ -948,14 +995,14 @@ class ClassData(db.Model):
             })
 
         # Sort the list, then return it.
-        sorted_list = sorted(dwf_list, key=lambda e: e['avg_dwf'], reverse=True)
+        sorted_list = sorted(
+            dwf_list, key=lambda e: e['avg_dwf'], reverse=True)
 
         # Format the DWF rates in each class to be 2 decimal places.
         for clazz in sorted_list:
             clazz['avg_dwf'] = '%.2f' % clazz['avg_dwf']
-        
+
         return sorted_list
-        
 
     @staticmethod
     def get_avg_dwf_head() -> list[dict]:
@@ -965,16 +1012,15 @@ class ClassData(db.Model):
         return:
             A `list` of `dict` objects with the top 5 courses.
         '''
-        
+
         # Get the list of sorted classes.
         dwf_list = ClassData.get_avg_dwf_per_course()
-        
+
         if (len(dwf_list) < 5):
             return dwf_list
         else:
             return dwf_list[0:5]
 
-    
     @staticmethod
     def get_avg_dwf_tail() -> list[dict]:
         '''
@@ -983,17 +1029,16 @@ class ClassData(db.Model):
         return:
             A `list` of `dict` objects with the top 5 courses.
         '''
-        
+
         # Get the list of sorted classes.
         dwf_list = ClassData.get_avg_dwf_per_course()
-        
+
         if (len(dwf_list) < 5):
             return dwf_list
         else:
             dwf_list = dwf_list[-5:]
             dwf_list.reverse()
             return dwf_list
-
 
     @staticmethod
     def get_awg_dwf_head_and_tail():
@@ -1008,7 +1053,7 @@ class ClassData(db.Model):
         # Get the list of sorted classes.
         dwf_list = ClassData.get_avg_dwf_per_course()
 
-        return_list = dwf_list[0:5] 
+        return_list = dwf_list[0:5]
         return_list.append({})
         lowest = dwf_list[-5:]
         lowest.reverse()
@@ -1016,7 +1061,7 @@ class ClassData(db.Model):
 
         return return_list
 
-    @staticmethod 
+    @staticmethod
     def get_dwf_rate_per_semester():
         '''
         Returns a dictionary with the dwf rate per semester.
@@ -1024,23 +1069,23 @@ class ClassData(db.Model):
         return:
             A `dict` of semesters mapped to each DWF rate.
         '''
-        grouped_class_data = Utils.group_table_by_column(ClassData, 
-            ClassData.course)
+        grouped_class_data = Utils.group_table_by_column(ClassData,
+                                                         ClassData.course)
         return_dict = {}
         for course_group in grouped_class_data:
-             # Get the grades, then make a call to get the avg DWF.
+            # Get the grades, then make a call to get the avg DWF.
             course_grades = [c.grade for c in course_group]
             length = len(course_grades)
-            dwf_len = len(list(filter(lambda c: c == 'W' or c == 'D+' or c == 'D' 
-                or c == 'D-' or c == 'F', course_grades)))
+            dwf_len = len(list(filter(lambda c: c == 'W' or c == 'D+' or c == 'D'
+                                      or c == 'D-' or c == 'F', course_grades)))
             term = f'{course_group[0].course_obj.semester} {course_group[0].course_obj.year}'
-            return_dict[term] = round((dwf_len / length) * 100, 2) if length > 0 else 0
+            return_dict[term] = round(
+                (dwf_len / length) * 100, 2) if length > 0 else 0
 
         return return_dict
 
-
     @staticmethod
-    def get_data(limit: int=None) -> list[dict] :
+    def get_data(limit: int=None) -> list[dict]:
         '''
         Returns a list of dictionaries, which contain the information for each
         `ClassData` entry, along with the student, MCAS score, and class related
@@ -1060,9 +1105,9 @@ class ClassData(db.Model):
         # If the limit is not specified, set it to the max amount.
         if (limit is None):
             limit = len(class_data)
-        
+
         # Loop over every ClassData object in the database, within the limit.
-        for i in range(limit):   
+        for i in range(limit):
             current_class = class_data[i]
             current_student = current_class.student_obj
             current_course = current_class.course_obj
@@ -1146,14 +1191,14 @@ class ClassData(db.Model):
                     location = city
                 else:
                     location = 'N/A'
-                
+
                 return {
                     'race_ethnicity': current_student.race_ethnicity,
                     'gender': current_student.gender,
                     'home_location': format_home_location(current_student.city,
-                        current_student.state, current_student.country),
-                    'home_zip_code': '' if (current_student.postal_code is None) 
-                        else current_student.postal_code,
+                                                          current_student.state, current_student.country),
+                    'home_zip_code': '' if (current_student.postal_code is None)
+                    else current_student.postal_code,
                     'high_school_name': format_info(current_student.high_school_name),
                     'high_school_location': location,
                     'high_school_ceeb': format_info(current_student.high_school_ceeb)
@@ -1173,7 +1218,7 @@ class ClassData(db.Model):
                     'minor_1': format_info(current_student.minor_1_desc),
                     'concentration': format_info(current_student.concentration_desc),
                     'class_year': ClassEnum.class_to_str(current_student.class_year),
-                    'admit_term_year': f'{current_student.admit_term} {current_student.admit_year}', 
+                    'admit_term_year': f'{current_student.admit_term} {current_student.admit_year}',
                     'admit_type': current_student.admit_type
                 }
 
@@ -1194,7 +1239,7 @@ class ClassData(db.Model):
                     'high_school_gpa': format_info(current_student.high_school_gpa)
                 }
 
-            # Create the dict for this ClassData object, and append it to the 
+            # Create the dict for this ClassData object, and append it to the
             # return list.
             current_dict = {
                 'student_id': current_class.student_id,
@@ -1212,7 +1257,6 @@ class ClassData(db.Model):
             return_list.append(current_dict)
         return return_list
 
-    
     @staticmethod
     def get_avg_grade() -> str:
         '''
@@ -1222,27 +1266,26 @@ class ClassData(db.Model):
             A `str` representing the average course grade.
         '''
         all_grades = []
-        
-        grade_to_num = { 
+
+        grade_to_num = {
             'A+': 13, 'A': 12, 'A-': 11, 'B+': 10, 'B': 9, 'B-': 8, 'C+': 7,
             'C': 6, 'C-': 5, 'D+': 4, 'D': 3, 'D-': 2, 'F': 1
         }
 
         num_to_grade = {
-            13: 'A+', 12: 'A', 11: 'A-', 10: 'B+', 9: 'B', 8: 'B-', 7: 'C+', 
+            13: 'A+', 12: 'A', 11: 'A-', 10: 'B+', 9: 'B', 8: 'B-', 7: 'C+',
             6: 'C', 5: 'C-', 4: 'D+', 3: 'D', 2: 'D-', 1: 'F'
         }
 
         for class_data in ClassData.query.all():
             if (class_data.grade != 'W' and class_data.grade != 'IP' and
-                class_data.grade != 'P'):
+                    class_data.grade != 'P'):
                 all_grades.append(grade_to_num[class_data.grade])
 
         if (len(all_grades) != 0):
             return num_to_grade[round(sum(all_grades) / len(all_grades))]
         else:
             return 'N/A'
-
 
     def get_avg_gpa_per_cohort():
         '''
@@ -1251,12 +1294,14 @@ class ClassData(db.Model):
         return:
             A `dict` containing the average student gpa per cohort.
         '''
-        grouped_cohorts = Utils.group_table_by_column(Student, Student.class_year)
+        grouped_cohorts = Utils.group_table_by_column(
+            Student, Student.class_year)
         return_dict = {}
         for group in grouped_cohorts:
             gpas = [s.gpa_cumulative for s in group]
             summed_gpa = sum(gpas)
-            return_dict[group[0].class_year.value] = round(summed_gpa / len(gpas), 2) if len(gpas) > 0 else 0
+            return_dict[group[0].class_year.value] = round(
+                summed_gpa / len(gpas), 2) if len(gpas) > 0 else 0
         return return_dict
 
 
@@ -1267,10 +1312,10 @@ class Course(db.Model):
     __tablename__ = 'courses'
     id = Column(Integer(), primary_key=True)
     term_code = Column(Text(), nullable=False)
-    course_num = Column(Text(), CheckConstraint('length(course_num) >= 7 AND length(course_num) <= 9'), 
-        nullable=False)
-    semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI", "SU")'), 
-        nullable=False)
+    course_num = Column(Text(), CheckConstraint('length(course_num) >= 7 AND length(course_num) <= 9'),
+                        nullable=False)
+    semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI", "SU")'),
+                      nullable=False)
     year = Column(Integer(), nullable=False)
 
     @staticmethod
@@ -1305,7 +1350,8 @@ class Course(db.Model):
             else:
                 return 0
 
-        grouped_course_nums = Utils.group_table_by_column(Course, Course.course_num)
+        grouped_course_nums = Utils.group_table_by_column(
+            Course, Course.course_num)
         mapping_dict = {}
 
         # Walk over every group of each course, getting each semester and adding
@@ -1318,7 +1364,6 @@ class Course(db.Model):
             semester_list.sort(key=cmp_to_key(semester_sort))
             mapping_dict[course_num] = semester_list
         return mapping_dict
-
 
     @staticmethod
     def get_list_of_years() -> list:
@@ -1369,8 +1414,8 @@ class MCASScore(db.Model):
     A class to represent MCAS scores.
     '''
     __tablename__ = 'mcas_scores'
-    student_id = Column(Text(), ForeignKey('students.id'), primary_key=True, 
-        nullable=False)
+    student_id = Column(Text(), ForeignKey('students.id'), primary_key=True,
+                        nullable=False)
     english_raw = Column(Integer())
     english_scaled = Column(Integer())
     english_achievement_level = Column(Text())

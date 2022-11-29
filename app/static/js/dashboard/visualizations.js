@@ -584,6 +584,7 @@ function genCovidGraph() {
         },
         body: JSON.stringify({column: selectedColumn})
     }).then((res) => res.json()).then((json) => {
+        console.log(json);
         // Build the div containing the appropriate chart/graph, then show it.
         var div = buildCovidChart(json, yAxisLabel);
         showChartOrGraphPopUp(div);
@@ -624,6 +625,101 @@ function buildCovidChart(data, yAxisLabel) {
         for (var semester of xValues) {
             yValues.push(data[semester]);
         }
+        
+        var data = [{
+            x: xValues,
+            y: yValues,
+            type: 'bar'
+        }];
+
+        Plotly.newPlot(chartOrGraphDiv, data, layout);
+    };
+
+    genBarGraph(data);
+
+    return chartOrGraphDiv;
+}
+
+function barChartGeneration(){
+    /**
+     * Returns the value of the selected option element inside of the specified 
+     * select element.
+     * @param {HTMLElement} selectElement The HTML Select element.
+     * @returns A string containing the value of the selected option element.
+     */
+     function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    /**
+     * Gets the label/text that is inside of the selected option in the given
+     * select element.
+     * 
+     * @param {HTMLSelectElement} selectElement The Select Element to get the 
+     * label of.
+     * 
+     * @returns A string containing the label of the selected option. 
+     */
+    function getSelectedLabel(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].text;
+    }
+
+    // Get the column the user selected.
+    var XValueSelect = document.getElementById('barChartXValues');
+    var YValueSelect = document.getElementById('barChartYValues');
+    
+    const yAxisLabel = getSelectedLabel(XValueSelect);
+    const xAxisLabel = getSelectedLabel(YValueSelect);
+
+    // Make the request to the backend to get the data.
+    fetch('/bar-chart-comparisons', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json'
+        },
+        body: JSON.stringify({columnX: XValueSelect, columnY: YValueSelect})
+    }).then((res) => res.json()).then((json) => {
+        // Build the div containing the appropriate chart/graph, then show it.
+        var div = buildBarChart(json, yAxisLabel, xAxisLabel);
+        showChartOrGraphPopUp(div);
+    });
+
+}
+
+function buildBarChart(data, yAxisLabel, xAxisLabel) {
+    const chartOrGraphDiv = document.createElement('div');
+    const layout = {
+        autosize: false,
+        width: 920,
+        height: 450,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        }
+    }
+
+    /**
+     * Generates a Bar Graph.
+     */
+    const genBarGraph = (data) => {
+        layout.title = {
+            text: `${yAxisLabel} for ${xAxisLabel}`
+        };
+        layout.xaxis = {
+            title: xAxisLabel
+        };
+        layout.yaxis = {
+            title: yAxisLabel
+        };
+
+        var xValues = [];
+        var yValues = [];
+
+       
         
         var data = [{
             x: xValues,

@@ -294,41 +294,38 @@
                                         <tbody> 
                                             <tr>
                                                 <td class="col-3">
-                                                    <select class="form-select" id = "xAxisSelect">
+                                                    <select class="form-select" id = "barChartXValues">
                                                         <option selected disabled>Choose a column...</option>
-                                                        <option value="1">Admit Term</option>
-                                                        <option value="2">Admit Year</option>
-                                                        <option value="3">Admit Type</option>
-                                                        <option value="4">Program Level</option>
-                                                        <option value="5">Sub-Program Code</option>
-                                                        <option value="6">1st Major</option>
-                                                        <option value="7">2nd Major</option>
-                                                        <option value="8">1st Minor</option>
-                                                        <option value="9">Concentration</option>
-                                                        <option value="10">Class</option>
-                                                        <option value="11">City</option>
-                                                        <option value="12">State</option>
-                                                        <option value="13">Race</option>
-                                                        <option value="14">Gender</option>
-                                                        <option value="15">High School Name</option>
-                                                        <option value="16">High School State</option>
-                                                        <option value="17">Course</option>
-                                                        <option value="18">Course Grade</option>
+                                                        <option value="admit_term">Admit Term</option>
+                                                        <option value="admit_year">Admit Year</option>
+                                                        <option value="program_level">Program Level</option>
+                                                        <option value="sub_program_code">Sub-Program Code</option>
+                                                        <option value="major_one">1st Major</option>
+                                                        <option value="major-two">2nd Major</option>
+                                                        <option value="minor_one">1st Minor</option>
+                                                        <option value="concentration">Concentration</option>
+                                                        <option value="student_class">Class</option>
+                                                        <option value="city">City</option>
+                                                        <option value="state">State</option>
+                                                        <option value="race">Race</option>
+                                                        <option value="gender">Gender</option>
+                                                        <option value="hs_name">High School Name</option>
+                                                        <option value="hs_state">High School State</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-3">
-                                                    <select class="form-select" id = "yAxisSelect">
+                                                    <select class="form-select" id = "barChartYValues">
                                                         <option selected disabled>Choose a column...</option>
-                                                        <option value="1">Average Cumulative GPA</option>
-                                                        <option value="2">Average Math SAT</option>
-                                                        <option value="3">Average Total SAT</option>
-                                                        <option value="4">Average Math Placement Score</option>
+                                                        <option value="avg_gpa">Average Cumulative GPA</option>
+                                                        <option value="avg_sat_math">Average Math SAT</option>
+                                                        <option value="avg_sat_total">Average Total SAT</option>
+                                                        <option value="avg_math_placement_score">Average Math Placement Score</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-3">
                     
                                                 </td>
-                                                <td class="col-2"><button id='barChartGenerateButton' onclick='genBarChart()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button><button class="btn btn-primary">Generate Visual</button>
+                                                    <button id='barChartGenerateButton' onclick='barChartGeneration()' class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>
