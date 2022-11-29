@@ -255,9 +255,8 @@ class Utils:
 
     @staticmethod
     def get_bar_chart_data(columnX: str, columnY: str) -> dict:
+        
         data_dict = {}
-
-        X_value_list = []
 
         match columnX:
             case 'admit_term':
@@ -300,8 +299,8 @@ class Utils:
             case 'avg_sat_math':
                 columnY = 'sat_math'
 
-        for i in X_value_list:
-            data_dict[X_value_list] = Utils.get_avg_for_bar_data(i,columnY)
+        for i in groups:
+            data_dict[groups] = Utils.get_avg_for_bar_data(i,columnY)
 
         return data_dict
 
