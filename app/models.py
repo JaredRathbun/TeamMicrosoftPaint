@@ -29,8 +29,8 @@ from app import db, app
 import pyotp
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlalchemy
-from sqlalchemy import (Column, Integer, Text, Float, Boolean, CheckConstraint,
-    Enum, ForeignKey)
+from sqlalchemy import (Column, Integer, Text, Float, CheckConstraint, Enum, 
+    ForeignKey)
 from itertools import groupby
 from operator import attrgetter
 from functools import cmp_to_key
@@ -174,6 +174,67 @@ class Utils:
             return_data[course_num] = function_to_call(column, course_num, semester, year)
         return return_data             
 
+
+    @staticmethod
+    def get_all_data() -> list[dict]:
+        '''
+        Returns a list of dictionaries, where each dictionary is each entry in 
+        the database.
+
+        return:
+            A `list` of `dict` objects containing information about each database
+            entry.
+        '''
+        return_list = []
+        for cd in ClassData.query.all():
+            cd_dict = {}
+
+            # Pull the info from the ClassData object.
+            cd_dict['Unique_ID'] = cd.student_id
+            cd_dict['Program_Level'] = cd.program_level
+            cd_dict['Subprogram_Code'] = cd.subprogram_code
+            cd_dict['Course_Grade'] = cd.grade
+
+            # Pull the info from the Student object related to the ClassData.
+            student_obj = cd.student_obj
+            cd_dict['Admit_Year'] = student_obj.admit_year
+            cd_dict['Admit_Term'] = student_obj.admit_term
+            cd_dict['Admit_Type'] = student_obj.admit_type
+            cd_dict['Major1_Code'] = student_obj.major_1
+            cd_dict['Major1_Desc'] = student_obj.major_1_desc
+            cd_dict['Major2_Code'] = student_obj.major_2
+            cd_dict['Major2_Desc'] = student_obj.major_2_desc
+            cd_dict['Minor1_Code'] = student_obj.minor_1
+            cd_dict['Minor1_Desc'] = student_obj.minor_1_desc
+            cd_dict['Concentration_Code'] = student_obj.concentration_code
+            cd_dict['Concentration_Desc'] = student_obj.concentration_desc
+            cd_dict['Class'] = student_obj.class_year
+            cd_dict['City'] = student_obj.city
+            cd_dict['State'] = student_obj.state
+            cd_dict['Country'] = student_obj.country
+            cd_dict['Postal_Code'] = student_obj.postal_code
+            cd_dict['Sex'] = student_obj.gender
+            cd_dict['Race-Ethnicity'] = student_obj.race_ethnicity
+            cd_dict['Math_Placement_Score'] = student_obj.math_placement_score
+            cd_dict['GPA_Cum'] = student_obj.gpa_cumulative
+            cd_dict['SAT_Math'] = student_obj.sat_math
+            cd_dict['SAT_Total'] = student_obj.sat_total
+            cd_dict['ACT_Score'] = student_obj.act_score
+            cd_dict['HS_GPA'] = student_obj.high_school_gpa
+            cd_dict['HS_CEEB'] = student_obj.high_school_ceeb
+            cd_dict['HS_Name'] = student_obj.high_school_name
+            cd_dict['HS_City'] = student_obj.high_school_city
+            cd_dict['HS_State'] = student_obj.high_school_state
+            cd_dict['Cohort'] = student_obj.cohort
+
+            # Pull the Course object that is related to the ClassData entry.
+            course_obj = cd.course_obj
+            cd_dict['Term'] = f'{course_obj.semester} {course_obj.year}'
+            cd_dict['Course_Num'] = course_obj.course_num
+            cd_dict['Numeric_Term_Code'] = course_obj.term_code
+
+            return_list.append(cd_dict)
+        return return_list
 
 class ProviderEnum(enum.Enum):
     '''
