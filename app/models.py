@@ -259,39 +259,33 @@ class Utils:
 
         X_value_list = []
 
-        print(columnX)
         match columnX:
             case 'admit_term':
                 columnX = Student.admit_term
             case 'admit_year':
                 columnX = Student.admit_year
-            case 'program_level':
-                columnX = Student.program_level
-            case 'sub_program_code':
-                columnX = Student.sub_program_code
             case 'concentration':
-                columnX = Student.concentration
+                columnX = Student.concentration_desc
             case 'student_class':
-                columnX = Student.student_class
+                columnX = Student.class_year
             case 'city':
                 columnX = Student.city
             case 'state':
                 columnX = Student.state
             case 'race':
-                columnX = Student.race
+                columnX = Student.race_ethnicity
             case 'gender':
                 columnX = Student.gender
             case 'hs_name':
-                columnX = Student.hs_name
+                columnX = Student.high_school_name
             case 'hs_state':
-                columnX = Student.hs_state
+                columnX = Student.high_school_state
 
         groups = Utils.group_table_by_column(Student, columnX)
-        #print(groups)
+        print(groups)
 
         match columnY:
             case 'avg_gpa':
-                # The column needed to get the student's gpa.
                 columnY = 'gpa_cumulative'
 
             case 'avg_high_school_gpa':
