@@ -532,6 +532,8 @@ class User(UserMixin, db.Model):
         Sets the user to a viewer.
         '''
         self.role = RoleEnum.VIEWER
+        self.totp_key = None
+        db.session.commit()
 
 
     def get_otp(self):
