@@ -324,7 +324,7 @@ def avg_gpa_per_cohort_csv_download():
     # Return the CSV Bytes as a download to the user.
     res = make_response(csv_bytes)
     res.headers.set('Content-Type', 'text/csv')
-    res.headers.set( 'Content-Disposition', 'attachment', 
+    res.headers.set('Content-Disposition', 'attachment', 
         filename='avg_gpa_per_cohort.csv')
     return res
 
@@ -355,6 +355,7 @@ def class_by_class_comparisons():
 
 
 @dash_bp.route('/email-suggestion', methods = ['POST'])
+@login_required
 def send_email_suggestion():
     body = request.get_json()
 
@@ -371,3 +372,21 @@ def send_email_suggestion():
         msg.body = f'SENDER NAME: {name}\nSUBJECT: {subject}\MESSAGE:\n{body}'
         mail.send(msg)
         return {'message': 'Success'}, 200
+
+
+@dash_bp.route('/download-all-data', methods = ['GET'])
+@login_required
+def download_all_data():
+    formatted_data = Utils.get_all_data()
+
+    # Create the dataframe, then convert it to CSV.
+    df = pd.DataFrame(formatted_data)
+    csv_bytes = bytes(df.to_csv(lineterminator='\r\n', index=False),
+             encoding='utf-8')
+
+    # Return the CSV Bytes as a download to the user.
+    res = make_response(csv_bytes)
+    res.headers.set('Content-Type', 'text/csv')
+    res.headers.set('Content-Disposition', 'attachment', 
+        filename='stem_data.csv')
+    return res
