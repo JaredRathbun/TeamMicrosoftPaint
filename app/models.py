@@ -208,7 +208,7 @@ class Utils:
             cd_dict['Minor1_Desc'] = student_obj.minor_1_desc
             cd_dict['Concentration_Code'] = student_obj.concentration_code
             cd_dict['Concentration_Desc'] = student_obj.concentration_desc
-            cd_dict['Class'] = student_obj.class_year
+            cd_dict['Class'] = student_obj.class_year.value
             cd_dict['City'] = student_obj.city
             cd_dict['State'] = student_obj.state
             cd_dict['Country'] = student_obj.country
