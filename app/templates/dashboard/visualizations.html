@@ -233,26 +233,60 @@
                                             <select class="form-select my-2 mb-3" id="chartOrGraphTypeSelect" onchange="checkDropdowns();">
                                                 <option selected disabled value="Select a Chart/Graph Type">Select a Chart/Graph Type</option>
                                             </select>
-                                            <!-- <div class="d-inline-flex">
-                                                <input checked type="checkbox" id='includeSemesterInRange'>
-                                                <h7 style="margin-left: 10px">Include Data In Selected Range</h7>
-                                            </div>
-                                            <div class="d-inline-flex">
-                                                <input checked type="checkbox" id='includeWinterAndSummerSemesters'>
-                                                <h7 style="margin-left: 10px">Include Winter/Summer Data</h7>
-                                            </div> -->
-                                            <button id='showChartGraphButton' onclick='genChartOrGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                            <button id='classByClassGenerateButton' onclick='genClassByClassChartOrGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-6 col-md-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center align-middle">
+                                        <h6 class="text-primary fw-bold m-0">COVID Data Comparisons </h6>
+                                        <p class="text-primary m-0">Analyze COVID data by selecting columns and 
+                                            generating a visual that ranges from FA 2019 - FA 2021.</p>
+                                    </div>
+                                    <div class="card-body align-items-center align-middle">
+                                        <table class="table table-responsive my-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-3">Select Y-Axis Data</th>
+                                                    <th class="col-3"></th>
+                                                    <th class="col-3"></th>
+                                                    <th class="col-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody> 
+                                                <tr>
+                                                    <td class="col-5">
+                                                        <select class="form-select" id = "covidData"onchange ="checkCovidDropdowns()">
+                                                            <option selected disabled>Choose a column...</option>
+                                                            <option value="avg_gpa">Average College GPA</option>
+                                                            <option value="avg_high_school_gpa">Average High School GPA</option>
+                                                            <option value="avg_dwf_rate">Average DWF Rate</option>
+                                                            <option value="avg_math_placement_score">Math Placement Score</option>
+                                                            <option value="avg_sat_total">Total SAT Score</option>
+                                                            <option value="avg_sat_math">SAT Math Score</option>
+                                                            <option value="avg_act_score">ACT Score</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-3">         
+                                                    </td>
+                                                    <td class="col-2">
+                                                        <button id='covidGenerateButton' onclick='genCovidGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+    
+                                    </div>
+                                </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center align-middle">
-                                    <h6 class="text-primary fw-bold m-0">Chart/Graph Generation</h6>
+                                    <h6 class="text-primary fw-bold m-0">Bar Chart Generation</h6>
                                     <p class="text-primary m-0">To generate a graph/chart, select the columns and type
                                         of the graph from the dropdowns below.</p>
                                 </div>
@@ -262,44 +296,43 @@
                                             <tr>
                                                 <th class="col-3">X-Axis</th>
                                                 <th class="col-3">Y-Axis</th>
-                                                <th class="col-3">Graph/Chart Type</th>
+                                                <th class="col-3"></th>
                                                 <th class="col-2"></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody> 
                                             <tr>
                                                 <td class="col-3">
-                                                    <select class="form-select">
+                                                    <select class="form-select" id = "barChartXValues">
                                                         <option selected disabled>Choose a column...</option>
-                                                        <option value="1">Student ID #</option>
-                                                        <option value="2">Student First Name</option>
-                                                        <option value="3">Student Last Name</option>
-                                                        <option value="4">Program Code</option>
-                                                        <option value="5">Major</option>
+                                                        <option value="admit_term">Admit Term</option>
+                                                        <option value="admit_year">Admit Year</option>
+                                                        <option value="major_one">1st Major</option>
+                                                        <option value="major-two">2nd Major</option>
+                                                        <option value="minor_one">1st Minor</option>
+                                                        <option value="concentration">Concentration</option>
+                                                        <option value="student_class">Class</option>
+                                                        <option value="city">City</option>
+                                                        <option value="state">State</option>
+                                                        <option value="race">Race/Ethnicity</option>
+                                                        <option value="gender">Gender</option>
+                                                        <option value="hs_name">High School</option>
+                                                        <option value="hs_state">High School State</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-3">
-                                                    <select class="form-select">
+                                                    <select class="form-select" id = "barChartYValues">
                                                         <option selected disabled>Choose a column...</option>
-                                                        <option value="1">Student ID #</option>
-                                                        <option value="2">Student First Name</option>
-                                                        <option value="3">Student Last Name</option>
-                                                        <option value="4">Program Code</option>
-                                                        <option value="5">Major</option>
+                                                        <option value="avg_gpa">Average Cumulative GPA</option>
+                                                        <option value="avg_sat_math">Average Math SAT</option>
+                                                        <option value="avg_sat_total">Average Total SAT</option>
+                                                        <option value="avg_math_placement_score">Average Math Placement Score</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-3">
-                                                    <select class="form-select">
-                                                        <option selected disabled>Choose a chart/graph type...</option>
-                                                        <option value="1">Bar Chart</option>
-                                                        <option value="2">Scatterplot</option>
-                                                        <option value="3">Standard Deviation</option>
-                                                        <option value="4">Pie Chart</option>
-                                                        <option value="5">Line Graph</option>
-                                                    </select>
+                    
                                                 </td>
-                                                <td class="col-2">
-                                                    <button class="btn btn-primary">Generate Visual</button>
+                                                    <button id='barChartGenerateButton' onclick='barChartGeneration()' class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -309,189 +342,60 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
+                        <div class="col-12">
+                            <div class="card shadow mb-<div class="row">
                         <div class="col-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center align-middle">
-                                    <div class="d-block my-auto">
-                                        <h6 class="text-primary fw-bold m-0">Data Correlations</h6>
-                                        <!-- <p>Correlate a given time period, class, and type of data.</p> -->
-                                    </div>
-
-                                    <p class="text-primary m-0">Please select a start and end date, the class you are
-                                        searching for, and the data you would like.</p>
+                                    <h6 class="text-primary fw-bold m-0">Scatter Plot Generation</h6>
+                                    <p class="text-primary m-0">To generate a scatter plot, select the Year Range and the Y-Values.</p>
                                 </div>
-                                <div class="card-body d-flex flex-wrap">
-                                    <div class="col-10 align-items-center text-center">
-                                        <table class="table table-responsive">
-                                            <thead>
-                                                <tr class="d-flex">
-                                                    <th class="col-2">Start Date</th>
-                                                    <th class="col-2">End Date</th>
-                                                    <th class="col-2">Class</th>
-                                                    <th class="col-2">Data Selection</th>
-                                                    <th class="col-2" />
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr class="d-flex">
-                                                    <td class="col-2">
-                                                        <select class="form-select">
-                                                            <option selected disabled>Choose semester...</option>
-                                                            <option value="1">SP 16</option>
-                                                            <option value="2">FA 16</option>
-                                                            <option value="3">SP 17</option>
-                                                            <option value="4">FA 17</option>
-                                                            <option value="5">SP 18</option>
-                                                            <option value="6">FA 18</option>
-                                                            <option value="7">SP 19</option>
-                                                            <option value="8">FA 19</option>
-                                                            <option value="9">SP 20</option>
-                                                            <option value="10">FA 20</option>
-                                                            <option value="11">SP 21</option>
-                                                            <option value="12">FA 21</option>
-                                                            <option value="13">SP 22</option>
-                                                            <option value="14">FA 22</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="col-2">
-                                                        <select class="form-select">
-                                                            <option selected disabled>Choose semester...</option>
-                                                            <option value="1">SP 16</option>
-                                                            <option value="2">FA 16</option>
-                                                            <option value="3">SP 17</option>
-                                                            <option value="4">FA 17</option>
-                                                            <option value="5">SP 18</option>
-                                                            <option value="6">FA 18</option>
-                                                            <option value="7">SP 19</option>
-                                                            <option value="8">FA 19</option>
-                                                            <option value="9">SP 20</option>
-                                                            <option value="10">FA 20</option>
-                                                            <option value="11">SP 21</option>
-                                                            <option value="12">FA 21</option>
-                                                            <option value="13">SP 22</option>
-                                                            <option value="14">FA 22</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="col-2">
-                                                        <select class="form-select">
-                                                            <option selected disabled>Choose a class...</option>
-                                                            <option value="1">CSC1610 - Problem Solving w/ Java</option>
-                                                            <option value="2">CSC2820 - Data Structures</option>
-                                                            <option value="3">CSC2620 - Object Oriented Design</option>
-                                                            <option value="4">CSC2710 - Analysis of Algorithms</option>
-                                                            <option value="5">CSC3810 - Database Principles</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="col-2">
-                                                        <select class="form-select">
-                                                            <option selected disabled>Choose an option...</option>
-                                                            <option value="1">Average DWF Rate</option>
-                                                            <option value="2">Average GPA</option>
-                                                            <option value="3"># of Students w/ A</option>
-                                                            <option value="4"># of Students w/ B</option>
-                                                            <option value="5"># of Students w/ C</option>
-                                                            <option value="6"># of Students w/ D</option>
-                                                            <option value="7"># of Students w/ W</option>
-                                                            <option value="8"># of Students w/ F</option>
-                                                            <option value="9">All Students</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="col-2">
-                                                        <button class="btn btn-primary">Calculate Value</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="d-block align-items-center text-center">
-                                        <h7 class="text-primary"><u>Calculated Value</u></h7>
-                                        <p class="text-danger mt-1" id="calculation-result">234</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center align-middle">
-                                    <div class="d-block my-auto">
-                                        <h6 class="text-primary fw-bold m-0">Class Grades</h6>
-                                    </div>
-
-                                    <p class="text-primary m-0">Please select a class, the appropriate semester, and
-                                        click download.</p>
-                                </div>
-                                <div class="card-body d-flex flex-wrap">
-                                    <table class="table table-responsive">
+                                <div class="card-body align-items-center align-middle">
+                                    <table class="table table-responsive my-0">
                                         <thead>
-                                            <tr class="d-flex">
-                                                <th class="col-2">Class</th>
-                                                <th class="col-2">Semester</th>
+                                            <tr>
+                                                <th class="col-3">Start Year</th>
+                                                <th class="col-3">End Year</th>
+                                                <th class="col-3">Y-Values</th>
                                                 <th class="col-2"></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr class="d-flex">
-                                                <td class="col-2">
-                                                    <select class="form-select">
-                                                        <option selected disabled>Choose a class...</option>
-                                                        <option value="1">CSC1610 - Problem Solving w/ Java</option>
-                                                        <option value="2">CSC2820 - Data Structures</option>
-                                                        <option value="3">CSC2620 - Object Oriented Design</option>
-                                                        <option value="4">CSC2710 - Analysis of Algorithms</option>
-                                                        <option value="5">CSC3810 - Database Principles</option>
+                                        <tbody> 
+                                            <tr>
+                                                <td class="row-3">
+                                                    <select class="form-select" id="lowestYearSelect" onchange ="fillValidHighestYears(this, {{ lowest_highest_years.highest }})">
+                                                        <option selected disabled>Choose a Start Year...</option>
+                                                        {% for i in range( lowest_highest_years.lowest, lowest_highest_years.highest +1 )%}
+                                                            <option value= {{ i }}>{{ i }}</option>
+                                                         {% endfor %}
+                        
+                                                    </select>
+                                                    </td>
+                                                    <td class="row-3">
+                                                    <select class="form-select" id = "highestYearSelect">
+                                                        <option selected disabled>Choose an End Year...</option>
+                                                    </select>
+                                                    </td>
+                                                    <td class="row-3">                                                  
+                                                        <select class="form-select" id = "xAxisData">
+                                                        <option selected disabled>Choose a Value...</option>
+                                                        <option value="1">Types</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-2">
-                                                    <select class="form-select">
-                                                        <option selected disabled>Choose semester...</option>
-                                                        <option value="1">SP 16</option>
-                                                        <option value="2">FA 16</option>
-                                                        <option value="3">SP 17</option>
-                                                        <option value="4">FA 17</option>
-                                                        <option value="5">SP 18</option>
-                                                        <option value="6">FA 18</option>
-                                                        <option value="7">SP 19</option>
-                                                        <option value="8">FA 19</option>
-                                                        <option value="9">SP 20</option>
-                                                        <option value="10">FA 20</option>
-                                                        <option value="11">SP 21</option>
-                                                        <option value="12">FA 21</option>
-                                                        <option value="13">SP 22</option>
-                                                        <option value="14">FA 22</option>
-                                                    </select>
-                                                </td>
-                                                <td class="col-2">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value=""
-                                                            id="includeStudentInfoCheck" checked>
-                                                        <label class="form-check-label"
-                                                            for="includeStudentInfoCheck">Include student
-                                                            information</label>
-                                                    </div>
-                                                </td>
-                                                <td class="col-2">
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle"
-                                                            data-bs-toggle="dropdown">Download</button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item">As Excel Sheet</a>
-                                                            <a class="dropdown-item">As CSV File</a>
-                                                        </div>
-                                                    </div>
+                                                    <button id='showChartGraphButtonScatterplot' onclick='genScatterPlot()' 
+                                                    disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
                     <div class="text-center my-auto copyright"><span>Copyright © Jared Rathbun and Katie O'Neil

@@ -63,10 +63,11 @@ def get_visualizations():
     avg_gpa = Student.get_avg_gpa()
     avg_course_grade = ClassData.get_avg_grade()
     total_students = len(Student.query.all())
+    lowest_highest_years = Course.get_highest_lowest_years()
     return render_template('dashboard/visualizations.html', 
         current_user=current_user, user_name=name, dwf_avg=dwf_avg, 
         avg_gpa=avg_gpa, avg_course_grade=avg_course_grade, 
-        total_students=total_students)
+        total_students=total_students, lowest_highest_years = lowest_highest_years)
 
 
 @dash_bp.route('/dataadmin', methods = ['GET'])
@@ -74,9 +75,16 @@ def get_visualizations():
 @data_admin_or_higher_required
 def get_data_admin():
     name = current_user.first_name + ' ' + current_user.last_name
+    
+    user_query = User.query
+    total_admins = len(user_query.filter_by(role=RoleEnum.ADMIN).all())
+    total_users = len(user_query.all())
+    total_students = len(Student.query.all())
+    total_data_admins = len(User.query.filter(User.role==RoleEnum.DATA_ADMIN).all())
+    
     return render_template('dashboard/dataadmin.html', current_user=current_user, 
-            user_name=name)
-
+            user_name=name, total_admins=total_admins, total_users=total_users,
+            total_students=total_students, total_data_admins=total_data_admins)
 
 @dash_bp.route('/admin', methods = ['GET'])
 @login_required
@@ -355,6 +363,33 @@ def class_by_class_comparisons():
         return Utils.get_class_by_class_data(column, selected_courses), 200
 
 
+@dash_bp.route('/covid-data-comparison', methods = ['POST'])
+def covid_data_comparison():
+    body = request.get_json()
+
+    if ('column' not in body):
+        return {'message': 'Body missing information.'}, 400
+        
+    # Check for valid keys in body.
+    column = body['column']
+    data = Utils.get_covid_data(column)
+    return data, 200
+
+
+@dash_bp.route('/bar-chart-comparisons', methods = ['POST'])
+def bar_chart_comparison():
+    body = request.get_json()
+
+    if ('columnX' not in body or 'columnY' not in body):
+        return {'message': 'Body missing information.'}, 400
+        
+    # Check for valid keys in body.
+    columnX = body['columnX']
+    columnY = body['columnY']
+    data = Utils.get_bar_chart_data(columnX, columnY)
+    return data, 200
+
+
 @dash_bp.route('/email-suggestion', methods = ['POST'])
 @login_required
 def send_email_suggestion():
@@ -404,3 +439,4 @@ def download_sample_data():
     # res.headers.set('Content-Disposition', 'attachment', 
     #     filename='stem_data.csv')
     # return res
+

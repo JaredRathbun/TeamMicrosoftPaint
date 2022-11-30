@@ -29,7 +29,7 @@ alertify.defaults.theme.input = "form-control";
 
 function logout(evt) {
     evt.preventDefault();
-    fetch('/logout', {method: 'POST'}).then((res) => {
+    fetch('/logout', { method: 'POST' }).then((res) => {
         if (res.redirected) {
             window.location.href = res.url;
         }
@@ -64,7 +64,7 @@ window.onload = () => {
             // Add 2 dropdowns for courses.
             addNewCourseDropdowns(false);
             addNewCourseDropdowns(false);
-    });
+        });
 }
 
 /**
@@ -136,7 +136,7 @@ function addNewCourseDropdowns(addDeleteButton) {
     `;
     dropdownsDiv.innerHTML += row;
     dropdownsDiv.scrollTop = dropdownsDiv.scrollHeight;
-    document.getElementById('showChartGraphButton').disabled = true;
+    document.getElementById('classByClassGenerateButton').disabled = true;
 }
 
 /**
@@ -153,7 +153,7 @@ function fillValidGraphTypes() {
     for (var chartGraphType of validChartGraphTypes) {
         optionsString += `<option value="${chartGraphType}">${chartGraphType}</option>\n`;
     }
-    
+
     document.getElementById('chartOrGraphTypeSelect').innerHTML = optionsString;
 }
 
@@ -181,15 +181,15 @@ function checkDropdowns() {
         var semesterSelect = document.getElementById(`semester-${i}`);
 
         if (courseSelect != null && semesterSelect != null) {
-            validDropdowns = validDropdowns && (hasValidSelection(courseSelect) 
+            validDropdowns = validDropdowns && (hasValidSelection(courseSelect)
                 && hasValidSelection(semesterSelect));
         }
     }
 
     if (validDropdowns) {
-        document.getElementById('showChartGraphButton').disabled = false;
+        document.getElementById('classByClassGenerateButton').disabled = false;
     } else {
-        document.getElementById('showChartGraphButton').disabled = true;
+        document.getElementById('classByClassGenerateButton').disabled = true;
     }
 }
 
@@ -253,10 +253,10 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
         };
 
         var barList = [];
-        
+
         for (var course in data) {
             // Check to see if the data is a single value or list.
-            var yData = (typeof data[course] === Array ) ? data[course] : 
+            var yData = (typeof data[course] === Array) ? data[course] :
                 [data[course]];
             barList.push({
                 x: course,
@@ -297,7 +297,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
             });
             xAxisCount++;
         }
-        
+
         Plotly.newPlot(chartOrGraphDiv, courseTraceList, layout);
     };
 
@@ -323,7 +323,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
             for (var course in data) {
                 gradeObj = {
                     'A': 0, 'A-': 0, 'B+': 0, 'B': 0, 'B-': 0, 'C+': 0, 'C': 0,
-                    'C-': 0, 'D+': 0, 'D': 0, 'D-': 0, 'W': 0, 'F': 0, 'P': 0, 
+                    'C-': 0, 'D+': 0, 'D': 0, 'D-': 0, 'W': 0, 'F': 0, 'P': 0,
                     'W': 0
                 };
 
@@ -336,7 +336,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
                     gradeList.push(key);
                     gradeCountList.push(gradeObj[key]);
                 });
-                
+
                 barList.push({
                     x: gradeList,
                     y: gradeCountList,
@@ -346,8 +346,8 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
             }
         } else if (yAxisLabel == 'Race/Ethnicity') {
             for (var course in data) {
-                var whiteCount = 0, hispCount = 0, blackCount = 0, 
-                    asianCount = 0, americanIndianOrAlaskaNativeCount = 0, 
+                var whiteCount = 0, hispCount = 0, blackCount = 0,
+                    asianCount = 0, americanIndianOrAlaskaNativeCount = 0,
                     nativeHawaiianOrOtherCount = 0;
 
                 for (var raceEthnicity of data[course]) {
@@ -375,10 +375,10 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
 
                 barList.push({
                     x: ['White', 'Black/African American', 'Hispanic/Latino',
-                         'Asian', 'American Indian/Alaska Native', 
-                         'Native Hawaiian/Other'],
-                    y: [whiteCount, blackCount, hispCount, asianCount, 
-                        americanIndianOrAlaskaNativeCount, 
+                        'Asian', 'American Indian/Alaska Native',
+                        'Native Hawaiian/Other'],
+                    y: [whiteCount, blackCount, hispCount, asianCount,
+                        americanIndianOrAlaskaNativeCount,
                         nativeHawaiianOrOtherCount],
                     name: course,
                     type: 'bar'
@@ -438,7 +438,7 @@ function showChartOrGraphPopUp(div) {
  * Gets the selected options from the user, then calls the appropriate function
  * to generate a chart/graph.
  */
-function genChartOrGraph() {
+function genClassByClassChartOrGraph() {
     /**
      * Returns the value of the selected option element inside of the specified 
      * select element.
@@ -472,21 +472,20 @@ function genChartOrGraph() {
     // Get the graph/chart type the user selected.
     const chartGraphType = getSelectedValue(document
         .getElementById('chartOrGraphTypeSelect'));
-    
+
     // Walk over every course dropdown, and get the course and semester.
     selectedCourses = {};
     for (var i = 1; i <= currentDropdownID; i++) {
         var selectedCourse = getSelectedValue(document
-                .getElementById(`course-${i}`));
+            .getElementById(`course-${i}`));
         var selectedSemester = getSelectedValue(document
-                .getElementById(`semester-${i}`));
-        
-        if (selectedCourse != null && selectedSemester != null){
+            .getElementById(`semester-${i}`));
+
+        if (selectedCourse != null && selectedSemester != null) {
             selectedCourses[selectedCourse] = selectedSemester;
         }
     }
     selectedData.selectedCourses = selectedCourses;
-
     // Make the request to the backend to get the data.
     fetch('/class-by-class-comparisons', {
         method: 'POST',
@@ -500,4 +499,239 @@ function genChartOrGraph() {
         var div = buildChartOrGraph(chartGraphType, json, yAxisLabel);
         showChartOrGraphPopUp(div);
     });
+}
+
+function fillValidHighestYears(lowestSelectElement, highestYear) {
+
+    /**
+    * Returns the value of the selected option element inside of the specified 
+    * select element.
+    * @param {HTMLElement} selectElement The HTML Select element.
+    * @returns A string containing the value of the selected option element.
+    */
+    function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    var lowestSelectedValue = getSelectedValue(lowestSelectElement);
+    var highestSelect = document.getElementById('highestYearSelect');
+
+    var optionsString = '<option selected disabled value="Choose an End Year: ">Select an End Year </option>\n';
+
+    for (var i = lowestSelectedValue; i <= highestYear; i++) {
+        optionsString += `<option value="${i}"> ${i}</option>\n`;
+    }
+    highestSelect.innerHTML = optionsString;
+}
+
+/**
+ * Checks to make sure all dropdowns have a valid selection and enables the 
+ * "Generate Graph/Chart" button if they are.
+ */
+ function checkCovidDropdowns() {
+    function hasValidSelection(selectElement) {
+        return selectElement.selectedIndex != 0;
+    }
+
+    var validDropdowns = true;
+
+    // Check to make sure a column in the dataset was selected.
+    validDropdowns = validDropdowns && hasValidSelection(document
+        .getElementById('covidData'));
+
+    if (validDropdowns) {
+        document.getElementById('covidGenerateButton').disabled = false;
+    } else {
+        document.getElementById('covidGenerateButton').disabled = true;
+    }
+}
+
+function genCovidGraph() {
+    /**
+    * Returns the value of the selected option element inside of the specified 
+    * select element.
+    * @param {HTMLElement} selectElement The HTML Select element.
+    * @returns A string containing the value of the selected option element.
+    */
+    function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    /**
+     * Gets the label/text that is inside of the selected option in the given
+     * select element.
+     * 
+     * @param {HTMLSelectElement} selectElement The Select Element to get the 
+     * label of.
+     * 
+     * @returns A string containing the label of the selected option. 
+     */
+    function getSelectedLabel(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].text;
+    }
+
+    // Get the column the user selected.
+    var columnSelect = document.getElementById('covidData');
+    var selectedColumn = getSelectedValue(columnSelect);
+    const yAxisLabel = getSelectedLabel(columnSelect);
+
+    // Make the request to the backend to get the data.
+    fetch('/covid-data-comparison', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json'
+        },
+        body: JSON.stringify({column: selectedColumn})
+    }).then((res) => res.json()).then((json) => {
+        console.log(json);
+        // Build the div containing the appropriate chart/graph, then show it.
+        var div = buildCovidChart(json, yAxisLabel);
+        showChartOrGraphPopUp(div);
+    });
+}
+
+function buildCovidChart(data, yAxisLabel) {
+    const chartOrGraphDiv = document.createElement('div');
+    const layout = {
+        autosize: false,
+        width: 920,
+        height: 450,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        }
+    }
+
+    /**
+     * Generates a Bar Graph.
+     */
+    const genBarGraph = (data) => {
+        layout.title = {
+            text: `${yAxisLabel} during COVID`
+        };
+        layout.xaxis = {
+            title: 'Covid Years'
+        };
+        layout.yaxis = {
+            title: yAxisLabel
+        };
+
+        var xValues = ['FA 2019', 'SP 2020', 'FA 2020', 'SP 2021', 'FA 2021'];
+        var yValues = [];
+        for (var semester of xValues) {
+            yValues.push(data[semester]);
+        }
+        
+        var data = [{
+            x: xValues,
+            y: yValues,
+            type: 'bar'
+        }];
+
+        Plotly.newPlot(chartOrGraphDiv, data, layout);
+    };
+
+    genBarGraph(data);
+
+    return chartOrGraphDiv;
+}
+
+function barChartGeneration(){
+    /**
+     * Returns the value of the selected option element inside of the specified 
+     * select element.
+     * @param {HTMLElement} selectElement The HTML Select element.
+     * @returns A string containing the value of the selected option element.
+     */
+     function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    /**
+     * Gets the label/text that is inside of the selected option in the given
+     * select element.
+     * 
+     * @param {HTMLSelectElement} selectElement The Select Element to get the 
+     * label of.
+     * 
+     * @returns A string containing the label of the selected option. 
+     */
+    function getSelectedLabel(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].text;
+    }
+
+    // Get the column the user selected.
+    var XValueSelect = document.getElementById('barChartXValues');
+    var YValueSelect = document.getElementById('barChartYValues');
+    const yAxisLabel = getSelectedLabel(YValueSelect);
+    const xAxisLabel = getSelectedLabel(XValueSelect);
+    var XValue = getSelectedValue(XValueSelect);
+    var YValue = getSelectedValue(YValueSelect);
+
+    // Make the request to the backend to get the data.
+    fetch('/bar-chart-comparisons', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json'
+        },
+        body: JSON.stringify({columnX: XValue, columnY: YValue})
+    }).then((res) => res.json()).then((json) => {
+        // Build the div containing the appropriate chart/graph, then show it.
+        var div = buildBarChart(json, yAxisLabel, xAxisLabel);
+        showChartOrGraphPopUp(div);
+    });
+
+}
+
+function buildBarChart(data, yAxisLabel, xAxisLabel) {
+    const chartOrGraphDiv = document.createElement('div');
+    const layout = {
+        autosize: false,
+        width: 920,
+        height: 450,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        }
+    }
+
+    /**
+     * Generates a Bar Graph.
+     */
+    const genBarGraph = (data) => {
+        layout.title = {
+            text: `${yAxisLabel} for ${xAxisLabel}`
+        };
+        layout.xaxis = {
+            title: xAxisLabel
+        };
+        layout.yaxis = {
+            title: yAxisLabel
+        };
+
+        var xValues = [];
+        var yValues = [];
+
+       
+        
+        var data = [{
+            x: xValues,
+            y: yValues,
+            type: 'bar'
+        }];
+
+        Plotly.newPlot(chartOrGraphDiv, data, layout);
+    };
+
+    genBarGraph(data);
+
+    return chartOrGraphDiv;
 }
