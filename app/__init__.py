@@ -103,7 +103,6 @@ def data_admin_or_higher_required(f):
 
 
 def is_data_admin_or_higher(current_u):
-    from app.models import RoleEnum
     '''
     Returns whether or not the user is a data admin or higher role.
 
@@ -112,11 +111,11 @@ def is_data_admin_or_higher(current_u):
     return: 
         A `bool` representing if the user is a data_admin or a higher role.
     '''
+    from app.models import RoleEnum
     return (current_u.role == RoleEnum.DATA_ADMIN or current_u.role == RoleEnum.ADMIN)
 
 
 def is_admin(current_u):
-    from app.models import RoleEnum
     '''
     Returns whether or not the user is an admin role.
 
@@ -125,11 +124,22 @@ def is_admin(current_u):
     return: 
         A `bool` representing if the user is an admin or not.
     '''
+    from app.models import RoleEnum
     return (current_u.role == RoleEnum.ADMIN)
+
 
 @app.context_processor
 def utility_functions():
+    '''
+    Utility functions used with the Jinja templating engine.
+    '''
     def print_in_console(message):
+        '''
+        Prints the given message to the console.
+
+        param:
+            `message`: The message to print.
+        '''
         print(str(message))
 
     return dict(print_debug=print_in_console)

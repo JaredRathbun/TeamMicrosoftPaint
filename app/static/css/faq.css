@@ -1,0 +1,24 @@
+/* Found at: http://jsfiddle.net/dcodesmith/DruxN/ */
+
+ol {
+    margin: 0 0 1.5em;
+    padding: 0;
+    counter-reset: item;
+}
+
+ol>li {
+    margin: 0;
+    padding: 0 0 0 2em;
+    text-indent: -2em;
+    list-style-type: none;
+    counter-increment: item;
+}
+
+ol>li:before {
+    display: inline-block;
+    width: 1.5em;
+    padding-right: 0.5em;
+    font-weight: bold;
+    text-align: right;
+    content: counter(item) ".";
+}

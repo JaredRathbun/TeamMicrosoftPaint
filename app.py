@@ -38,11 +38,11 @@ if __name__ == '__main__':
 
     # Run the app based on the environment. 
     if (env == 'dev'):
+        # Run on all addresses.
         app.run('0.0.0.0', port=app.config['PORT'], debug=app.config['DEBUG'], ssl_context=('instance/cert.pem', 'instance/key.pem'))
-    elif (env == 'prod'): 
-        from waitress import serve
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
-        serve(app, listen=f'127.0.0.1:{app.config["PORT"]}')
+    elif (env == 'prod'):
+        # Run on just localhost.
+        app.run('127.0.0.1', port=app.config['PORT'], debug=app.config['DEBUG'], ssl_context=('instance/cert.pem', 'instance/key.pem'))
     else:
         print('Incorrect environment, please use either "dev" or "prod."')
         exit(1)

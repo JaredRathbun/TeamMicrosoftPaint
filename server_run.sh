@@ -22,4 +22,5 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 export env='prod'
-python3.11 app.py
+pip3 install gunicorn
+gunicorn --bind 127.0.0.1:5006 --certfile=instance/cert.pem --keyfile=instance/key.pem 'app:init_app()'

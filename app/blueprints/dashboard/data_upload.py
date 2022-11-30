@@ -203,7 +203,7 @@ def __insert_class_data(csv_file: DataFrame):
                 current_row, 34))
             found_error = True 
             valid_course_data = False
-        elif (len(course_id) < 6 or len(course_id) > 9):
+        elif (len(course_id) < 7 or len(course_id) > 9):
             error_list.append(InvalidDataException('Invalid Course number.', 
                 current_row, 34))
             found_error = True 
@@ -280,7 +280,6 @@ def __insert_students(csv_file: DataFrame):
             # If the student exists, move to the next row of the data.
             if Student.query.get(unique_id):
                 continue
-        
         admit_year = csv_file['Admit_Year'][idx]
         admit_term = csv_file['Admit_Term'][idx]
         admit_type = csv_file['Admit_Type'][idx]
@@ -427,5 +426,3 @@ def __process_errors(errors: list[InvalidDataException]) -> list[dict]:
         'error_message': error.message, 'line_num': error.line_num, 
         'col_num': error.col_num
     } for error in errors]
-
-

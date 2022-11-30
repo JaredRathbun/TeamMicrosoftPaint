@@ -21,12 +21,15 @@
 
 
 from . import dash_bp
-from flask import render_template, request, make_response
+from app import app, mail
+from flask_mail import Message
+from flask import render_template, request, make_response, send_file
 from flask_login import login_required, current_user
 from app import admin_required, data_admin_or_higher_required
 from app.blueprints.dashboard.data_upload import upload_csv_file
 from app.models import RoleEnum, User, ClassData, Course, Student, Utils
 import pandas as pd
+from os import getcwd, path
 
 @dash_bp.route('/dashboard', methods = ['GET'])
 @login_required
@@ -121,6 +124,14 @@ def get_admin():
             user_list=user_list)
     else:
         return render_template('errors/403.html'), 403
+
+
+@dash_bp.route('/faq', methods = ['GET'])
+@login_required
+def get_faq():
+    name = current_user.first_name + ' ' + current_user.last_name
+    return render_template('dashboard/faq.html', user_name=name, 
+        current_user=current_user)
 
 
 @dash_bp.route('/change-role', methods = ['POST'])
@@ -322,7 +333,7 @@ def avg_gpa_per_cohort_csv_download():
     # Return the CSV Bytes as a download to the user.
     res = make_response(csv_bytes)
     res.headers.set('Content-Type', 'text/csv')
-    res.headers.set( 'Content-Disposition', 'attachment', 
+    res.headers.set('Content-Disposition', 'attachment', 
         filename='avg_gpa_per_cohort.csv')
     return res
 
@@ -335,7 +346,7 @@ def get_course_semester_mapping():
 
 
 @dash_bp.route('/class-by-class-comparisons', methods = ['POST'])
-# @login_required
+@login_required
 def class_by_class_comparisons():
     body = request.get_json()
 
@@ -350,6 +361,7 @@ def class_by_class_comparisons():
         selected_courses = body['selectedCourses']
 
         return Utils.get_class_by_class_data(column, selected_courses), 200
+
 
 @dash_bp.route('/covid-data-comparison', methods = ['POST'])
 def covid_data_comparison():
@@ -376,3 +388,55 @@ def bar_chart_comparison():
     columnY = body['columnY']
     data = Utils.get_bar_chart_data(columnX, columnY)
     return data, 200
+
+
+@dash_bp.route('/email-suggestion', methods = ['POST'])
+@login_required
+def send_email_suggestion():
+    body = request.get_json()
+
+    if ('name' not in body or 'email' not in body or 'subject' not in body or 
+        'message' not in body):
+        return {'message': 'Invalid body.'}, 400
+    else:
+        name = body['name']
+        email = body['email']
+        subject = body['subject']
+        body = body['message']
+
+        msg = Message(subject, sender=email, recipients=[app.config['MAIL_USERNAME']])
+        msg.body = f'SENDER NAME: {name}\nSUBJECT: {subject}\MESSAGE:\n{body}'
+        mail.send(msg)
+        return {'message': 'Success'}, 200
+
+
+@dash_bp.route('/download-all-data', methods = ['GET'])
+@login_required
+def download_all_data():
+    formatted_data = Utils.get_all_data()
+
+    # Create the dataframe, then convert it to CSV.
+    df = pd.DataFrame(formatted_data)
+    csv_bytes = bytes(df.to_csv(lineterminator='\r\n', index=False),
+             encoding='utf-8')
+
+    # Return the CSV Bytes as a download to the user.
+    res = make_response(csv_bytes)
+    res.headers.set('Content-Type', 'text/csv')
+    res.headers.set('Content-Disposition', 'attachment', 
+        filename='stem_data.csv')
+    return res
+
+
+@dash_bp.route('/download-sample-data', methods = ['GET'])
+@login_required
+def download_sample_data():
+    return send_file(path.join(getcwd(), 'data/sample_data.xlsx'), 
+        as_attachment=True, download_name='sample_data.xlsx')
+    # Return the CSV Bytes as a download to the user.
+    # res = make_response(csv_bytes)
+    # res.headers.set('Content-Type', 'text/csv')
+    # res.headers.set('Content-Disposition', 'attachment', 
+    #     filename='stem_data.csv')
+    # return res
+

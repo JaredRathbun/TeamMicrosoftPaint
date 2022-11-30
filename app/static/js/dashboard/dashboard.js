@@ -151,9 +151,10 @@ function buildAvgGpaPerCohortChart(data) {
         },
         xaxis: {
             title: {
-              text: 'Class Cohort'
+                text: 'Class Cohort'
             },
-          },
+            automargin: true
+        },
         yaxis: {
             autorange: false,
             range: [0.0, 4.0],
@@ -163,7 +164,7 @@ function buildAvgGpaPerCohortChart(data) {
         },
     };
 
-    Plotly.newPlot('avg-gpa-per-cohort-div', data, layout, {responsive: true});
+    Plotly.newPlot('avg-gpa-per-cohort-div', data, layout, { responsive: true });
 }
 
 function downloadAvgStudentGPADWFRateAsPDF() {
@@ -227,11 +228,17 @@ function buildAvgGpaAndDwfPerSemesterChart(json) {
             r: 40,
             b: 40,
             t: 40
-        }
+        },
+        xaxis: {
+            title: {
+                text: 'Semester'
+            },
+            automargin: true
+        },
     };
 
-    Plotly.newPlot('avg-gpa-and-course-dwf-per-semester', data, layout, 
-        {responsive: true, scrollZoom: true});
+    Plotly.newPlot('avg-gpa-and-course-dwf-per-semester', data, layout,
+        { responsive: true, scrollZoom: true });
 }
 
 
