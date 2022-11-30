@@ -120,10 +120,10 @@ class Utils:
             if (column == 'avg_high_school_gpa'):
                 gpa_list = []
                 for class_data_obj in class_data_objs:
-                    hs_gpa = class_data_obj.student_obj.high_school_gpa
+                    hs_gpa = class_data_obj.student_obj.hs_gpa
 
                     # Only get grades that are in the database, since 
-                    # high_school_gpa is nullable in the database.
+                    # hs_gpa is nullable in the database.
                     if (hs_gpa is not None):
                         gpa_list.append(hs_gpa)
                 
@@ -132,7 +132,7 @@ class Utils:
             elif (column == 'avg_gpa'):
                 gpa_list = []
                 for class_data_obj in class_data_objs:
-                    gpa = class_data_obj.student_obj.gpa_cumulative
+                    gpa = class_data_obj.student_obj.college_gpa
 
                     # Only get grades that are in the database, since gpa is 
                     # nullable in the database.
@@ -150,7 +150,7 @@ class Utils:
                     column_val = getattr(student, column)
 
                     # If the column is a gpa, round it to 2 decimal places.
-                    if (column == 'gpa_cumulative' or column == 
+                    if (column == 'college_gpa' or column == 
                         'high_school_gpa'):
                         column_val = round(column_val, 2)
 
@@ -197,6 +197,7 @@ class ClassEnum(enum.Enum):
     SOPHOMORE = 'Sophomore'
     JUNIOR = 'Junior' 
     SENIOR = 'Senior'
+    UNKNOWN = 'Unknown'
  
 
     @staticmethod
@@ -220,6 +221,8 @@ class ClassEnum(enum.Enum):
                 return ClassEnum.JUNIOR
             case 'SR':
                 return ClassEnum.SENIOR
+            case 'UN':
+                return ClassEnum.UNKNOWN
             case _:
                 raise InvalidClassException('Class not recognized.')
 
@@ -243,6 +246,8 @@ class ClassEnum(enum.Enum):
                 return 'Junior'
             case ClassEnum.SENIOR:
                 return 'Senior'
+            case ClassEnum.UNKNOWN:
+                return 'Unknown'
             case _:
                 return ''
 
@@ -528,38 +533,36 @@ class Student(db.Model):
     id = Column(Text(), primary_key=True)
     admit_year = Column(Integer(), nullable=False)
     admit_term = Column(Text(), nullable=False)
-    admit_type = Column(Text(), nullable=False)
-    major_1 = Column(Text(), nullable=False)
-    major_1_desc = Column(Text(), nullable=False)
+    major_1 = Column(Text())
+    major_1_desc = Column(Text())
     major_2 = Column(Text())
     major_2_desc = Column(Text())
     minor_1 = Column(Text())
     minor_1_desc = Column(Text())
-    concentration_code = Column(Text())
-    concentration_desc = Column(Text())
+    concentration = Column(Text())
     class_year = Column(Enum(ClassEnum), nullable=False)
-    city = Column(Text(), nullable=False)
-    state = Column(Text())
+    city = Column(Text())
+    state = Column(Text(), nullable=False)
     country = Column(Text(), nullable=False)
-    postal_code = Column(Text(), nullable=False)
     math_placement_score = Column(Integer())
-    race_ethnicity = Column(Text(), nullable=False)
-    gender = Column(Text(), nullable=False)
-    gpa_cumulative = Column(Float(), 
-        CheckConstraint('gpa_cumulative >= 0.0 AND gpa_cumulative <= 4.0'))
-    high_school_gpa = Column(Float(), 
-        CheckConstraint('high_school_gpa >= 0.0 AND high_school_gpa <= 4.0'))
-    sat_math = Column(Integer(), 
-        CheckConstraint(f'sat_math >= {app.config["SAT_SCORE_MIN"]} AND sat_math <= {app.config["SAT_SCORE_MAX"]}'))
-    sat_total = Column(Integer(), 
-        CheckConstraint(f'sat_total >= {app.config["SAT_SCORE_MIN"]} AND sat_total <= {app.config["SAT_SCORE_MAX"]}'))
-    act_score = Column(Integer(), 
-        CheckConstraint(f'act_score >= {app.config["ACT_SCORE_MIN"]} AND act_score <= {app.config["ACT_SCORE_MAX"]}'))
-    high_school_name = Column(Text())
-    high_school_city = Column(Text())
-    high_school_state = Column(Text())
-    high_school_ceeb = Column(Integer())
-    cohort = Column(Text())
+    race = Column(Text(), nullable=False)
+    sex = Column(Text(), nullable=False)
+    first_gen_student = Column(Boolean(), nullable=False)
+    accuplacer_score = Column(Integer())
+    college_gpa = Column(Float(), 
+        CheckConstraint('college_gpa >= 0.0 AND college_gpa <= 4.0'))
+    sat_math = Column(Integer())
+    # sat_math = Column(Integer(), 
+    #     CheckConstraint(f'sat_math >= {app.config["SAT_SCORE_MIN"]} AND sat_math <= {app.config["SAT_SCORE_MAX"]}'))
+    hs_gpa = Column(Float(), 
+        CheckConstraint('hs_gpa >= 0.0 AND hs_gpa <= 4.0'))
+    hs_name = Column(Text(), nullable=False)
+    hs_city = Column(Text(), nullable=False)
+    hs_state = Column(Text(), nullable=False)
+    is_honors = Column(Boolean(), nullable=False)
+    is_compass = Column(Boolean(), nullable=False)
+    is_austin = Column(Boolean(), nullable=False)
+    is_athlete = Column(Boolean(), nullable=False)
     mcas_score_obj = db.relationship('MCASScore', uselist=False)
 
 
@@ -579,7 +582,7 @@ class Student(db.Model):
             semester = group[0].course_obj.semester
             year = group[0].course_obj.year
 
-            avg_gpa = sum([g.student_obj.gpa_cumulative for g in group]) / len(group)
+            avg_gpa = sum([g.student_obj.college_gpa for g in group]) / len(group)
             term = f'{semester} {year}'
             return_dict[term] = round(avg_gpa, 2)
         return return_dict
@@ -602,9 +605,9 @@ class Student(db.Model):
             '''
             sum = 0
             for student in Student.query.all():
-                student_gpa = student.gpa_cumulative
+                student_gpa = student.college_gpa
                 if (student_gpa is not None):
-                    sum += student.gpa_cumulative
+                    sum += student.college_gpa
             return sum
 
         total_students = len(Student.query.all())
@@ -627,9 +630,9 @@ class Student(db.Model):
             '''
             sum = 0
             for student in Student.query.all():
-                student_hs_gpa = student.high_school_gpa
+                student_hs_gpa = student.hs_gpa
                 if (student_hs_gpa is not None):
-                    sum += student.high_school_gpa
+                    sum += student.hs_gpa
             return sum
 
         total_students = len(Student.query.all())
@@ -699,10 +702,9 @@ class ClassData(db.Model):
     __tablename__ = 'class_data'
     dummy_pk = Column(Integer(), primary_key=True)
     student_id = Column(Integer(), ForeignKey('students.id'), nullable=False)
-    program_level = Column(Text(), nullable=False)
-    subprogram_code = Column(Integer(), nullable=False)
-    grade = Column(Text(), CheckConstraint("grade in ('A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'W', 'IP', 'P')"), 
-        nullable=False)
+    # grade = Column(Text(), CheckConstraint("grade in ('A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'W', 'IP', 'P', 'NC', 'Y', 'U', 'H', 'NR', 'N', 'WF')"), 
+    #     nullable=False)
+    grade = Column(Text())
     course = Column(Integer(), ForeignKey('courses.id'), nullable=False)
     course_obj = db.relationship('Course', uselist=False)
     student_obj = db.relationship('Student', uselist=False)
@@ -999,12 +1001,12 @@ class ClassData(db.Model):
                     A `dict` containing the student's academic scores.
                 '''
                 return {
-                    'college_gpa': format_info(current_student.gpa_cumulative),
+                    'college_gpa': format_info(current_student.college_gpa),
                     'math_placement_score': format_info(current_student.math_placement_score),
                     'sat_math': format_info(current_student.sat_math),
                     'sat_total': format_info(current_student.sat_total),
                     'act_score': format_info(current_student.act_score),
-                    'high_school_gpa': format_info(current_student.high_school_gpa)
+                    'high_school_gpa': format_info(current_student.hs_gpa)
                 }
 
             # Create the dict for this ClassData object, and append it to the 
@@ -1067,7 +1069,7 @@ class ClassData(db.Model):
         grouped_cohorts = Utils.group_table_by_column(Student, Student.class_year)
         return_dict = {}
         for group in grouped_cohorts:
-            gpas = [s.gpa_cumulative for s in group]
+            gpas = [s.college_gpa for s in group]
             summed_gpa = sum(gpas)
             return_dict[group[0].class_year.value] = round(summed_gpa / len(gpas), 2) if len(gpas) > 0 else 0
         return return_dict
@@ -1084,7 +1086,9 @@ class Course(db.Model):
         nullable=False)
     semester = Column(Text(), CheckConstraint('semester IN ("FA", "SP", "WI", "SU")'), 
         nullable=False)
+    section = Column(Text(), nullable=False)
     year = Column(Integer(), nullable=False)
+    title = Column(Text(), nullable=False)
 
     @staticmethod
     def get_course_semester_mapping() -> dict[str, list]:

@@ -119,8 +119,8 @@ def __insert_class_data(csv_file: DataFrame):
         '''
         return (int(year) <= datetime.now().year)
 
-    def __insert_course(semester: str, year: str, num_term_code: str, 
-        course_id: str) -> int:
+    def __insert_course(semester: str, year: str, section: str, 
+        num_term_code: str, course_id: str, course_title: str) -> int:
         '''
         Searches for the course matching the given data. If the course is found,
         the ID of it is returned. If it does not exist, it is created and the 
@@ -129,14 +129,17 @@ def __insert_class_data(csv_file: DataFrame):
         param:
             `semester`: A `str` holding the semester.
             `year`: A `str` holding the year.
-            `num_term_code`: A `str` holding the term numeric code.
-            `course_id`: A `str` holding the course ID.
+            `section`: A `str` holding the section.
+            `term_code`: A `str` holding the term numeric code.
+            `course_num`: A `str` holding the course number.
+            `course_title`: A `str` holding the course title.
         return:
             The ID of the `Course` object.
         '''
         course_obj = Course.query.filter(Course.term_code==num_term_code, 
             Course.course_num==course_id, Course.semester==semester, 
-            Course.year==year).first()
+            Course.year==year, Course.section == section, 
+            Course.title == course_title).first()
 
         # If the course already exists, return the ID of it.
         if (course_obj):
@@ -144,7 +147,8 @@ def __insert_class_data(csv_file: DataFrame):
         else:
             # If the course does not exist, create it and add it to the database.
             new_course = Course(term_code=num_term_code, course_num=course_id,
-                semester=semester, year=year)
+                section=section, semester=semester, year=year, 
+                title=course_title)
             db.session.add(new_course)
             db.session.flush()
             return new_course.id
@@ -155,103 +159,77 @@ def __insert_class_data(csv_file: DataFrame):
         valid_course_data = True
 
         student_id = csv_file['Unique_ID'][idx]
-        term = csv_file['Term'][idx]
-        num_term_code = csv_file['Numeric_Term_Code'][idx]
-        program_level = csv_file['Program_Level'][idx]
-        subprogram_code = csv_file['Subprogram_Code'][idx]
-        course_id = csv_file['Course_Number'][idx]
+        semester = csv_file['Course_Term'][idx]
+        term_code = csv_file['Term_Code'][idx]
+        section = csv_file['Course_Section'][idx]
+        year = csv_file['Course_Year'][idx]
+        course_num = csv_file['Course_Number'][idx]
         grade = csv_file['Course_Grade'][idx]
+        course_title = csv_file['Course_Title'][idx]
 
-        if (term is None):
-            error_list.append(InvalidDataException('Missing Term', current_row, 5))
+        if (student_id is None):
+            error_list.append(InvalidDataException('Missing Unique_ID', 
+                current_row, 1))
+            found_error = True
+            valid_course_data = False
+
+        if (semester is None):
+            error_list.append(InvalidDataException('Missing Course_Term', 
+                current_row, 33))
+            found_error = True
+            valid_course_data = False
+
+        if (term_code is None):
+            error_list.append(InvalidDataException('Missing Term_Code', 
+                current_row, 34))
+            found_error = True
+            valid_course_data = False
+
+        if (section is None):
+            error_list.append(InvalidDataException('Missing Course_Section', 
+                current_row, 35))
+            found_error = True
+            valid_course_data = False
+
+        if (year is None):
+            error_list.append(InvalidDataException('Missing Course_Year', 
+                current_row, 32))
+            found_error = True
+            valid_course_data = False
+
+        if (course_num is None):
+            error_list.append(InvalidDataException('Missing Course_Number', 
+                current_row, 30))
             found_error = True
             valid_course_data = False
         else:
-            split_term = term.split(' ')
-            if (len(split_term) != 2):
-                error_list.append(InvalidDataException('Invalid Term', 
-                    current_row, 5))
+            if (len(course_num) < 7 or len(course_num) > 9):
+                error_list.append(InvalidDataException('Invalid Course Number', 
+                    current_row, 30))
                 found_error = True
                 valid_course_data = False
-            else:
-                # Verify the semester.
-                if (__verify_semester(split_term[0])):
-                    semester = split_term[0]
-                else:
-                    error_list.append(InvalidDataException('Invalid Semester', 
-                        current_row, 5))
-                    found_error = True
-                    valid_course_data = False
-                
-                # Verify the year.
-                if (__verify_year(split_term[1])):
-                    year = split_term[1]
-                else:
-                    error_list.append(InvalidDataException('Invalid Year', 
-                        current_row, 5))
-                    found_error = True
-                    valid_course_data = False
 
-        if (num_term_code is None): 
-            error_list.append(InvalidDataException('Numeric term missing.', 
-                current_row, 6))
+        # if (grade is None):
+        #     error_list.append(InvalidDataException('Missing Grade', current_row,
+        #         36))
+        #     found_error = True
+        #     valid_course_data = False
+
+        if (course_title is None):
+            error_list.append(InvalidDataException('Missing Course_Title', 
+                current_row, 35))
             found_error = True
-            valid_course_data = False
-
-        if (course_id is None):
-            error_list.append(InvalidDataException('Course number missing.', 
-                current_row, 34))
-            found_error = True 
-            valid_course_data = False
-        elif (len(course_id) < 7 or len(course_id) > 9):
-            error_list.append(InvalidDataException('Invalid Course number.', 
-                current_row, 34))
-            found_error = True 
             valid_course_data = False
 
         course = None
         # If the course data was all valid, get the course ID.
         if (valid_course_data):
-            course = __insert_course(semester, year, num_term_code, course_id)
-
-        if (program_level is None):
-            error_list.append(InvalidDataException('Missing Program Level', 
-                current_row, 7))
-            found_error = True
-        elif (program_level not in ('UNDG', 'GRAD')):
-            error_list.append(InvalidDataException('Invalid Program Level (Must be either UNDG or GRAD)', 
-                current_row, 7))
-            found_error = True
-
-        if (subprogram_code is None):
-            error_list.append(InvalidDataException('Missing Subprogram Code', 
-                current_row, 8))
-            found_error = True
-
-        if (grade is None):
-            error_list.append(InvalidDataException('Missing Course Grade', 
-                    current_row, 35))
-            found_error = True
-            valid_course_data = False
-        else:
-            valid_grades = ('A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 
-                'D', 'D-', 'F', 'W', 'P', 'IP')
-            if (grade not in valid_grades):
-                error_list.append(InvalidDataException('Invalid Course Grade', 
-                    current_row))
-                found_error = True
-                valid_course_data = False
-
-        if (student_id is None):
-            error_list.append(InvalidDataException('Missing Unique_ID', 
-                    current_row, 1))
-            found_error = True
+            course = __insert_course(semester, year, section, term_code, 
+                course_num, course_title)
 
         if (course and not found_error):
             # Add the new ClassData entry.
             new_class_data = ClassData(student_id=student_id,
-                program_level=program_level,
-                subprogram_code=subprogram_code,
                 grade=grade,
                 course=course)
             db.session.add(new_class_data)
@@ -280,59 +258,77 @@ def __insert_students(csv_file: DataFrame):
             # If the student exists, move to the next row of the data.
             if Student.query.get(unique_id):
                 continue
+
         admit_year = csv_file['Admit_Year'][idx]
         admit_term = csv_file['Admit_Term'][idx]
-        admit_type = csv_file['Admit_Type'][idx]
-        major_1_code = csv_file['Major1_Code'][idx]
-        major_1_desc = csv_file['Major1_Desc'][idx]
-        major_2_code = csv_file['Major2_Code'][idx]
-        major_2_desc = csv_file['Major2_Desc'][idx]
-        minor_1_code = csv_file['Minor1_Code'][idx]
-        minor_1_desc = csv_file['Minor1_Desc'][idx]
-        concentration_code = csv_file['Concentration_Code'][idx]
-        concentration_desc = csv_file['Concentration_Desc'][idx]
+        major_1 = csv_file['Major_1'][idx]
+        major_1_desc = csv_file['Major_1_Desc'][idx]
+        major_2 = csv_file['Major_2'][idx]
+        major_2_desc = csv_file['Major_2_Desc'][idx]
+        concentration = csv_file['Major_1_Conc'][idx]
+        minor_1 = csv_file['Minor_1'][idx]
+        minor_1_desc = csv_file['Minor_1_Desc'][idx]
         class_year = csv_file['Class'][idx]
         city = csv_file['City'][idx]
         state = csv_file['State'][idx]
-        postal_code = csv_file['Postal_Code'][idx]
-        country = csv_file['Country_Code'][idx]
-        race_ethnicity = csv_file['Race-Ethnicity'][idx]
-        gender = csv_file['Sex'][idx]
-        gpa_cumulative = csv_file['GPA_Cum'][idx]
+        country = csv_file['Country'][idx]
+        race = csv_file['Race'][idx]
+        sex = csv_file['Sex'][idx]
+        first_gen_student = csv_file['First_Gen?'][idx]
+        accuplacer_score = csv_file['Accuplacer_Score'][idx]
+        college_gpa = csv_file['College_GPA'][idx]
         sat_math = csv_file['SAT_Math'][idx]
-        sat_total = csv_file['SAT_Total'][idx]
-        act_score = csv_file['ACT_Score'][idx]
-        math_placement_score = csv_file['Math_Placement'][idx]
+        math_placement_score = csv_file['Math_Placement_Score'][idx]
         hs_gpa = csv_file['HS_GPA'][idx]
-        hs_ceeb = csv_file['HS_CEEB'][idx]
         hs_name = csv_file['HS_Name'][idx]
         hs_city = csv_file['HS_City'][idx]
         hs_state = csv_file['HS_State'][idx]
-        cohort = csv_file['Cohort'][idx]
+        is_honors = csv_file['Honors?'][idx]
+        is_compass = csv_file['Compass?'][idx]
+        is_austin = csv_file['Austin?'][idx]
+        is_athlete = csv_file['Athlete?'][idx]
 
-        if (admit_year is None):
-            error_list.append(InvalidDataException('Admit year missing.', 
+        if (sex is None):
+            error_list.append(InvalidDataException('Sex missing.', 
+                current_row, 2))
+            found_error = True
+        elif (sex not in ('M', 'F', 'UN')):
+            error_list.append(InvalidDataException('Invalid sex.', 
                 current_row, 2))
             found_error = True
 
-        if (admit_term is None):
-            error_list.append(InvalidDataException('Admit term missing.', 
+        if (race not in ('BL', 'WH', 'UN', 'HISP', 'MU', 'NO', 'AS', 'AM', 'IS')):
+            print(race)
+
+        if (race is None):
+            error_list.append(InvalidDataException('Race missing.', 
+                current_row, 3))
+            found_error = True
+        elif (race not in ('BL', 'WH', 'UN', 'HISP', 'MU', 'NO', 'AS', 'AM', 'IS')):
+            error_list.append(InvalidDataException('Invalid race.', 
                 current_row, 3))
             found_error = True
 
-        if (admit_type is None):
-            error_list.append(InvalidDataException('Admit type missing.', 
+        if (admit_year is None):
+            error_list.append(InvalidDataException('Admit year missing.', 
                 current_row, 4))
             found_error = True
+        else:
+            if (admit_year == '0'):
+                admit_year = None
 
-        if (major_1_code is None):
-            error_list.append(InvalidDataException('Major1_Code missing.', 
-                current_row, 9))
+        if (admit_term is None):
+            error_list.append(InvalidDataException('Admit term missing.', 
+                current_row, 5))
+            found_error = True
+        elif (admit_term not in ('FA', 'SP', 'SU', 'WI', 'UN')):
+            error_list.append(InvalidDataException('Invalid admit term.', 
+                current_row, 5))
             found_error = True
 
-        if (major_1_desc is None):
-            error_list.append(InvalidDataException('Major1_Desc missing.', 
-                current_row, 10))
+        if (country is None):
+            error_list.append(InvalidDataException('Country missing.', 
+                current_row, 13))
             found_error = True
 
         # Try to parse the class year if it exists, reporting a failed parse.
@@ -345,68 +341,109 @@ def __insert_students(csv_file: DataFrame):
                 class_year = ClassEnum.parse_class(class_year)
             except InvalidClassException:
                 error_list.append(InvalidDataException('Invalid Class', 
-                    current_row, 17))
+                    current_row, 14))
                 found_error = True
 
-        if (city is None):
-            error_list.append(InvalidDataException('City missing.', 
-                current_row, 18))
+        if (first_gen_student is None):
+            error_list.append(InvalidDataException('First gen student missing.', 
+                current_row, 15))
+            found_error = True
+        elif (first_gen_student not in ('Y', 'N')):
+            error_list.append(InvalidDataException('Invalid First gen student.', 
+                current_row, 15))
+            found_error = True
+        else:
+            first_gen_student = (first_gen_student == 'Y')
+
+        if (hs_name is None):
+            error_list.append(InvalidDataException('High school name missing.', 
+                current_row, 17))
             found_error = True
 
-        if (postal_code is None):
-            error_list.append(InvalidDataException('Postal_Code missing.', 
+        if (hs_city is None):
+            error_list.append(InvalidDataException('High school city missing.', 
+                current_row, 18))
+            found_error = True
+        
+        if (hs_state is None):
+            error_list.append(InvalidDataException('High school state missing.', 
                 current_row, 19))
             found_error = True
 
-        if (country is None):
-            error_list.append(InvalidDataException('Country_Code missing.', 
+        if (is_honors is None):
+            error_list.append(InvalidDataException('Honors? missing.', 
                 current_row, 20))
             found_error = True
+        elif (is_honors not in ('N', 'Y')):
+            error_list.append(InvalidDataException('Invalid Honors?.', 
+                current_row, 20))
+            found_error = True
+        else:
+            is_honors = (is_honors == 'Y')
 
-        if (race_ethnicity is None):
-            error_list.append(InvalidDataException('Race-Ethnicity missing.', 
+        if (is_compass is None):
+            error_list.append(InvalidDataException('Compass? missing.', 
                 current_row, 21))
             found_error = True
-        
-        if (gender is None):
-            error_list.append(InvalidDataException('Sex missing.', 
+        elif (is_compass not in ('N', 'Y')):
+            error_list.append(InvalidDataException('Invalid Compass?.', 
+                current_row, 21))
+            found_error = True
+        else:
+            is_compass = (is_compass == 'Y')
+
+        if (is_austin is None):
+            error_list.append(InvalidDataException('Austin? missing.', 
                 current_row, 22))
             found_error = True
+        elif (is_austin not in ('N', 'Y')):
+            error_list.append(InvalidDataException('Invalid Austin?.', 
+                current_row, 22))
+            found_error = True
+        else:
+            is_austin = (is_austin == 'Y')
 
-        if (gpa_cumulative is None):
-            gpa_cumulative = 0.00
+        if (is_athlete is None):
+            error_list.append(InvalidDataException('Athlete? missing.', 
+                current_row, 23))
+            found_error = True
+        elif (is_athlete not in ('N', 'Y')):
+            error_list.append(InvalidDataException('Invalid Athlete?.', 
+                current_row, 23))
+            found_error = True
+        else:
+            is_athlete = (is_athlete == 'Y')
 
         if (not found_error):
             new_student = Student(id=unique_id,
                 admit_year=admit_year,
                 admit_term=admit_term,
-                admit_type=admit_type,
-                major_1=major_1_code,
+                major_1=major_1,
                 major_1_desc=major_1_desc,
-                major_2=major_2_code,
+                major_2=major_2,
                 major_2_desc=major_2_desc,
-                minor_1=minor_1_code,
+                minor_1=minor_1,
                 minor_1_desc=minor_1_desc,
-                concentration_code=concentration_code,
-                concentration_desc=concentration_desc,
+                concentration=concentration,
                 class_year=class_year,
                 city=city,
                 state=state,
                 country=country,
-                postal_code=postal_code,
-                math_placement_score=math_placement_score,
-                race_ethnicity=race_ethnicity,
-                gender=gender,
-                gpa_cumulative=gpa_cumulative,
-                high_school_gpa=hs_gpa,
+                race=race,
+                sex=sex,
+                first_gen_student=first_gen_student,
+                accuplacer_score=accuplacer_score,
+                college_gpa=college_gpa,
                 sat_math=sat_math,
-                sat_total=sat_total,
-                act_score=act_score,
-                high_school_name=hs_name,
-                high_school_city=hs_city,
-                high_school_state=hs_state,
-                high_school_ceeb=hs_ceeb,
-                cohort=cohort
+                math_placement_score=math_placement_score,
+                hs_gpa=hs_gpa,
+                hs_name=hs_name,
+                hs_city=hs_city,
+                hs_state=hs_state,
+                is_honors=is_honors,
+                is_compass=is_compass,
+                is_austin=is_austin,
+                is_athlete=is_athlete
             )
             db.session.add(new_student)
 
