@@ -259,30 +259,34 @@ class Utils:
         data_dict = {}
 
         match columnX:
-            case 'Admit Term':
+            case 'admit_term':
                 columnX = Student.admit_term
-            case 'Admit Year':
+            case 'admit_year':
                 columnX = Student.admit_year
-            case 'Concentration':
+            case 'major_one':
+                columnX = Student.major_1_desc
+            case 'major_two':
+                columnX = Student.major_2_desc
+            case 'minor_one':
+                columnX = Student.minor_1_desc
+            case 'concentration':
                 columnX = Student.concentration_desc
-            case 'Class':
+            case 'class_year':
                 columnX = Student.class_year
-            case 'City':
+            case 'city':
                 columnX = Student.city
-            case 'State':
+            case 'state':
                 columnX = Student.state
-            case 'Race/Ethnicity':
+            case 'race':
                 columnX = Student.race_ethnicity
-            case 'Gender':
+            case 'gender':
                 columnX = Student.gender
-            case 'High School':
+            case 'hs_name':
                 columnX = Student.high_school_name
-            case 'High School State':
+            case 'hs_state':
                 columnX = Student.high_school_state
 
-        print(columnX)
         groups = Utils.group_table_by_column(Student, columnX)
-        print(groups)
 
         match columnY:
             case 'avg_gpa':
@@ -300,22 +304,16 @@ class Utils:
             case 'avg_sat_math':
                 columnY = 'sat_math'
 
-        for i in groups:
-            data_dict[groups] = Utils.get_avg_for_bar_data(i,columnY)
+        avg_col_val = Utils.get_avg_for_bar_data(groups, columnY)
 
+            
         return data_dict
 
     @staticmethod
-    def get_avg_for_bar_data(bar_value, columnY):
+    def get_avg_for_bar_data(grouped, columnY):
         '''
         '''
-        all_data_objects = []
-
-        for student_data_obj in Student.query.all():
-            student_obj = student_data_obj.student_obj
-
-            if (student_obj.columnY == columnY and student_obj.barValue == bar_value):
-                all_data_objects.append(student_data_obj)
+        
 
 class ProviderEnum(enum.Enum):
     '''
@@ -1390,18 +1388,6 @@ class Course(db.Model):
         }
 
         return years
-
-    @staticmethod
-    def getAvgPerYear():
-        '''
-        Returns the lowest and highest year in the data.
-
-        return:
-            An 'dict' that shows the lowest and highest year.
-        '''
-
-        return avg
-
 
 class MCASScore(db.Model):
     '''
