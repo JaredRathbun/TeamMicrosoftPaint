@@ -214,7 +214,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6 l-xl-8">
+                        <div class="col-lg-6 col-xl-6">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary fw-bold m-0">How To Upload Data</h6>
@@ -222,15 +222,16 @@
                                 <div class="card-body" style="height: 390px;">
                                     <div>
                                         <p>To Upload data to the Dashboard, Follow the format specified in the Sample Data.
-                                            Download this data by selecting the button "Download Sample Data" below! 
-                                            If the data is in the incorrect format, you will receive errors in the sections that are not correct.
-                                            Once the data is corrected, the data will be visible in the dashboard!
+                                            Download this data by selecting the "Download Sample Data" button below! 
+                                            If the data you upload is incorrectly formatted, please reference the sample 
+                                            data and correct your data. After that, you will be able to reupload and see
+                                            the data on the dashboard!
                                         </p>
                                     </div>
                                     <div style="text-align: center; display: flexbox">
                                         <ul style="list-style-type: none;">
                                             <li>
-                                                <button class="m-2 btn btn-primary"><i class="fas fa-light fa-download"></i> Download Sample Data</button>
+                                                <a href='/download-sample-data'><button class="m-2 btn btn-primary"><i class="fas fa-light fa-download"></i> Download Sample Data</button></a>
                                             </li>
                                         </ul>
                                         
@@ -238,7 +239,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-5 col-xl-4">
+                        <div class="col-lg-6 col-xl-6">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary fw-bold m-0">Add New Data</h6>
@@ -255,13 +256,7 @@
                                                 <li>
                                                     <button id="uploadButton" type="button" class="m-3 btn btn-primary" disabled>Upload Data</button>
                                                 </li>
-
-                                                <li>
-                                                    <a href='/download-sample-data'><button class="m-2 btn btn-primary"><i class="fas fa-light fa-download"></i> Download Sample Data</button></a>
-                                                </li>
-
                                             </ul>
-                                            
                                         </div>
                                     </div>
                                 </div>

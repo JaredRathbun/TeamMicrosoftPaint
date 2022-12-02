@@ -30,8 +30,8 @@
     <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
     <link rel="stylesheet" href="../../static/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
 </head>
 
 <body id="page-top">
@@ -64,20 +64,20 @@
                         </a>
                     </li>
                     {% if is_data_admin_or_higher(current_user) %}
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/dataadmin">
-                                <i class="fas fa-solid fa-file-csv"></i>
-                                    <span>Data Administration</span>
-                            </a>
-                        </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/dataadmin">
+                            <i class="fas fa-solid fa-file-csv"></i>
+                            <span>Data Administration</span>
+                        </a>
+                    </li>
                     {% endif %}
                     {% if is_admin(current_user) %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin">
-                                <i class="fas fa-user"></i>
-                                <span>Administration</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">
+                            <i class="fas fa-user"></i>
+                            <span>Administration</span>
+                        </a>
+                    </li>
                     {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="/faq">
@@ -169,8 +169,10 @@
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
-                                            <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>NUMBER OF STUDENTS</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ total_students }}</span></div>
+                                            <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>NUMBER
+                                                    OF STUDENTS</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ total_students }}</span>
+                                            </div>
                                         </div>
                                         <div class="col-auto"><i class="fas fa-user-graduate fa-2x text-gray-300"></i>
                                         </div>
@@ -183,8 +185,10 @@
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
-                                            <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span>AVG COURSE GRADE</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ avg_course_grade }}</span></div>
+                                            <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span>AVG
+                                                    COURSE GRADE</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{ avg_course_grade }}</span>
+                                            </div>
                                         </div>
                                         <div class="col-auto"><i class="fa fa-school fa-2x text-gray-300"></i></div>
                                     </div>
@@ -194,24 +198,31 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-md-12">
-                            <div class="card shadow mb-4">
+                            <div class="card shadow mb-4" style="min-height: 440px;">
                                 <div class="card-header d-flex justify-content-between align-items-center align-middle">
                                     <h6 class="text-primary fw-bold m-0">Class by Class Comparisons</h6>
-                                    <span class='mx-1' data-toggle="tooltip" data-placement="auto" title="To compare classes, select which classes and semesters you would like to analyze. To add more classes, click the 'Add New Course' button."><i class="fa fa-light fa-circle-info"></i></span>
+                                    <span class='mx-1' data-toggle="tooltip" data-placement="auto"
+                                        title="To compare classes, select which classes and semesters you would like to analyze. To add more classes, click the 'Add New Course' button."><i
+                                            class="fa fa-light fa-circle-info"></i></span>
                                 </div>
                                 <div class="card-body align-items-center align-middle" style="min-height: 380px;">
                                     <div class="row">
                                         <div class="col-8">
-                                            <div id="courseDropdownDiv" class='align-items-center align-middle' style="overflow-y: auto; overflow-x: hidden; height: 305px">
+                                            <div id="courseDropdownDiv" class='align-items-center align-middle'
+                                                style="overflow-y: auto; overflow-x: hidden; height: 305px">
                                             </div>
-                                            <button class="m-1 mt-2 btn btn-primary" onclick="addNewCourseDropdowns(true)">Add New Course</button>  
+                                            <button class="m-1 mt-2 btn btn-primary"
+                                                onclick="addNewCourseDropdowns(true)">Add New Course</button>
                                         </div>
                                         <div class="col-4 align-items-center align-middle">
                                             <div class="d-inline-flex mb-1 align-items-center">
                                                 <h7><strong>Select Data Column</strong></h7>
-                                                <span class='mx-1' data-toggle="tooltip" data-placement="auto" title="A column/field on the data page to compare classes with."><i class="fa fa-light fa-circle-info"></i></span>
+                                                <span class='mx-1' data-toggle="tooltip" data-placement="auto"
+                                                    title="A column/field on the data page to compare classes with."><i
+                                                        class="fa fa-light fa-circle-info"></i></span>
                                             </div>
-                                            <select class="form-select mb-3" id="columnSelect" onchange="fillValidGraphTypes(); checkDropdowns();">
+                                            <select class="form-select mb-3" id="columnSelect"
+                                                onchange="fillValidGraphTypes(); checkDropdowns();">
                                                 <option selected disabled value="">Select a Column</option>
                                                 <option value="avg_gpa">Average College GPA</option>
                                                 <option value="gpa_cumulative">College GPA</option>
@@ -228,82 +239,110 @@
                                             </select>
                                             <div class="d-flex align-items-center">
                                                 <h7 class="mb-1"><strong>Select a Chart/Graph Type</strong></h7>
-                                                <span class='mx-1' data-toggle="tooltip" data-placement="auto" title="The type of graph/chart you would like to generate."><i class="fa fa-light fa-circle-info"></i></span>
+                                                <span class='mx-1' data-toggle="tooltip" data-placement="auto"
+                                                    title="The type of graph/chart you would like to generate."><i
+                                                        class="fa fa-light fa-circle-info"></i></span>
                                             </div>
-                                            <select class="form-select my-2 mb-3" id="chartOrGraphTypeSelect" onchange="checkDropdowns();">
-                                                <option selected disabled value="Select a Chart/Graph Type">Select a Chart/Graph Type</option>
+                                            <select class="form-select my-2 mb-3" id="chartOrGraphTypeSelect"
+                                                onchange="checkDropdowns();">
+                                                <option selected disabled value="Select a Chart/Graph Type">Select a
+                                                    Chart/Graph Type</option>
                                             </select>
-                                            <button id='classByClassGenerateButton' onclick='genClassByClassChartOrGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                            <button id='classByClassGenerateButton'
+                                                onclick='genClassByClassChartOrGraph()' disabled
+                                                class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-12">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header d-flex justify-content-between align-items-center align-middle">
-                                        <h6 class="text-primary fw-bold m-0">COVID Data Comparisons </h6>
-                                        <p class="text-primary m-0">Analyze COVID data by selecting columns and 
-                                            generating a visual that ranges from FA 2019 - FA 2021.</p>
-                                    </div>
-                                    <div class="card-body align-items-center align-middle">
-                                        <table class="table table-responsive my-0">
-                                            <thead>
-                                                <tr>
-                                                    <th class="col-3">Select Y-Axis Data</th>
-                                                    <th class="col-3"></th>
-                                                    <th class="col-3"></th>
-                                                    <th class="col-2"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody> 
-                                                <tr>
-                                                    <td class="col-5">
-                                                        <select class="form-select" id = "covidData"onchange ="checkCovidDropdowns()">
-                                                            <option selected disabled>Choose a column...</option>
-                                                            <option value="avg_gpa">Average College GPA</option>
-                                                            <option value="avg_high_school_gpa">Average High School GPA</option>
-                                                            <option value="avg_dwf_rate">Average DWF Rate</option>
-                                                            <option value="avg_math_placement_score">Math Placement Score</option>
-                                                            <option value="avg_sat_total">Total SAT Score</option>
-                                                            <option value="avg_sat_math">SAT Math Score</option>
-                                                            <option value="avg_act_score">ACT Score</option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="col-3">         
-                                                    </td>
-                                                    <td class="col-2">
-                                                        <button id='covidGenerateButton' onclick='genCovidGraph()' disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-    
+                            <div class="card shadow mb-4" style="min-height: 440px;">
+                                <div class="card-header d-flex justify-content-between align-items-center align-middle">
+                                    <h6 class="text-primary fw-bold m-0">COVID Data Comparisons </h6>
+                                    <span class='mx-1' data-toggle="tooltip" data-placement="auto"
+                                        title="To compare classes during the COVID-19 Pandemic, select the column you would like to analyze from the data page."><i
+                                            class="fa fa-light fa-circle-info"></i></span>
+                                    <!-- <p class="text-primary m-0">Analyze COVID data by selecting columns and
+                                        generating a visual that ranges from FA 2019 - FA 2021.</p> -->
+                                </div>
+                                <div class="card-body align-items-center align-middle">
+                                    <p>Please note that all data is generated from Fall 2019 through Fall 2021.</p>
+                                    <!-- <table class="table table-responsive my-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-3">Select Y-Axis Data</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-5">
+                                                    <select class="form-select" id="covidData"
+                                                        onchange="checkCovidDropdowns()">
+                                                        <option selected disabled>Choose a column...</option>
+                                                        <option value="avg_gpa">Average College GPA</option>
+                                                        <option value="avg_high_school_gpa">Average High School GPA
+                                                        </option>
+                                                        <option value="avg_dwf_rate">Average DWF Rate</option>
+                                                        <option value="avg_math_placement_score">Math Placement Score
+                                                        </option>
+                                                        <option value="avg_sat_total">Total SAT Score</option>
+                                                        <option value="avg_sat_math">SAT Math Score</option>
+                                                        <option value="avg_act_score">ACT Score</option>
+                                                    </select>
+                                                </td>
+                                                <td class="col-2">
+                                                    <button id='covidGenerateButton' onclick='genCovidGraph()' disabled
+                                                        class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table> -->
+                                    <div>
+                                        <div class="mb-4 justify-content-center">
+                                            <label for="covidData" class="mb-2">Column to Analyze</label>
+                                            <select class="form-select" id="covidData" onchange="checkCovidDropdowns()">
+                                                <option selected disabled>Choose a column...</option>
+                                                <option value="avg_gpa">Average College GPA</option>
+                                                <option value="avg_high_school_gpa">Average High School GPA
+                                                </option>
+                                                <option value="avg_dwf_rate">Average DWF Rate</option>
+                                                <option value="avg_math_placement_score">Math Placement Score
+                                                </option>
+                                                <option value="avg_sat_total">Total SAT Score</option>
+                                                <option value="avg_sat_math">SAT Math Score</option>
+                                                <option value="avg_act_score">ACT Score</option>
+                                            </select>
+                                        </div>
+                                        <button id='covidGenerateButton' onclick='genCovidGraph()' disabled
+                                                        class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center align-middle">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="card shadow mb-4" style="min-height: 270px">
+                                <div
+                                    class="card-header d-flex justify-content-between align-items-center align-middle">
                                     <h6 class="text-primary fw-bold m-0">Bar Chart Generation</h6>
-                                    <p class="text-primary m-0">To generate a graph/chart, select the columns and type
-                                        of the graph from the dropdowns below.</p>
+                                    <span class='mx-1' data-toggle="tooltip" data-placement="auto"
+                                        title="To generate a bar graph, select the column you like to compare for the x-axis, and a different column to compare for the y-axis."><i
+                                            class="fa fa-light fa-circle-info"></i></span>
                                 </div>
                                 <div class="card-body align-items-center align-middle">
                                     <table class="table table-responsive my-0">
                                         <thead>
                                             <tr>
-                                                <th class="col-3">X-Axis</th>
-                                                <th class="col-3">Y-Axis</th>
-                                                <th class="col-3"></th>
-                                                <th class="col-2"></th>
+                                                <th>X-Axis</th>
+                                                <th>Y-Axis</th>
                                             </tr>
                                         </thead>
-                                        <tbody> 
+                                        <tbody>
                                             <tr>
-                                                <td class="col-3">
-                                                    <select class="form-select" id = "barChartXValues">
+                                                <td >
+                                                    <select class="form-select" id="barChartXValues">
                                                         <option selected disabled>Choose a column...</option>
                                                         <option value="admit_term">Admit Term</option>
                                                         <option value="admit_year">Admit Year</option>
@@ -311,7 +350,7 @@
                                                         <option value="major-two">2nd Major</option>
                                                         <option value="minor_one">1st Minor</option>
                                                         <option value="concentration">Concentration</option>
-                                                        <option value="student_class">Class</option>
+                                                        <option value="class_year">Course</option>
                                                         <option value="city">City</option>
                                                         <option value="state">State</option>
                                                         <option value="race">Race/Ethnicity</option>
@@ -320,36 +359,31 @@
                                                         <option value="hs_state">High School State</option>
                                                     </select>
                                                 </td>
-                                                <td class="col-3">
-                                                    <select class="form-select" id = "barChartYValues">
+                                                <td>
+                                                    <select class="form-select" id="barChartYValues">
                                                         <option selected disabled>Choose a column...</option>
                                                         <option value="avg_gpa">Average Cumulative GPA</option>
                                                         <option value="avg_sat_math">Average Math SAT</option>
                                                         <option value="avg_sat_total">Average Total SAT</option>
-                                                        <option value="avg_math_placement_score">Average Math Placement Score</option>
+                                                        <option value="avg_math_placement_score">Average Math
+                                                            Placement Score</option>
                                                     </select>
-                                                </td>
-                                                <td class="col-3">
-                    
-                                                </td>
-                                                    <button id='barChartGenerateButton' onclick='barChartGeneration()' class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-
+                                    <button id='barChartGenerateButton' onclick='barChartGeneration()'
+                                                    class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card shadow mb-<div class="row">
-                        <div class="col-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center align-middle">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="card shadow mb-4" style="min-height: 270px">
+                                <div
+                                    class="card-header d-flex justify-content-between align-items-center align-middle">
                                     <h6 class="text-primary fw-bold m-0">Scatter Plot Generation</h6>
-                                    <p class="text-primary m-0">To generate a scatter plot, select the Year Range and the Y-Values.</p>
+                                    <p class="text-primary m-0">To generate a scatter plot, select the Year Range
+                                        and the Y-Values.</p>
                                 </div>
                                 <div class="card-body align-items-center align-middle">
                                     <table class="table table-responsive my-0">
@@ -361,62 +395,186 @@
                                                 <th class="col-2"></th>
                                             </tr>
                                         </thead>
-                                        <tbody> 
+                                        <tbody>
                                             <tr>
                                                 <td class="row-3">
-                                                    <select class="form-select" id="lowestYearSelect" onchange ="fillValidHighestYears(this, {{ lowest_highest_years.highest }})">
+                                                    <select class="form-select" id="lowestYearSelect"
+                                                        onchange="fillValidHighestYears(this, {{ lowest_highest_years.highest }})">
                                                         <option selected disabled>Choose a Start Year...</option>
-                                                        {% for i in range( lowest_highest_years.lowest, lowest_highest_years.highest +1 )%}
-                                                            <option value= {{ i }}>{{ i }}</option>
-                                                         {% endfor %}
-                        
+                                                        {% for i in range( lowest_highest_years.lowest,
+                                                        lowest_highest_years.highest +1 )%}
+                                                        <option value={{ i }}>{{ i }}</option>
+                                                        {% endfor %}
+
                                                     </select>
-                                                    </td>
-                                                    <td class="row-3">
-                                                    <select class="form-select" id = "highestYearSelect">
+                                                </td>
+                                                <td class="row-3">
+                                                    <select class="form-select" id="highestYearSelect">
                                                         <option selected disabled>Choose an End Year...</option>
                                                     </select>
-                                                    </td>
-                                                    <td class="row-3">                                                  
-                                                        <select class="form-select" id = "xAxisData">
+                                                </td>
+                                                <td class="row-3">
+                                                    <select class="form-select" id="xAxisData">
                                                         <option selected disabled>Choose a Value...</option>
                                                         <option value="1">Types</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-2">
-                                                    <button id='showChartGraphButtonScatterplot' onclick='genScatterPlot()' 
-                                                    disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                    <button id='showChartGraphButtonScatterplot'
+                                                        onclick='genScatterPlot()' disabled
+                                                        class="btn btn-primary my-3 mr-2">Generate
+                                                        Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-
                                 </div>
                             </div>
                         </div>
                     </div>
+                        <!-- <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card shadow mb-4">
+                                    <div
+                                        class="card-header d-flex justify-content-between align-items-center align-middle">
+                                        <h6 class="text-primary fw-bold m-0">Bar Chart Generation</h6>
+                                        <p class="text-primary m-0">To generate a graph/chart, select the columns and
+                                            type
+                                            of the graph from the dropdowns below.</p>
+                                    </div>
+                                    <div class="card-body align-items-center align-middle">
+                                        <table class="table table-responsive my-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-3">X-Axis</th>
+                                                    <th class="col-3">Y-Axis</th>
+                                                    <th class="col-3"></th>
+                                                    <th class="col-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="col-3">
+                                                        <select class="form-select" id="barChartXValues">
+                                                            <option selected disabled>Choose a column...</option>
+                                                            <option value="admit_term">Admit Term</option>
+                                                            <option value="admit_year">Admit Year</option>
+                                                            <option value="major_one">1st Major</option>
+                                                            <option value="major-two">2nd Major</option>
+                                                            <option value="minor_one">1st Minor</option>
+                                                            <option value="concentration">Concentration</option>
+                                                            <option value="student_class">Class</option>
+                                                            <option value="city">City</option>
+                                                            <option value="state">State</option>
+                                                            <option value="race">Race/Ethnicity</option>
+                                                            <option value="gender">Gender</option>
+                                                            <option value="hs_name">High School</option>
+                                                            <option value="hs_state">High School State</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-3">
+                                                        <select class="form-select" id="barChartYValues">
+                                                            <option selected disabled>Choose a column...</option>
+                                                            <option value="avg_gpa">Average Cumulative GPA</option>
+                                                            <option value="avg_sat_math">Average Math SAT</option>
+                                                            <option value="avg_sat_total">Average Total SAT</option>
+                                                            <option value="avg_math_placement_score">Average Math
+                                                                Placement Score</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-3">
 
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © Jared Rathbun and Katie O'Neil
-                            2022</span></div>
+                                                    </td>
+                                                    <button id='barChartGenerateButton' onclick='barChartGeneration()'
+                                                        class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card shadow mb-4">
+                                    <div
+                                        class="card-header d-flex justify-content-between align-items-center align-middle">
+                                        <h6 class="text-primary fw-bold m-0">Scatter Plot Generation</h6>
+                                        <p class="text-primary m-0">To generate a scatter plot, select the Year Range
+                                            and the Y-Values.</p>
+                                    </div>
+                                    <div class="card-body align-items-center align-middle">
+                                        <table class="table table-responsive my-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-3">Start Year</th>
+                                                    <th class="col-3">End Year</th>
+                                                    <th class="col-3">Y-Values</th>
+                                                    <th class="col-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="row-3">
+                                                        <select class="form-select" id="lowestYearSelect"
+                                                            onchange="fillValidHighestYears(this, {{ lowest_highest_years.highest }})">
+                                                            <option selected disabled>Choose a Start Year...</option>
+                                                            {% for i in range( lowest_highest_years.lowest,
+                                                            lowest_highest_years.highest +1 )%}
+                                                            <option value={{ i }}>{{ i }}</option>
+                                                            {% endfor %}
+
+                                                        </select>
+                                                    </td>
+                                                    <td class="row-3">
+                                                        <select class="form-select" id="highestYearSelect">
+                                                            <option selected disabled>Choose an End Year...</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="row-3">
+                                                        <select class="form-select" id="xAxisData">
+                                                            <option selected disabled>Choose a Value...</option>
+                                                            <option value="1">Types</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-2">
+                                                        <button id='showChartGraphButtonScatterplot'
+                                                            onclick='genScatterPlot()' disabled
+                                                            class="btn btn-primary my-3 mr-2">Generate
+                                                            Chart/Graph</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <footer class="bg-white sticky-footer">
+                            <div class="container my-auto">
+                                <div class="text-center my-auto copyright"><span>Copyright © Jared Rathbun and Katie
+                                        O'Neil
+                                        2022</span></div>
+                            </div>
+                        </footer>
+                    </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i
+                            class="fas fa-angle-up"></i></a>
                 </div>
-            </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    </div>
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../../static/js/theme.js"></script>
-    <script src="../../static/js/FileSaver.min.js"></script>
-    <script src="../../static/js/html2canvas.min.js"></script>
-    <script src="https://kit.fontawesome.com/177241023b.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@4.3.2/js/bootstrap5-toggle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <script src="../../static/js/plotly-2.16.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
-    <script src="../../static/js/dashboard/visualizations.js"></script>
+                <script src="https://unpkg.com/@popperjs/core@2"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+                <script src="../../static/js/theme.js"></script>
+                <script src="../../static/js/FileSaver.min.js"></script>
+                <script src="../../static/js/html2canvas.min.js"></script>
+                <script src="https://kit.fontawesome.com/177241023b.js" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@4.3.2/js/bootstrap5-toggle.min.js"></script>
+                <script
+                    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+                <script src="../../static/js/plotly-2.16.1.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+                <script src="../../static/js/dashboard/visualizations.js"></script>
 </body>
 
 </html>
