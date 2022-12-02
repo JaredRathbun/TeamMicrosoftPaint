@@ -286,8 +286,6 @@ class Utils:
             case 'hs_state':
                 columnX = Student.high_school_state
 
-        groups = Utils.group_table_by_column(Student, columnX)
-
         match columnY:
             case 'avg_gpa':
                 columnY = 'gpa_cumulative'
@@ -304,16 +302,28 @@ class Utils:
             case 'avg_sat_math':
                 columnY = 'sat_math'
 
-        avg_col_val = Utils.get_avg_for_bar_data(groups, columnY)
-
+        Xgroups = Utils.group_table_by_column(Student, columnX)
+        avg_col_val = Utils.get_avg_for_bar_data(Xgroups, columnY)
             
-        return data_dict
+        return data_dict 
 
     @staticmethod
-    def get_avg_for_bar_data(grouped, columnY):
+    def get_avg_for_bar_data(XGroups, column_name: str):
         '''
         '''
-        
+        #sprint(getattr(Student, column_name))
+
+        return_dict = {}
+        for group in XGroups:
+            value = group[0].gpa_cumulative
+
+        avg = sum([g.gpa_cumulative for g in group]) / len(group)
+        term = f'{value}'
+    
+        return_dict[term] = round(avg, 2)
+
+        print(return_dict)
+        return return_dict
 
 class ProviderEnum(enum.Enum):
     '''
