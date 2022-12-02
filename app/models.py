@@ -255,9 +255,6 @@ class Utils:
 
     @staticmethod
     def get_bar_chart_data(columnX: str, columnY: str) -> dict:
-        
-        data_dict = {}
-
         match columnX:
             case 'admit_term':
                 columnX = Student.admit_term
@@ -303,26 +300,31 @@ class Utils:
                 columnY = 'sat_math'
 
         Xgroups = Utils.group_table_by_column(Student, columnX)
-        avg_col_val = Utils.get_avg_for_bar_data(Xgroups, columnY)
+        data_dict = Utils.get_avg_for_bar_data(Xgroups, columnX, columnY)
             
         return data_dict 
 
     @staticmethod
-    def get_avg_for_bar_data(XGroups, column_name: str):
+    def get_avg_for_bar_data(XGroups: list[list], xColumn, yColumn: str):
         '''
+    
         '''
-        #sprint(getattr(Student, column_name))
-
+        x_col_str = str(xColumn).split('.')[1]
         return_dict = {}
         for group in XGroups:
-            value = group[0].gpa_cumulative
+            group_key = getattr(group[0], x_col_str)
 
-        avg = sum([g.gpa_cumulative for g in group]) / len(group)
-        term = f'{value}'
-    
-        return_dict[term] = round(avg, 2)
+            col_sum = 0
+            col_len = 0
+            for student in group:
+                y_col_val = getattr(student, yColumn)
 
-        print(return_dict)
+                if (y_col_val is not None):
+                    col_sum += y_col_val
+                    col_len += 1
+
+            avg = col_sum / col_len
+            return_dict[group_key] = round(avg, 2)
         return return_dict
 
 class ProviderEnum(enum.Enum):
