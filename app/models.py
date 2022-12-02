@@ -681,10 +681,8 @@ class User(UserMixin, db.Model):
             A `bool` representing the result of the the comparison.
         '''
         
-        if otp: 
-            correct_otp = self.get_otp()
-
-            return correct_otp == otp
+        if otp:
+            return pyotp.TOTP(self.totp_key).verify(otp)
         else:
             return False
 
