@@ -717,11 +717,9 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
             title: yAxisLabel
         };
 
-        var xValues = [];
-        var yValues = [];
+        var xValues = Object.keys(data);
+        var yValues = Object.values(data);
 
-       
-        
         var data = [{
             x: xValues,
             y: yValues,

@@ -313,6 +313,8 @@ class Utils:
         return_dict = {}
         for group in XGroups:
             group_key = getattr(group[0], x_col_str)
+            if (group_key == None):
+                del return_dict[None]
 
             col_sum = 0
             col_len = 0
@@ -323,8 +325,9 @@ class Utils:
                     col_sum += y_col_val
                     col_len += 1
 
-            avg = col_sum / col_len
+            avg = col_sum / col_len if (col_len > 0) else 0
             return_dict[group_key] = round(avg, 2)
+    
         return return_dict
 
 class ProviderEnum(enum.Enum):
