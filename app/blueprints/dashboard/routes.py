@@ -376,3 +376,19 @@ def bar_chart_comparison():
     columnY = body['columnY']
     data = Utils.get_bar_chart_data(columnX, columnY)
     return data, 200
+
+
+@dash_bp.route('/scatter-plot-comparisons', methods = ['POST'])
+def bar_chart_comparison():
+    body = request.get_json()
+
+    if ('lowestYearSelect' not in body or 'highestYearSelect' not in body 
+            or 'yAxisScatterData' not in body):
+        return {'message': 'Body missing information.'}, 400
+        
+    # Check for valid keys in body.
+    startYear = body['lowestYearSelect']
+    endYear = body['highestYearSelect']
+    yAxis = body['yAxisScatterData']
+    data = Utils.get_bar_chart_data(startYear, endYear, yAxis)
+    return data, 200
