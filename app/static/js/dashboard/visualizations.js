@@ -733,3 +733,49 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
 
     return chartOrGraphDiv;
 }
+
+function scatterPlotGeneration(){
+    /**
+     * Returns the value of the selected option element inside of the specified 
+     * select element.
+     * @param {HTMLElement} selectElement The HTML Select element.
+     * @returns A string containing the value of the selected option element.
+     */
+     function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    /**
+     * Gets the label/text that is inside of the selected option in the given
+     * select element.
+     * 
+     * @param {HTMLSelectElement} selectElement The Select Element to get the 
+     * label of.
+     * 
+     * @returns A string containing the label of the selected option. 
+     */
+    function getSelectedLabel(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].text;
+    }
+
+    // Get the column the user selected.
+    var startYear = document.getElementById('lowestYearSelect');
+    var endYear = document.getElementById('highestYearSelect ');
+    var yAxis = document.getElementById('yAxisScatterData');
+    const yAxisLabel = getSelectedLabel(yAxis);
+
+    // Make the request to the backend to get the data.
+    fetch('/scatter-plot-comparisons', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json'
+        },
+        body: JSON.stringify({starYear: startYear, endYear: endYear, yAxis: yAxis})
+    }).then((res) => res.json()).then((json) => {
+        // Build the div containing the appropriate chart/graph, then show it.
+        var div = buildBarChart(json, yAxisLabel);
+        showChartOrGraphPopUp(div);
+    });
+
+}

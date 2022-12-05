@@ -330,6 +330,16 @@ class Utils:
     
         return return_dict
 
+    @staticmethod
+    def get_scatter_plot_data(startYear: int, endYear: int, columnY: str):
+        '''
+        '''
+        return_dict = {}
+   
+        return return_dict
+
+        
+
 class ProviderEnum(enum.Enum):
     '''
     An Enum to represent the method of how a user is authenticating to the system.

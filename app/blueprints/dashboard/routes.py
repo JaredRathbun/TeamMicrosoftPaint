@@ -390,5 +390,5 @@ def bar_chart_comparison():
     startYear = body['lowestYearSelect']
     endYear = body['highestYearSelect']
     yAxis = body['yAxisScatterData']
-    data = Utils.get_bar_chart_data(startYear, endYear, yAxis)
+    data = Utils.get_scatter_plot_data(startYear, endYear, yAxis)
     return data, 200
