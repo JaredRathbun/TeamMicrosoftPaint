@@ -411,6 +411,112 @@
                                                     <h6 class="text-primary m-0">Visualizations Page</h6>
                                                 </div>
                                                 <div class="card-body align-items-center">
+                                                    <p>
+                                                    The <a href="/dashboard">Visualizations</a> page serves as the page on the dashboard where the most operations can be performed. On this page,
+                                                    you are able to specify the columns in the dataset you would like to analyze; along with the type of chart or graph you would like to generate.
+                                                    At the top of the page, you are presented with a general data bar which holds common analytics from the database. An example of the general data bar
+                                                    can be seen below.
+                                                    </p>
+                                                    <img class='mt-1' src="../../static/img/usermanual/visualizations_top_bar.png" width="100%">
+                                                    <p class="mt-2">Below the general data bar you will see 4 boxes, each with a label showing their respective operations. Each box is broken down into sections below, explaining how
+                                                        to use each section.</p>
+                                                    
+                                                    <hr>
+                                                    <h5 class="mt-3">Class by Class Comparisons</h5>
+                                                    <div class="d-flex my-3">
+                                                        <img class="mt-1" src="../../static/img/usermanual/class_x_class_not_filled.png" width='40%'>
+                                                        <div class="mx-2">
+                                                            <p>This visualizations option requires you to input at least 4 pieces of data; 2 courses you would like to analyze, the column you would like, 
+                                                                and the type of graph/chart. To generate a chart/graph follow these steps:</p>
+                                                            <ol>
+                                                                <li>
+                                                                    Select 2 courses and semesters to analyze <span style='color: purple;'>(as seen in the purple box)</span>. When the dropdown for 
+                                                                    <strong>Select course...</strong> is clicked, you will see a list of all the course codes in the database. Once a course is selected, 
+                                                                    the <strong>Select semester...</strong> dropdown to the right of the given course dropdown will populate with the available semester. 
+                                                                    Select a semester from that list.
+                                                                </li>
+                                                                <li>
+                                                                    Click on the <strong style="color: orange;">Select Data Column</strong> dropdown <span style="color: orange;">(as seen in the orange box)</span>. You will see a dropdown with
+                                                                    a list of the column in the database. 
+                                                                </li>
+                                                                <li>
+                                                                    Click on the <strong class="text-primary">Select a Chart/Graph Type</strong> dropdown <span class='text-primary'>(as seen in the blue box)</span>. You will see at least 1 option for 
+                                                                    the type of graph/chart you can generate for the data you selected.
+                                                                </li>
+                                                                <li>
+                                                                    Click on the <strong><span class="text-success">Generate Chart/Graph</span></strong> button <span class="text-success">(as seen in the green box)</span>. 
+                                                                </li>
+                                                                <li>
+                                                                    You will be presented with a graph of the data you generated. An example of a generated bar chart can be seen below in the bottom image.
+                                                                </li>
+                                                            </ol>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex my-3">
+                                                        <img src="../../static/img/usermanual/class_x_class_bar_chart.png" width="40%">
+                                                        <div class='mx-2'>
+                                                            <p>
+                                                                If you would like to add more than 2 courses to analyze, click on the <strong class="text-danger">Add New Course</strong> button 
+                                                                <span class='text-danger'>(as seen in the red box above)</span>.
+                                                            </p>
+                                                            <p>You will see a new option for a course/semester under the original 2 course/semester dropdowns. You can repeat this action to add as many classes as you would like, but you cannot have less than 2. 
+                                                                Each set of dropdowns for a new course/semester will look similar to this:</p>
+                                                            <div class="text-center">
+                                                                <img src="../../static/img/usermanual/class_x_class_extra_course_added.png" width="60%">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <hr>
+                                                    <h5 class="mt-3">COVID Data Comparisons</h5>
+                                                    <p>To the right of the Class by Comparisons box lives the COVID Data Comparisons box. Inside of this box, you are able to select a column to 
+                                                        analyze, and only the data present during the COVID-19 Pandemic years will be shown.</p>
+                                                    <div class="d-flex mt-3">
+                                                        <img src="../../static/img/usermanual/covid_data_comparisons.png" width="40%">
+                                                        <div class="d-flex mx-2">
+                                                            <div>
+                                                                <p>To generate a COVID graph, do the following:</p>
+                                                                <ol>
+                                                                    <li>
+                                                                        Click on the <strong><span class='text-danger'>Choose a column...</span></strong> dropdown <span class="text-danger">(as seen in the red box)</span>.
+                                                                    </li>
+                                                                    <li>
+                                                                        You will see a dropdown with all of the columns in the table on the <a href="/data">data</a> page. Select one of the columns (an example of this dropdown can be seen to the right).
+                                                                    </li>
+                                                                    <li>
+                                                                        The <strong class="text-success">Generate Chart/Graph</strong> button <span class='text-success'>(as seen in the green box)</span> will change 
+                                                                        from being disabled to enabled. When you click on this button, a chart/graph will pop up.
+                                                                    </li>
+                                                                </ol>
+                                                            </div>
+                                                            <img src="../../static/img/usermanual/covid_data_dropdown_options.png" width="25%">
+                                                        </div>
+                                                    </div>
+
+                                                    <hr>
+                                                    <h5 class="mt-3">Bar Chart Generation</h5>
+                                                    <p>Below the Class by Class and COVID Data Comparison sections lives 2 more boxes. On the left side, the Bar Chart Generation section is visible. An example of what this box 
+                                                        looks like can be seen below:</p>
+                                                    <div class="d-flex mt-2">
+                                                        <img src="../../static/img/usermanual/bar_chart_generation.png" width="40%">
+                                                        <div>
+                                                            <p>To generate a bar chart, follow these steps:</p>
+                                                            <ol>
+                                                                <li>
+                                                                    Select an X-Axis column to compare. To do this, click on the <span class="text-danger">X-Axis Choose a column</span> dropdown 
+                                                                    <span class="text-danger">(as seen in the red box)</span>. This will allow you to choose from any of the columns in the database.
+                                                                </li>
+                                                                <li>
+                                                                    Select an Y-Axis column to compare. To do this, click on the <span style="color: purple">Y-Axis Choose a column</span> dropdown 
+                                                                    <span style="color: purple">(as seen in the purple box)</span>. This will allow you to choose from any of the columns in the database.
+                                                                </li>
+                                                                <li>
+                                                                    Click the <span class="text-success">Generate Bar Chart</span> button <span class="text-success">(as seen in the green box)</span>. 
+                                                                    You will see a pop up with the generated bar chart appear.
+                                                                </li>
+                                                            </ol>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
