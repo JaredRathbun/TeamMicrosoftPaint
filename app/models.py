@@ -314,7 +314,10 @@ class Utils:
         for group in XGroups:
             group_key = getattr(group[0], x_col_str)
             if (group_key == None):
-                del return_dict[None]
+                try:
+                    del return_dict[None]
+                except KeyError:
+                    continue
 
             col_sum = 0
             col_len = 0
@@ -335,10 +338,52 @@ class Utils:
         '''
         '''
         return_dict = {}
+        print(startYear)
+        
+        match columnY:
+            case 'avg_gpa':
+                columnY = 'gpa_cumulative'
+
+            case 'avg_high_school_gpa':
+                columnY = 'high_school_gpa'
+
+            case 'avg_math_placement_score':
+                columnY = 'math_placement_score'
+
+            case 'avg_sat_total':
+                columnY = 'sat_total'
+
+            case 'avg_sat_math':
+                columnY = 'sat_math'
+
+        years_list = list(range( startYear, endYear))
+        return_dict = Utils.get_avg_for_year(columnY, years_list)
    
+        print(return_dict)
         return return_dict
 
-        
+    def get_avg_for_year(column: str, year: list):
+        '''
+        '''
+        all_class_data_objects = []
+
+        for class_data_obj in ClassData.query.all():
+            course_obj = class_data_obj.course_obj
+
+        print(year)
+        for i in year:
+            if (course_obj.year == i):
+                all_class_data_objects.append(class_data_obj)
+
+            column_sum = 0
+            column_entry_count = 0
+            for cd in all_class_data_objects:
+                attribute = getattr(cd.student_obj, column)
+                if attribute != 0.0 and attribute != None:
+                    column_sum += attribute
+                    column_entry_count += 1
+
+            return round((column_sum / column_entry_count), 2) if column_entry_count > 0 else 0
 
 class ProviderEnum(enum.Enum):
     '''

@@ -379,7 +379,7 @@ def bar_chart_comparison():
 
 
 @dash_bp.route('/scatter-plot-comparisons', methods = ['POST'])
-def bar_chart_comparison():
+def scatter_plot_comparison():
     body = request.get_json()
 
     if ('lowestYearSelect' not in body or 'highestYearSelect' not in body 

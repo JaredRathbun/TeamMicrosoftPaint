@@ -733,6 +733,55 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
 
     return chartOrGraphDiv;
 }
+function buildScatterPlot(data, yAxisLabel) {
+    const chartOrGraphDiv = document.createElement('div');
+    const layout = {
+        autosize: false,
+        width: 920,
+        height: 450,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        }
+    }
+
+    /**
+     * Generates a Scatter Plot.
+     */
+     const genScatterplot = (data) => {
+        layout.title = {
+            text: `${yAxisLabel} per Course`
+        };
+        layout.xaxis = {
+            showline: true,
+            showticklabels: false,
+            title: 'Courses'
+        };
+        layout.yaxis = {
+            title: yAxisLabel
+        }
+
+        var courseTraceList = [];
+
+        for (var course in data) {
+            courseTraceList.push({
+                x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                y: data[course],
+                mode: 'markers',
+                type: 'scatter',
+                name: course
+            });
+        }
+
+        Plotly.newPlot(chartOrGraphDiv, courseTraceList, layout);
+    };
+
+    genScatterplot(data);
+
+}
 
 function scatterPlotGeneration(){
     /**
@@ -774,8 +823,7 @@ function scatterPlotGeneration(){
         body: JSON.stringify({starYear: startYear, endYear: endYear, yAxis: yAxis})
     }).then((res) => res.json()).then((json) => {
         // Build the div containing the appropriate chart/graph, then show it.
-        var div = buildBarChart(json, yAxisLabel);
+        var div = buildScatterPlot(json, yAxisLabel);
         showChartOrGraphPopUp(div);
     });
-
 }

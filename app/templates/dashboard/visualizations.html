@@ -371,12 +371,15 @@
                                                     <td class="row-3">                                                  
                                                         <select class="form-select" id = "yAxisScatterData">
                                                         <option selected disabled>Choose a Value...</option>
-                                                        <option value="1">Types</option>
+                                                        <option value="avg_gpa">Average Cumulative GPA</option>
+                                                        <option value="avg_sat_math">Average Math SAT</option>
+                                                        <option value="avg_sat_total">Average Total SAT</option>
+                                                        <option value="avg_math_placement_score">Average Math Placement Score</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-2">
-                                                    <button id='showChartGraphButtonScatterplot' onclick='genScatterPlot()' 
-                                                    disabled class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                    <button id='showChartGraphButtonScatterplot' onclick='scatterPlotGeneration()' 
+                                                    class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>
