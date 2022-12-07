@@ -382,13 +382,14 @@ def bar_chart_comparison():
 def scatter_plot_comparison():
     body = request.get_json()
 
-    if ('lowestYearSelect' not in body or 'highestYearSelect' not in body 
-            or 'yAxisScatterData' not in body):
+    if ('startYear' not in body or 'endYear' not in body 
+            or 'yAxis' not in body):
         return {'message': 'Body missing information.'}, 400
         
     # Check for valid keys in body.
-    startYear = body['lowestYearSelect']
-    endYear = body['highestYearSelect']
-    yAxis = body['yAxisScatterData']
+    startYear = int(body['startYear'])
+    endYear = int(body['endYear'])
+    yAxis = body['yAxis']
+    print(startYear)
     data = Utils.get_scatter_plot_data(startYear, endYear, yAxis)
     return data, 200

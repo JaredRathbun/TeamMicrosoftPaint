@@ -337,53 +337,32 @@ class Utils:
     def get_scatter_plot_data(startYear: int, endYear: int, columnY: str):
         '''
         '''
-        return_dict = {}
-        print(startYear)
-        
         match columnY:
-            case 'avg_gpa':
+            case 'gpa':
                 columnY = 'gpa_cumulative'
 
-            case 'avg_high_school_gpa':
+            case 'high_school_gpa':
                 columnY = 'high_school_gpa'
 
-            case 'avg_math_placement_score':
+            case 'math_placement_score':
                 columnY = 'math_placement_score'
 
-            case 'avg_sat_total':
+            case 'sat_total':
                 columnY = 'sat_total'
 
-            case 'avg_sat_math':
+            case 'sat_math':
                 columnY = 'sat_math'
 
-        years_list = list(range( startYear, endYear))
-        return_dict = Utils.get_avg_for_year(columnY, years_list)
-   
-        print(return_dict)
+        years_list = list(range(startYear, endYear))
+
+        return_dict = {}
+        for year in years_list:
+            cd_list = []
+            for cd in ClassData.query.all():
+                if (cd.course_obj.year == year):
+                    cd_list.append(getattr(cd.student_obj, columnY))
+            return_dict[year] = cd_list
         return return_dict
-
-    def get_avg_for_year(column: str, year: list):
-        '''
-        '''
-        all_class_data_objects = []
-
-        for class_data_obj in ClassData.query.all():
-            course_obj = class_data_obj.course_obj
-
-        print(year)
-        for i in year:
-            if (course_obj.year == i):
-                all_class_data_objects.append(class_data_obj)
-
-            column_sum = 0
-            column_entry_count = 0
-            for cd in all_class_data_objects:
-                attribute = getattr(cd.student_obj, column)
-                if attribute != 0.0 and attribute != None:
-                    column_sum += attribute
-                    column_entry_count += 1
-
-            return round((column_sum / column_entry_count), 2) if column_entry_count > 0 else 0
 
 class ProviderEnum(enum.Enum):
     '''

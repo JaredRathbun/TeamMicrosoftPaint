@@ -753,34 +753,34 @@ function buildScatterPlot(data, yAxisLabel) {
      */
      const genScatterplot = (data) => {
         layout.title = {
-            text: `${yAxisLabel} per Course`
+            text: `${yAxisLabel} per Year`
         };
         layout.xaxis = {
             showline: true,
             showticklabels: false,
-            title: 'Courses'
+            title: 'Years'
         };
         layout.yaxis = {
             title: yAxisLabel
         }
 
-        var courseTraceList = [];
+        var yearTraceList = [];
 
-        for (var course in data) {
-            courseTraceList.push({
-                x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                y: data[course],
-                mode: 'markers',
+        for (var year in data) {
+            yearTraceList.push({
+                x: year,
+                y: data[year],
+                mode: 'lines+markers',
                 type: 'scatter',
-                name: course
+                name: year
             });
         }
 
-        Plotly.newPlot(chartOrGraphDiv, courseTraceList, layout);
+        Plotly.newPlot(chartOrGraphDiv, yearTraceList, layout);
     };
-
     genScatterplot(data);
 
+    return chartOrGraphDiv;
 }
 
 function scatterPlotGeneration(){
@@ -809,8 +809,11 @@ function scatterPlotGeneration(){
 
     // Get the column the user selected.
     var startYear = document.getElementById('lowestYearSelect');
-    var endYear = document.getElementById('highestYearSelect ');
+    var endYear = document.getElementById('highestYearSelect');
     var yAxis = document.getElementById('yAxisScatterData');
+    const yAxisVal = getSelectedValue(yAxis);
+    const start = getSelectedValue(startYear);
+    const end = getSelectedValue(endYear);
     const yAxisLabel = getSelectedLabel(yAxis);
 
     // Make the request to the backend to get the data.
@@ -820,7 +823,7 @@ function scatterPlotGeneration(){
             'Content-Type': 'application/json',
             accept: 'application/json'
         },
-        body: JSON.stringify({starYear: startYear, endYear: endYear, yAxis: yAxis})
+        body: JSON.stringify({startYear: start, endYear: end, yAxis: yAxisVal})
     }).then((res) => res.json()).then((json) => {
         // Build the div containing the appropriate chart/graph, then show it.
         var div = buildScatterPlot(json, yAxisLabel);
