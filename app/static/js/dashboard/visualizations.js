@@ -36,6 +36,40 @@ function logout(evt) {
     });
 }
 
+/**
+ * Returns the value of the selected option element inside of the specified 
+ * select element.
+ * @param {HTMLElement} selectElement The HTML Select element.
+ * @returns A string containing the value of the selected option element.
+ */
+function getSelectedValue(selectElement) {
+    return selectElement.options[selectElement.selectedIndex].value;
+}
+
+/**
+ * Gets the label/text that is inside of the selected option in the given
+ * select element.
+ * 
+ * @param {HTMLSelectElement} selectElement The Select Element to get the 
+ * label of.
+ * 
+ * @returns A string containing the label of the selected option. 
+ */
+function getSelectedLabel(selectElement) {
+    return selectElement.options[selectElement.selectedIndex].text;
+}
+
+/**
+ * Returns whether or not the selected index of the given select element was 
+ * valid.
+ * 
+ * @param {HTMLSelectElement} selectElement The HTMLSelectElement to check.
+ * @returns A boolean representing if the selection was valid.
+ */
+function hasValidSelection(selectElement) {
+    return selectElement.selectedIndex != 0;
+}
+
 let currentDropdownID = 0;
 let classSemesterMap;
 
@@ -162,10 +196,6 @@ function fillValidGraphTypes() {
  * "Generate Graph/Chart" button if they are.
  */
 function checkDropdowns() {
-    function hasValidSelection(selectElement) {
-        return selectElement.selectedIndex != 0;
-    }
-
     var validDropdowns = true;
 
     // Check the dropdown for the chart/graph type.
@@ -439,29 +469,6 @@ function showChartOrGraphPopUp(div) {
  * to generate a chart/graph.
  */
 function genClassByClassChartOrGraph() {
-    /**
-     * Returns the value of the selected option element inside of the specified 
-     * select element.
-     * @param {HTMLElement} selectElement The HTML Select element.
-     * @returns A string containing the value of the selected option element.
-     */
-    function getSelectedValue(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].value;
-    }
-
-    /**
-     * Gets the label/text that is inside of the selected option in the given
-     * select element.
-     * 
-     * @param {HTMLSelectElement} selectElement The Select Element to get the 
-     * label of.
-     * 
-     * @returns A string containing the label of the selected option. 
-     */
-    function getSelectedLabel(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].text;
-    }
-
     var selectedData = {};
 
     // Get the column the user selected.
@@ -503,16 +510,6 @@ function genClassByClassChartOrGraph() {
 
 function fillValidHighestYears(lowestSelectElement, highestYear) {
 
-    /**
-    * Returns the value of the selected option element inside of the specified 
-    * select element.
-    * @param {HTMLElement} selectElement The HTML Select element.
-    * @returns A string containing the value of the selected option element.
-    */
-    function getSelectedValue(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].value;
-    }
-
     var lowestSelectedValue = getSelectedValue(lowestSelectElement);
     var highestSelect = document.getElementById('highestYearSelect');
 
@@ -529,10 +526,6 @@ function fillValidHighestYears(lowestSelectElement, highestYear) {
  * "Generate Graph/Chart" button if they are.
  */
  function checkCovidDropdowns() {
-    function hasValidSelection(selectElement) {
-        return selectElement.selectedIndex != 0;
-    }
-
     var validDropdowns = true;
 
     // Check to make sure a column in the dataset was selected.
@@ -547,28 +540,6 @@ function fillValidHighestYears(lowestSelectElement, highestYear) {
 }
 
 function genCovidGraph() {
-    /**
-    * Returns the value of the selected option element inside of the specified 
-    * select element.
-    * @param {HTMLElement} selectElement The HTML Select element.
-    * @returns A string containing the value of the selected option element.
-    */
-    function getSelectedValue(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].value;
-    }
-
-    /**
-     * Gets the label/text that is inside of the selected option in the given
-     * select element.
-     * 
-     * @param {HTMLSelectElement} selectElement The Select Element to get the 
-     * label of.
-     * 
-     * @returns A string containing the label of the selected option. 
-     */
-    function getSelectedLabel(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].text;
-    }
 
     // Get the column the user selected.
     var columnSelect = document.getElementById('covidData');
@@ -641,29 +612,6 @@ function buildCovidChart(data, yAxisLabel) {
 }
 
 function barChartGeneration(){
-    /**
-     * Returns the value of the selected option element inside of the specified 
-     * select element.
-     * @param {HTMLElement} selectElement The HTML Select element.
-     * @returns A string containing the value of the selected option element.
-     */
-     function getSelectedValue(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].value;
-    }
-
-    /**
-     * Gets the label/text that is inside of the selected option in the given
-     * select element.
-     * 
-     * @param {HTMLSelectElement} selectElement The Select Element to get the 
-     * label of.
-     * 
-     * @returns A string containing the label of the selected option. 
-     */
-    function getSelectedLabel(selectElement) {
-        return selectElement.options[selectElement.selectedIndex].text;
-    }
-
     // Get the column the user selected.
     var XValueSelect = document.getElementById('barChartXValues');
     var YValueSelect = document.getElementById('barChartYValues');
@@ -734,4 +682,16 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
     genBarGraph(data);
 
     return chartOrGraphDiv;
+}
+
+function checkBarChartFields() {
+    const xAxis = document.getElementById('barChartXValues');
+    const yAxis = document.getElementById('barChartYValues');
+    const genButton = document.getElementById('barChartGenerateButton');
+
+    if (hasValidSelection(xAxis) && hasValidSelection(yAxis)) {
+        genButton.disabled = false;
+    } else {
+        genButton.disabled = true;
+    }
 }

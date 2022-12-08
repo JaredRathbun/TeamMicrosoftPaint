@@ -342,7 +342,7 @@
                                         <tbody>
                                             <tr>
                                                 <td >
-                                                    <select class="form-select" id="barChartXValues">
+                                                    <select class="form-select" id="barChartXValues" onchange="checkBarChartFields()">
                                                         <option selected disabled>Choose a column...</option>
                                                         <option value="admit_term">Admit Term</option>
                                                         <option value="admit_year">Admit Year</option>
@@ -360,7 +360,7 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <select class="form-select" id="barChartYValues">
+                                                    <select class="form-select" id="barChartYValues" onchange="checkBarChartFields()">
                                                         <option selected disabled>Choose a column...</option>
                                                         <option value="avg_gpa">Average Cumulative GPA</option>
                                                         <option value="avg_sat_math">Average Math SAT</option>
@@ -373,7 +373,7 @@
                                         </tbody>
                                     </table>
                                     <button id='barChartGenerateButton' onclick='barChartGeneration()'
-                                                    class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                    class="btn btn-primary my-3 mr-2" disabled>Generate Bar Chart</button>
                                 </div>
                             </div>
                         </div>
@@ -382,8 +382,9 @@
                                 <div
                                     class="card-header d-flex justify-content-between align-items-center align-middle">
                                     <h6 class="text-primary fw-bold m-0">Scatter Plot Generation</h6>
-                                    <p class="text-primary m-0">To generate a scatter plot, select the Year Range
-                                        and the Y-Values.</p>
+                                    <span class='mx-1' data-toggle="tooltip" data-placement="auto"
+                                        title="To generate a scatter plot, select the start year, end year, and column you would like to analyze."><i
+                                            class="fa fa-light fa-circle-info"></i></span>
                                 </div>
                                 <div class="card-body align-items-center align-middle">
                                     <table class="table table-responsive my-0">
@@ -391,7 +392,7 @@
                                             <tr>
                                                 <th class="col-3">Start Year</th>
                                                 <th class="col-3">End Year</th>
-                                                <th class="col-3">Y-Values</th>
+                                                <th class="col-3">Y-Axis Value</th>
                                                 <th class="col-2"></th>
                                             </tr>
                                         </thead>
@@ -415,7 +416,7 @@
                                                 </td>
                                                 <td class="row-3">
                                                     <select class="form-select" id="xAxisData">
-                                                        <option selected disabled>Choose a Value...</option>
+                                                        <option selected disabled>Choose a Y-Axis...</option>
                                                         <option value="1">Types</option>
                                                     </select>
                                                 </td>
@@ -423,7 +424,7 @@
                                                     <button id='showChartGraphButtonScatterplot'
                                                         onclick='genScatterPlot()' disabled
                                                         class="btn btn-primary my-3 mr-2">Generate
-                                                        Chart/Graph</button>
+                                                        Scatter Plot</button>
                                                 </td>
                                             </tr>
                                         </tbody>
