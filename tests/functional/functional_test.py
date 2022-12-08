@@ -179,7 +179,7 @@ def test_good_otp_auth(test_client, init_db):
     from app.models import User
 
     usr = User.query.get('admin.teammspaint@gmail.com')
-    otp = usr.get_otp().now()
+    otp = usr.get_otp()
 
     res = test_client.post('/otp/admin.teammspaint@gmail.com', json={
         'otp': otp
@@ -316,7 +316,7 @@ def __read_file(file_name: str) -> tuple[BytesIO, str]:
         return (BytesIO(file.read()), file_path)
 
 
-def test_good_data_upload(test_client):
+def test_good_data_upload(test_client, init_db):
     from app.models import Student, Course, ClassData
     
     file = {

@@ -23,12 +23,21 @@
 # https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
 # https://testdriven.io/blog/flask-pytest/
 
-from cgi import test
+# Add the directory above the tests/ directory to the sys path so the app can
+# be imported.
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 import pytest
 from app import init_app, db
 from os.path import abspath as abspath
 from os import environ as environ
 from sqlalchemy.orm import declarative_base
+from base64 import b64encode 
+
+def __str_to_b64(str_to_convert: str):
+    return b64encode(str_to_convert.encode('ascii')).decode('ascii')
+
 
 @pytest.fixture(scope='module')
 def test_client():
@@ -41,11 +50,11 @@ def test_client():
     with app.test_client() as testing_client:
         with app.app_context():
             yield testing_client
-        db.drop_all()
+            db.drop_all()
 
 
 @pytest.fixture(scope='module')
-def init_db(test_client):
+def init_db():
     base = declarative_base()
 
     from app.models import User
@@ -70,4 +79,3 @@ def init_db(test_client):
     db.session.close()
     # base.metadata.drop_all(bind=db.engine)
     db.drop_all()
- 
