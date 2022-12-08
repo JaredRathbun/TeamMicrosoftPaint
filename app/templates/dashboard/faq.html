@@ -412,7 +412,7 @@
                                                 </div>
                                                 <div class="card-body align-items-center">
                                                     <p>
-                                                    The <a href="/dashboard">Visualizations</a> page serves as the page on the dashboard where the most operations can be performed. On this page,
+                                                    The <a href="/visualizations">Visualizations</a> page serves as the page on the dashboard where the most operations can be performed. On this page,
                                                     you are able to specify the columns in the dataset you would like to analyze; along with the type of chart or graph you would like to generate.
                                                     At the top of the page, you are presented with a general data bar which holds common analytics from the database. An example of the general data bar
                                                     can be seen below.
@@ -499,20 +499,51 @@
                                                         looks like can be seen below:</p>
                                                     <div class="d-flex mt-2">
                                                         <img src="../../static/img/usermanual/bar_chart_generation.png" width="40%">
-                                                        <div>
+                                                        <div class="mx-2">
                                                             <p>To generate a bar chart, follow these steps:</p>
                                                             <ol>
                                                                 <li>
-                                                                    Select an X-Axis column to compare. To do this, click on the <span class="text-danger">X-Axis Choose a column</span> dropdown 
+                                                                    Select an X-Axis column to compare. To do this, click on the <span class="text-danger"><strong>X-Axis column</strong></span> dropdown 
                                                                     <span class="text-danger">(as seen in the red box)</span>. This will allow you to choose from any of the columns in the database.
                                                                 </li>
                                                                 <li>
-                                                                    Select an Y-Axis column to compare. To do this, click on the <span style="color: purple">Y-Axis Choose a column</span> dropdown 
+                                                                    Select an Y-Axis column to compare. To do this, click on the <span style="color: purple"><strong>Y-Axis column</strong></span> dropdown 
                                                                     <span style="color: purple">(as seen in the purple box)</span>. This will allow you to choose from any of the columns in the database.
                                                                 </li>
                                                                 <li>
-                                                                    Click the <span class="text-success">Generate Bar Chart</span> button <span class="text-success">(as seen in the green box)</span>. 
+                                                                    Click the <span class="text-success"><strong>Generate Bar Chart</strong></span> button <span class="text-success">(as seen in the green box)</span>. 
                                                                     You will see a pop up with the generated bar chart appear.
+                                                                </li>
+                                                            </ol>
+                                                        </div>
+                                                    </div>
+
+                                                    <hr>
+                                                    <h5 class="mt-3">Scatter Plot Generation</h5>
+                                                    <p>
+                                                        Next to the Bar Chart Generation card the Scatter Plot Generation section can be found. This section is used to solely generate scatter plots. 
+                                                        An example of what this section looks like can be seen below:
+                                                    </p>
+                                                    <div class="d-flex mt-2">
+                                                        <img src="../../static/img/usermanual/scatter_plot_unfilled.png" width="40%">
+                                                        <div class="mx-2">
+                                                            <p>To generate a scatter plot, follow these steps:</p>
+                                                            <ol>
+                                                                <li>
+                                                                    Select a start year. To do this, click on the <span class="text-danger"><strong>Start Year</strong></span> dropdown <span class="text-danger">
+                                                                        (as seen in the red box)</span>. A list of all the valid years in the database will be shown.
+                                                                </li>
+                                                                <li>
+                                                                    Select an end year. To do this, the previous step must be completed. Click on the <span style="color: orange"><strong>End Year</strong></span> dropdown <span style="color: orange">
+                                                                        (as seen in the green box)</span>. A list of years starting at the start year and running until the most recent year in the database will appear.
+                                                                </li>
+                                                                <li>
+                                                                    Select a Y-Axis value. To do this, click on the <span style="color: purple;"><strong>Y-Axis Value</strong></span> dropdown <span style="color: purple;">
+                                                                        (as seen in the purple box)</span>. This will be one of the columns on the <a href="/data">data</a> page.
+                                                                </li>
+                                                                <li>
+                                                                    Click on the <span class="text-success"><strong>Generate Scatter Plot</strong></span> button <span class="text-success">(as seen in the green box)</span>. A pop up will appear with 
+                                                                    the scatter plot you generated.
                                                                 </li>
                                                             </ol>
                                                         </div>
