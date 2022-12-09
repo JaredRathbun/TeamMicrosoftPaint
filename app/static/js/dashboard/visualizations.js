@@ -278,7 +278,6 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
         };
         layout.xaxis = {
             showline: true,
-            showticklabels: false,
             title: 'Courses'
         };
         layout.yaxis = {
@@ -289,7 +288,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
 
         for (var course in data) {
             courseTraceList.push({
-                x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                x: new Array(data[course].length).fill(course),
                 y: data[course],
                 mode: 'markers',
                 type: 'scatter',
