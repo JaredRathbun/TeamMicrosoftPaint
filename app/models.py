@@ -255,9 +255,6 @@ class Utils:
 
     @staticmethod
     def get_bar_chart_data(columnX: str, columnY: str) -> dict:
-        
-        data_dict = {}
-
         match columnX:
             case 'admit_term':
                 columnX = Student.admit_term
@@ -286,8 +283,6 @@ class Utils:
             case 'hs_state':
                 columnX = Student.high_school_state
 
-        groups = Utils.group_table_by_column(Student, columnX)
-
         match columnY:
             case 'avg_gpa':
                 columnY = 'gpa_cumulative'
@@ -304,16 +299,70 @@ class Utils:
             case 'avg_sat_math':
                 columnY = 'sat_math'
 
-        avg_col_val = Utils.get_avg_for_bar_data(groups, columnY)
-
+        Xgroups = Utils.group_table_by_column(Student, columnX)
+        data_dict = Utils.get_avg_for_bar_data(Xgroups, columnX, columnY)
             
-        return data_dict
+        return data_dict 
 
     @staticmethod
-    def get_avg_for_bar_data(grouped, columnY):
+    def get_avg_for_bar_data(XGroups: list[list], xColumn, yColumn: str):
+        '''
+    
+        '''
+        x_col_str = str(xColumn).split('.')[1]
+        return_dict = {}
+        for group in XGroups:
+            group_key = getattr(group[0], x_col_str)
+            if (group_key == None):
+                try:
+                    del return_dict[None]
+                except KeyError:
+                    continue
+
+            col_sum = 0
+            col_len = 0
+            for student in group:
+                y_col_val = getattr(student, yColumn)
+
+                if (y_col_val is not None):
+                    col_sum += y_col_val
+                    col_len += 1
+
+            avg = col_sum / col_len if (col_len > 0) else 0
+            return_dict[group_key] = round(avg, 2)
+    
+        return return_dict
+
+    @staticmethod
+    def get_scatter_plot_data(startYear: int, endYear: int, columnY: str):
         '''
         '''
-        
+        match columnY:
+            case 'gpa':
+                columnY = 'gpa_cumulative'
+
+            case 'high_school_gpa':
+                columnY = 'high_school_gpa'
+
+            case 'math_placement_score':
+                columnY = 'math_placement_score'
+
+            case 'sat_total':
+                columnY = 'sat_total'
+
+            case 'sat_math':
+                columnY = 'sat_math'
+
+        years_list = list(range(startYear, endYear))
+
+        return_dict = {}
+        for year in years_list:
+            cd_list = []
+            for cd in ClassData.query.all():
+                if (cd.course_obj.year == year):
+                    cd_list.append(getattr(cd.student_obj, columnY))
+            return_dict[year] = cd_list
+        return return_dict
 
     @staticmethod
     def get_all_data() -> list[dict]:

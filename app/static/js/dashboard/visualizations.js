@@ -308,7 +308,6 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
         };
         layout.xaxis = {
             showline: true,
-            showticklabels: false,
             title: 'Courses'
         };
         layout.yaxis = {
@@ -319,7 +318,7 @@ function buildChartOrGraph(chartGraphType, data, yAxisLabel) {
         var xAxisCount = 1;
         for (var course in data) {
             courseTraceList.push({
-                x: [xAxisCount],
+                x: new Array(data[course].length).fill(course),
                 y: data[course],
                 mode: 'markers',
                 type: 'scatter',
@@ -665,11 +664,9 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
             title: yAxisLabel
         };
 
-        var xValues = [];
-        var yValues = [];
+        var xValues = Object.keys(data);
+        var yValues = Object.values(data);
 
-       
-        
         var data = [{
             x: xValues,
             y: yValues,
@@ -683,6 +680,139 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
 
     return chartOrGraphDiv;
 }
+
+function buildScatterPlot(data, yAxisLabel, startYear, endYear) {
+    const chartOrGraphDiv = document.createElement('div');
+    const layout = {
+        autosize: false,
+        width: 920,
+        height: 450,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        }
+    }
+
+    layout.title = {
+        text: `${yAxisLabel} per Year`
+    };
+
+    // layout.xaxis = {
+    //     dtick: 1,
+    //     showline: true,
+    //     range: [startYear, endYear],
+    //     title: 'Years'
+    // };
+    // layout.yaxis = {
+    //     title: yAxisLabel
+    // }
+
+    // var yearTraceList = [];
+    // for (var year in data) {
+    //     yearTraceList.push({
+    //         x: new Array(data[year].length).fill(year),
+    //         y: data[year],
+    //         mode: 'markers',
+    //         type: 'scatter',
+    //         name: year
+    //     });
+    // }
+
+    layout.yaxis = {
+        showline: true,
+        title: 'Years',
+        range: [startYear, endYear],
+        dtick: 1
+    };
+    layout.xaxis = {
+        title: yAxisLabel
+    }
+
+    var yearTraceList = [];
+    for (var year in data) {
+        yearTraceList.push({
+            y: new Array(data[year].length).fill(year),
+            x: data[year],
+            mode: 'markers',
+            type: 'scatter',
+            name: year
+        });
+    }
+
+    Plotly.newPlot(chartOrGraphDiv, yearTraceList, layout);
+
+    return chartOrGraphDiv;
+}
+
+function scatterPlotGeneration(){
+    /**
+     * Returns the value of the selected option element inside of the specified 
+     * select element.
+     * @param {HTMLElement} selectElement The HTML Select element.
+     * @returns A string containing the value of the selected option element.
+     */
+     function getSelectedValue(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].value;
+    }
+
+    /**
+     * Gets the label/text that is inside of the selected option in the given
+     * select element.
+     * 
+     * @param {HTMLSelectElement} selectElement The Select Element to get the 
+     * label of.
+     * 
+     * @returns A string containing the label of the selected option. 
+     */
+    function getSelectedLabel(selectElement) {
+        return selectElement.options[selectElement.selectedIndex].text;
+    }
+
+    // Get the column the user selected.
+    var startSelect = document.getElementById('lowestYearSelect');
+    var endSelect = document.getElementById('highestYearSelect');
+    var yAxis = document.getElementById('scatterYAxisValue');
+    const yAxisVal = getSelectedValue(yAxis);
+    const startYear = getSelectedValue(startSelect);
+    const endYear = getSelectedValue(endSelect);
+    const yAxisLabel = getSelectedLabel(yAxis);
+
+    // Make the request to the backend to get the data.
+    fetch('/scatter-plot-comparisons', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json'
+        },
+        body: JSON.stringify({
+            startYear: startYear, 
+            endYear: endYear, 
+            yAxis: yAxisVal
+        })
+    }).then((res) => res.json()).then((json) => {
+        // Build the div containing the appropriate chart/graph, then show it.
+        var div = buildScatterPlot(json, yAxisLabel, startYear, endYear);
+        showChartOrGraphPopUp(div);
+    });
+}
+
+function checkScatterPlotFields() {
+    const startYear = document.getElementById('lowestYearSelect').selectedIndex;
+    const endYear = document.getElementById('highestYearSelect').selectedIndex;
+    const yValue = document.getElementById('scatterYAxisValue').selectedIndex;
+
+    const genButton = document.getElementById('genScatterplotBtn');
+
+    if (startYear != 0 && endYear != 0 && yValue != 0) {
+        genButton.disabled = false;
+    } else {
+        genButton.disabled = true;
+    }
+}
+
 
 function checkBarChartFields() {
     const xAxis = document.getElementById('barChartXValues');

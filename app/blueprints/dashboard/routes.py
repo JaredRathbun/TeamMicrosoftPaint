@@ -434,3 +434,18 @@ def download_sample_data():
     return send_file(path.join(getcwd(), 'data/sample_data.xlsx'), 
         as_attachment=True, download_name='sample_data.xlsx')
 
+
+@dash_bp.route('/scatter-plot-comparisons', methods = ['POST'])
+def scatter_plot_comparison():
+    body = request.get_json()
+
+    if ('startYear' not in body or 'endYear' not in body 
+            or 'yAxis' not in body):
+        return {'message': 'Body missing information.'}, 400
+        
+    # Check for valid keys in body.
+    startYear = int(body['startYear'])
+    endYear = int(body['endYear'])
+    yAxis = body['yAxis']
+    data = Utils.get_scatter_plot_data(startYear, endYear, yAxis)
+    return data, 200
