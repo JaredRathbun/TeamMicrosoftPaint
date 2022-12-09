@@ -390,6 +390,5 @@ def scatter_plot_comparison():
     startYear = int(body['startYear'])
     endYear = int(body['endYear'])
     yAxis = body['yAxis']
-    print(startYear)
     data = Utils.get_scatter_plot_data(startYear, endYear, yAxis)
     return data, 200

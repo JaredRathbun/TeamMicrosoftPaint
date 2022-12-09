@@ -733,7 +733,10 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
 
     return chartOrGraphDiv;
 }
-function buildScatterPlot(data, yAxisLabel) {
+
+function buildScatterPlot(data, yAxisLabel, startYear, endYear) {
+    console.log(data);
+
     const chartOrGraphDiv = document.createElement('div');
     const layout = {
         autosize: false,
@@ -748,37 +751,32 @@ function buildScatterPlot(data, yAxisLabel) {
         }
     }
 
-    /**
-     * Generates a Scatter Plot.
-     */
-     const genScatterplot = (data) => {
-        layout.title = {
-            text: `${yAxisLabel} per Year`
-        };
-        layout.xaxis = {
-            showline: true,
-            showticklabels: false,
-            title: 'Years'
-        };
-        layout.yaxis = {
-            title: yAxisLabel
-        }
-
-        var yearTraceList = [];
-
-        for (var year in data) {
-            yearTraceList.push({
-                x: year,
-                y: data[year],
-                mode: 'lines+markers',
-                type: 'scatter',
-                name: year
-            });
-        }
-
-        Plotly.newPlot(chartOrGraphDiv, yearTraceList, layout);
+    layout.title = {
+        text: `${yAxisLabel} per Year`
     };
-    genScatterplot(data);
+
+    layout.xaxis = {
+        dtick: 1,
+        showline: true,
+        range: [startYear, endYear],
+        title: 'Years'
+    };
+    layout.yaxis = {
+        title: yAxisLabel
+    }
+
+    var yearTraceList = [];
+    for (var year in data) {
+        yearTraceList.push({
+            x: new Array(data[year].length).fill(year),
+            y: data[year],
+            mode: 'markers',
+            type: 'scatter',
+            name: year
+        });
+    }
+
+    Plotly.newPlot(chartOrGraphDiv, yearTraceList, layout);
 
     return chartOrGraphDiv;
 }
@@ -808,12 +806,12 @@ function scatterPlotGeneration(){
     }
 
     // Get the column the user selected.
-    var startYear = document.getElementById('lowestYearSelect');
-    var endYear = document.getElementById('highestYearSelect');
-    var yAxis = document.getElementById('yAxisScatterData');
+    var startSelect = document.getElementById('lowestYearSelect');
+    var endSelect = document.getElementById('highestYearSelect');
+    var yAxis = document.getElementById('scatterYAxisValue');
     const yAxisVal = getSelectedValue(yAxis);
-    const start = getSelectedValue(startYear);
-    const end = getSelectedValue(endYear);
+    const startYear = getSelectedValue(startSelect);
+    const endYear = getSelectedValue(endSelect);
     const yAxisLabel = getSelectedLabel(yAxis);
 
     // Make the request to the backend to get the data.
@@ -823,10 +821,28 @@ function scatterPlotGeneration(){
             'Content-Type': 'application/json',
             accept: 'application/json'
         },
-        body: JSON.stringify({startYear: start, endYear: end, yAxis: yAxisVal})
+        body: JSON.stringify({
+            startYear: startYear, 
+            endYear: endYear, 
+            yAxis: yAxisVal
+        })
     }).then((res) => res.json()).then((json) => {
         // Build the div containing the appropriate chart/graph, then show it.
-        var div = buildScatterPlot(json, yAxisLabel);
+        var div = buildScatterPlot(json, yAxisLabel, startYear, endYear);
         showChartOrGraphPopUp(div);
     });
+}
+
+function checkScatterPlotFields() {
+    const startYear = document.getElementById('lowestYearSelect').selectedIndex;
+    const endYear = document.getElementById('highestYearSelect').selectedIndex;
+    const yValue = document.getElementById('scatterYAxisValue').selectedIndex;
+
+    const genButton = document.getElementById('genScatterplotBtn');
+
+    if (startYear != 0 && endYear != 0 && yValue != 0) {
+        genButton.disabled = false;
+    } else {
+        genButton.disabled = true;
+    }
 }

@@ -355,7 +355,7 @@
                                         <tbody> 
                                             <tr>
                                                 <td class="row-3">
-                                                    <select class="form-select" id="lowestYearSelect" onchange ="fillValidHighestYears(this, {{ lowest_highest_years.highest }})">
+                                                    <select class="form-select" id="lowestYearSelect" onchange="fillValidHighestYears(this, {{ lowest_highest_years.highest }}); checkScatterPlotFields();">
                                                         <option selected disabled>Choose a Start Year...</option>
                                                         {% for i in range( lowest_highest_years.lowest, lowest_highest_years.highest +1 )%}
                                                             <option value= {{ i }}>{{ i }}</option>
@@ -364,22 +364,22 @@
                                                     </select>
                                                     </td>
                                                     <td class="row-3">
-                                                    <select class="form-select" id = "highestYearSelect">
+                                                    <select class="form-select" id = "highestYearSelect" onchange="checkScatterPlotFields()">
                                                         <option selected disabled>Choose an End Year...</option>
                                                     </select>
                                                     </td>
                                                     <td class="row-3">                                                  
-                                                        <select class="form-select" id = "yAxisScatterData">
+                                                        <select class="form-select" id = "scatterYAxisValue" onchange="checkScatterPlotFields()">
                                                         <option selected disabled>Choose a Value...</option>
-                                                        <option value="gpa">Average Cumulative GPA</option>
-                                                        <option value="sat_math">Average Math SAT</option>
-                                                        <option value="sat_total">Average Total SAT</option>
-                                                        <option value="math_placement_score">Average Math Placement Score</option>
+                                                        <option value="gpa">Student GPA</option>
+                                                        <option value="sat_math">Math SAT Score</option>
+                                                        <option value="sat_total">Total SAT</option>
+                                                        <option value="math_placement_score">Math Placement Score</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-2">
-                                                    <button id='showChartGraphButtonScatterplot' onclick='scatterPlotGeneration()' 
-                                                    class="btn btn-primary my-3 mr-2">Generate Chart/Graph</button>
+                                                    <button id='genScatterplotBtn' onclick='scatterPlotGeneration()' 
+                                                    class="btn btn-primary my-3 mr-2" disabled>Generate Chart/Graph</button>
                                                 </td>
                                             </tr>
                                         </tbody>
