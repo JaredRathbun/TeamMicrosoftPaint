@@ -747,7 +747,7 @@ function buildScatterPlot(data, yAxisLabel, startYear, endYear) {
     return chartOrGraphDiv;
 }
 
-function scatterPlotGeneration(){
+function genScatterPlot(){
     /**
      * Returns the value of the selected option element inside of the specified 
      * select element.
@@ -804,7 +804,7 @@ function checkScatterPlotFields() {
     const endYear = document.getElementById('highestYearSelect').selectedIndex;
     const yValue = document.getElementById('scatterYAxisValue').selectedIndex;
 
-    const genButton = document.getElementById('genScatterplotBtn');
+    const genButton = document.getElementById('genScatterPlotBtn');
 
     if (startYear != 0 && endYear != 0 && yValue != 0) {
         genButton.disabled = false;

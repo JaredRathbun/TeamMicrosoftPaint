@@ -414,14 +414,17 @@
                                                         <option selected disabled>Choose an End Year...</option>
                                                     </select>
                                                 </td>
-                                                <td class="row-3">
-                                                    <select class="form-select" id="xAxisData">
-                                                        <option selected disabled>Choose a Y-Axis...</option>
-                                                        <option value="1">Types</option>
+                                                <td class="row-3">                                                  
+                                                    <select class="form-select" id = "scatterYAxisValue" onchange="checkScatterPlotFields()">
+                                                        <option selected disabled>Choose a Value...</option>
+                                                        <option value="gpa">Student GPA</option>
+                                                        <option value="sat_math">Math SAT Score</option>
+                                                        <option value="sat_total">Total SAT</option>
+                                                        <option value="math_placement_score">Math Placement Score</option>
                                                     </select>
                                                 </td>
                                                 <td class="col-2">
-                                                    <button id='showChartGraphButtonScatterplot'
+                                                    <button id='genScatterPlotBtn'
                                                         onclick='genScatterPlot()' disabled
                                                         class="btn btn-primary my-3 mr-2">Generate
                                                         Scatter Plot</button>
