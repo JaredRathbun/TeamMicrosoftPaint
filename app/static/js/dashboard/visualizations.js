@@ -734,8 +734,6 @@ function buildBarChart(data, yAxisLabel, xAxisLabel) {
 }
 
 function buildScatterPlot(data, yAxisLabel, startYear, endYear) {
-    console.log(data);
-
     const chartOrGraphDiv = document.createElement('div');
     const layout = {
         autosize: false,
@@ -754,21 +752,42 @@ function buildScatterPlot(data, yAxisLabel, startYear, endYear) {
         text: `${yAxisLabel} per Year`
     };
 
-    layout.xaxis = {
-        dtick: 1,
-        showline: true,
-        range: [startYear, endYear],
-        title: 'Years'
-    };
+    // layout.xaxis = {
+    //     dtick: 1,
+    //     showline: true,
+    //     range: [startYear, endYear],
+    //     title: 'Years'
+    // };
+    // layout.yaxis = {
+    //     title: yAxisLabel
+    // }
+
+    // var yearTraceList = [];
+    // for (var year in data) {
+    //     yearTraceList.push({
+    //         x: new Array(data[year].length).fill(year),
+    //         y: data[year],
+    //         mode: 'markers',
+    //         type: 'scatter',
+    //         name: year
+    //     });
+    // }
+
     layout.yaxis = {
+        showline: true,
+        title: 'Years',
+        range: [startYear, endYear],
+        dtick: 1
+    };
+    layout.xaxis = {
         title: yAxisLabel
     }
 
     var yearTraceList = [];
     for (var year in data) {
         yearTraceList.push({
-            x: new Array(data[year].length).fill(year),
-            y: data[year],
+            y: new Array(data[year].length).fill(year),
+            x: data[year],
             mode: 'markers',
             type: 'scatter',
             name: year
