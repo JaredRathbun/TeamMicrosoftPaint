@@ -21,5 +21,17 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-export env='dev'
-pytest
+export env='test'
+
+pytest -s
+# if [$# -eq 0]
+#     then
+#         pytest -s
+#     else
+#         ARGS_STR='pytest -s '   
+#         for arg in $@; do
+#             ARGS_STR+=$arg
+#         done
+#         echo $ARGS_STR
+#         pytest $ARGS_STR -s
+# fi
