@@ -25,14 +25,14 @@ from app.models import RoleEnum
 import pytest
 
 
-@pytest.mark.parametrize('test_client', [[True, RoleEnum.VIEWER, True]], 
-    indirect=True)
-def test_get_dashboard(test_client):
-    res = test_client.get('/dashboard')
+# @pytest.mark.parametrize('test_client', [[True, RoleEnum.VIEWER, True]], 
+#     indirect=True)
+# def test_get_dashboard(test_client):
+#     res = test_client.get('/dashboard')
     
-    assert (res.status_code == 200)
-    assert ('Content-Type' in res.headers)
-    assert ('text/html; charset=utf-8' == res.headers['Content-Type'])
+#     assert (res.status_code == 200)
+#     assert ('Content-Type' in res.headers)
+#     assert ('text/html; charset=utf-8' == res.headers['Content-Type'])
 
     
 # def __read_file(file_name: str) -> tuple[BytesIO, str]:

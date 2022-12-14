@@ -433,4 +433,3 @@ def download_all_data():
 def download_sample_data():
     return send_file(path.join(getcwd(), 'data/sample_data.xlsx'), 
         as_attachment=True, download_name='sample_data.xlsx')
-

@@ -22,22 +22,21 @@
 from app.models import *
 import pytest
 
-# class TestClassEnum:
-#     @pytest.mark.parametrize(
-#         'class_str, expected', [
-#             ('FR', ClassEnum.FRESHMAN),
-#             ('SO', ClassEnum.SOPHOMORE),
-#             ('JR', ClassEnum.JUNIOR),
-#             ('SR', ClassEnum.SENIOR),
-#             ('XX', ClassEnum.FRESHMAN)
-#         ]
-#     )
-#     def test_parse_class(class_str, expected):
-#         try:
-#             res = ClassEnum.parse_class(class_str)
 
-#             assert (res is not None)
-#             assert (expected == res)
-#         except InvalidClassException as ex:
-#             assert (class_str == 'XX')
-#             assert (expected == ClassEnum.FRESHMAN)
+@pytest.mark.parametrize(
+    'class_str, expected', [
+        ('FR', ClassEnum.FRESHMAN),
+        ('SO', ClassEnum.SOPHOMORE),
+        ('JR', ClassEnum.JUNIOR),
+        ('SR', ClassEnum.SENIOR),
+        ('XX', ClassEnum.FRESHMAN)
+], indirect=False)
+def test_parse_class(class_str, expected):
+    try:
+        res = ClassEnum.parse_class(class_str)
+
+        assert (res is not None)
+        assert (expected == res)
+    except InvalidClassException as ex:
+        assert (class_str == 'XX')
+        assert (expected == ClassEnum.FRESHMAN)
