@@ -23,51 +23,95 @@
 # https://gitlab.com/patkennedy79/flask_user_management_example/-/blob/main/tests/conftest.py#L12
 # https://testdriven.io/blog/flask-pytest/
 
-from cgi import test
+# Add the directory above the tests/ directory to the sys path so the app can
+# be imported.
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 import pytest
 from app import init_app, db
-from os.path import abspath as abspath
-from os import environ as environ
-from sqlalchemy.orm import declarative_base
+from app.models import RoleEnum, User
 
-@pytest.fixture(scope='module')
-def test_client():
-    app = init_app()
-    app.config.from_pyfile('test.cfg')
-    app.testing = True
-    app.config['DEBUG'] = False
-    app.config['SECRET_KEY'] = 'dev'
-
-    with app.test_client() as testing_client:
-        with app.app_context():
-            yield testing_client
-        db.drop_all()
+app = init_app()
+app.testing = True
+app.config['TESTING'] = True
+app.config['LOGIN_DISABLED'] = True
+app.config['DEBUG'] = False
+app.config['SECRET_KEY'] = 'testingkey'
+app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
 
 
-@pytest.fixture(scope='module')
-def init_db(test_client):
-    base = declarative_base()
+@pytest.fixture
+def test_client(request, mocker):
+    fill_data = request.param[0]
 
-    from app.models import User
-    
-    db.create_all()
-    
-    # base.metadata.drop_all(bind=db.engine)
-    # base.metadata.create_all(bind=db.engine)
-    local_usr = User('dummy@dummy.com', 'dummy', 'user', 'test123')
-    google_usr = User('dummy@gmail.com', 'dummy', 'googleuser')
-    admin_usr = User('admin.teammspaint@gmail.com', 'dummy', 'admin', 'test123')
-    admin_usr.set_admin()
+    user_role, use_google = None, None
+    if (len(request.param) > 1):
+        user_role = request.param[1]
+        use_google = request.param[2]
 
-    User.insert_user(local_usr)
-    User.insert_user(google_usr)
-    User.insert_user(admin_usr)
+    with app.test_client() as test_client:
+        app_context = app.app_context()
+        with app_context:
 
-    db.session.commit()
+            def __apply_role(user: User, role: RoleEnum) -> User:
+                assert (user is not None) and (role in 
+                    (RoleEnum.DATA_ADMIN, RoleEnum.ADMIN))
 
-    yield
+                match role:
+                    case RoleEnum.DATA_ADMIN:
+                        user.set_data_admin()
+                    case RoleEnum.ADMIN:
+                        user.set_admin()
+                return user
 
-    db.session.close()
-    # base.metadata.drop_all(bind=db.engine)
-    db.drop_all()
- 
+            db.create_all()
+            if (fill_data):
+                '''
+                Local and Google users with the Viewer role.
+                '''
+                LOCAL_VIEWER = User('viewer@gmail.com', 'Test', 'Viewer', 
+                    'test123')
+                GOOGLE_VIEWER = User('viewer@merrimack.edu', 'Test', 'Viewer')
+                
+                '''
+                Local and Google users with the Data Admin Role.
+                '''
+                LOCAL_DATA_ADMIN = __apply_role(
+                    User('data_admin@gmail.com', 'Test', 'DataAdmin', 'test123'), 
+                    RoleEnum.DATA_ADMIN)
+                GOOGLE_DATA_ADMIN = __apply_role(
+                    User('data_admin@merrimack.edu', 'Test', 'DataAdmin'), 
+                        RoleEnum.DATA_ADMIN)
+
+                '''
+                Local and Google users with the Admin Role.
+                '''
+                LOCAL_ADMIN = __apply_role(
+                    User('admin@gmail.com', 'Test', 'Admin', 'test123'), 
+                        RoleEnum.ADMIN)
+                GOOGLE_ADMIN = __apply_role(
+                    User('admin@merrimack.edu', 'Test', 'Admin'), 
+                        RoleEnum.ADMIN)
+
+                User.insert_user(LOCAL_VIEWER)
+                User.insert_user(GOOGLE_VIEWER)
+                User.insert_user(LOCAL_DATA_ADMIN)
+                User.insert_user(GOOGLE_DATA_ADMIN)
+                User.insert_user(LOCAL_ADMIN)
+                User.insert_user(GOOGLE_ADMIN)
+                db.session.commit()
+
+                if (user_role is not None and use_google is not None):
+                    match user_role:
+                        case RoleEnum.VIEWER:
+                            mock_user = GOOGLE_VIEWER if (use_google) else LOCAL_VIEWER
+                        case RoleEnum.DATA_ADMIN:
+                            mock_user = GOOGLE_DATA_ADMIN if (use_google) else LOCAL_DATA_ADMIN
+                        case RoleEnum.ADMIN:
+                            mock_user = GOOGLE_ADMIN if (use_google) else LOCAL_ADMIN
+                    mocker.patch('flask_login.current_user', mock_user)
+                
+            yield test_client
+            db.session.close()
+            db.drop_all()
