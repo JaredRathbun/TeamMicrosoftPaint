@@ -86,3 +86,94 @@ function logout(evt) {
         }
     });
 }
+
+usersList = null, sortedUsersList = null;
+window.onload = () => {
+    fetch('/get-all-users').then((res) => res.json()).then((data) => {
+        usersList = data;
+        sortedUsersList = usersList.sort((val1, val2) => val1['name']
+            .localeCompare(val2['name']));
+        createUsersTable(usersList);
+    })
+}
+
+function createUsersTable(data) {
+    document.getElementById('usersTable').innerHTML = '';
+
+    var bodyStr = '';
+    for (var user of data) {
+        var userStr = `
+            <tr>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>
+                    <select onchange='changeUserRole(this, "${user.email}")'
+                        class="form-select w-50" data-default=${user.role}
+                        data-name=${user.name}>
+        `;
+
+        switch (user.role) {
+            case 'Admin':
+                userStr += `
+                    <option selected value="1">Admin</option>
+                    <option value="2">Data Admin</option>
+                    <option value="3">Viewer</option>
+                `;
+                break;
+            case 'Data Admin':
+                userStr += `
+                    <option value="1">Admin</option>
+                    <option selected value="2">Data Admin</option>
+                    <option value="3">Viewer</option>
+                `;
+                break;
+            default:
+                userStr += `
+                    <option value="1">Admin</option>
+                    <option value="2">Data Admin</option>
+                    <option selected value="3">Viewer</option>
+                `;
+                break;
+        }
+        
+        userStr += '</select></td></tr>';
+        bodyStr += userStr;
+    }
+
+    var tableStr = `
+        <thead>
+            <tr>
+                <th>User's Name</th>
+                <th>Email Address</th>
+                <th>Current Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${bodyStr}
+        </tbody>
+    `;
+
+    document.getElementById('usersTable').innerHTML = tableStr;
+}
+
+function searchForUser(element) {
+    const searchVal = element.value;
+
+    if (searchVal != '') {
+        var start, end;
+        for (var i = 0; i < sortedUsersList.length; i++) {
+            if (sortedUsersList[i].name == searchVal) {
+                if (start == undefined) {
+                    start = i;
+                } else {
+                    end = i;
+                }
+            }
+        }
+
+        var copyList = sortedUsersList.splice(start, end + 1);
+        createUsersTable(copyList);
+    } else {
+        createUsersTable(usersList);
+    }
+}

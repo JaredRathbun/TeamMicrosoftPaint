@@ -1469,6 +1469,7 @@ class Course(db.Model):
             mapping_dict[course_num] = semester_list
         return mapping_dict
 
+
     @staticmethod
     def get_list_of_years() -> list:
         '''
