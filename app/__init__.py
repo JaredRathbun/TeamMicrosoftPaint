@@ -39,7 +39,7 @@ app = Flask('STEM Data Dashboard', instance_relative_config=True,
 )
 
 env = environ['env']
-if (env not in ('dev', 'prod')):
+if (env not in ('dev', 'prod', 'test')):
     logger.critical("Invalid environment. Please use either 'dev' or 'prod'.")
     raise SystemExit()
 else:

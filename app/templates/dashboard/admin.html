@@ -268,13 +268,15 @@
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h6 class="text-primary fw-bold m-0">Manage Users</h6>
+                                    <label class="form-label">
+                                        <input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" oninput="searchForUser(this)">
+                                    </label>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive mt-2" id="dataTable" role="grid"
                                         aria-describedby="dataTable_info" style="overflow-y: auto; max-height: 390px">
-                                        <table class="table table-responsive table-striped table-hover my-0"
-                                            id="dataTable">
-                                            <thead>
+                                        <table class="table table-responsive table-striped table-hover my-0" id="usersTable">
+                                            <!-- <thead>
                                                 <tr>
                                                     <th>User's Name</th>
                                                     <th>Email Address</th>
@@ -307,7 +309,7 @@
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
-                                            </tbody>
+                                            </tbody> -->
                                         </table>
                                     </div>
                                 </div>

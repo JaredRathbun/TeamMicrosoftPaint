@@ -136,7 +136,21 @@
                     <div class="card shadow">
                         <div class="card-header d-flex justify-content-between py-3">
                             <p class="text-primary m-0 fw-bold">All Data</p>
-                            <span class='mx-2' data-toggle="tooltip" data-placement="left" title="A table of all the data in the database. To analyze a specific row, click on the eye next to that given row."><i class="fa fa-light fa-circle-info"></i></span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- <label class="form-label">Sort By
+                                    <select class="form-select form-select-sm" onchange="sortBySelectedColumn()">
+                                        <option selected disabled>Select a column</option>
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </label> -->
+                                <label class="form-label">
+                                    <input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" oninput="searchForData(this)">
+                                </label>
+                                <span class='mx-2' data-toggle="tooltip" data-placement="left" title="A table of all the data in the database. To analyze a specific row, click on the eye next to that given row."><i class="fa fa-light fa-circle-info"></i></span>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="row">

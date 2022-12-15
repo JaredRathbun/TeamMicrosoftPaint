@@ -42,7 +42,7 @@ const applyShowHideToggle = () => {
                 $(id).removeAttr('hidden');
                 $(id).slideDown(400);
             } else {
-                $(id).slideToggle('slow', () => {});
+                $(id).slideToggle('slow', () => { });
             }
         });
     });
@@ -50,20 +50,26 @@ const applyShowHideToggle = () => {
 
 function logout(evt) {
     evt.preventDefault();
-    fetch('/logout', {method: 'POST'}).then((res) => {
+    fetch('/logout', { method: 'POST' }).then((res) => {
         if (res.redirected) {
             window.location.href = res.url;
         }
     });
 }
 
+var tableData = null, sortedTableData = null, dataLoaded = false;
 window.onload = () => {
     fetch('/all-data').then((res) => res.json()).then((data) => {
+        tableData = data;
+        sortedTableData = data.sort((val1, val2) => val1['student_id']
+            .localeCompare(val2['student_id']));
+        dataLoaded = true;
         createTable(data);
     });
 };
 
 function createTable(data) {
+    document.getElementById('dataTable').innerHTML = '';
     const convertToNA = (val) => (val == null) ? 'N/A' : val;
     const convertBooleanToString = (val) => (val) ? 'Yes' : 'No';
     let rowID = 0;
@@ -218,3 +224,72 @@ function createTable(data) {
 
     applyShowHideToggle();
 }
+
+function searchForData(searchElement) {
+    if (dataLoaded) {
+        const searchVal = searchElement.value;
+        
+        if (searchVal != '') {
+            var start, end;
+            for (var i = 0; i < sortedTableData.length; i++) {
+                if (sortedTableData[i].student_id == searchVal) {
+                    if (start == undefined) {
+                        start = i;
+                    } else {
+                        end = i;
+                    }
+                }
+            }
+
+            if (start != undefined && end != undefined) {
+                var copy = sortedTableData;
+                createTable(copy.splice(start, end + 1));
+            }
+        } else {
+            createTable(tableData);
+        }
+    }
+
+}
+
+/**
+ * Sorts the data array using merge sort. Offers a running time of O(nlgn).
+ * 
+ * @param {Array} data The array of data to sort. 
+ * @param {String} key The key to sort by in the list of objects.
+ * 
+ * @return The list in the sorted format.
+ */
+// function sort(data, key = 'student_id') {
+
+//     function merge(left, right) {
+//         let resArray = [], leftIdx = 0, rightIdx = 0;
+
+//         // We will concatenate values into the resultArray in order
+//         while (leftIdx < left.length && rightIdx < right.length) {
+//             if (left[leftIdx][key].localeCompare(right[rightIdx][key])) {
+//                 resArray.push(left[leftIdx]);
+//                 leftIdx++; // move left array cursor
+//             } else {
+//                 resArray.push(right[rightIdx]);
+//                 rightIdx++; // move right array cursor
+//             }
+//         }
+
+//         // We need to concat here because there will be one element remaining
+//         // from either left OR the right
+//         return resArray.concat(left.slice(leftIdx))
+//             .concat(right.slice(rightIdx));
+//     }
+
+//     const data_len = data.length;
+
+//     if (data_len <= 1) {
+//         return data;
+//     }
+
+//     const mid = Math.floor(data_len / 2);
+//     const left = data.splice(0, mid), right = data.splice(mid);
+
+//     return merge(sort(left), sort(right));
+// }   

@@ -21,7 +21,6 @@
 
 
 from app import init_app
-import logging
 from os import environ
 
 
@@ -37,7 +36,7 @@ if __name__ == '__main__':
     env = environ['env']
 
     # Run the app based on the environment. 
-    if (env == 'dev'):
+    if (env == 'dev' or env == 'test'):
         # Run on all addresses.
         app.run('0.0.0.0', port=app.config['PORT'], debug=app.config['DEBUG'], ssl_context=('instance/cert.pem', 'instance/key.pem'))
     elif (env == 'prod'):
